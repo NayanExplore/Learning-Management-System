@@ -25,6 +25,12 @@ public class PublicController {
         this.notificationService = notificationService;
     }
 
+    @GetMapping("/health")
+    @Operation(summary = "Simple health check endpoint for cloud load balancers")
+    public ResponseEntity<Map<String, String>> healthCheck() {
+        return ResponseEntity.ok(Map.of("status", "UP"));
+    }
+
     @GetMapping("/settings")
     @Operation(summary = "Get public website configuration and branding")
     public ResponseEntity<ApiResponse<Map<String, String>>> getPublicSettings() {

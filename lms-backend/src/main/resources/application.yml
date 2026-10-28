@@ -105,6 +105,11 @@ app:
 
 # Actuator
 management:
+  health:
+    mail:
+      enabled: false
+    diskspace:
+      enabled: false
   endpoints:
     web:
       exposure:
