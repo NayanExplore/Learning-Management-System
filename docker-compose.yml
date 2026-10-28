@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: skillforge-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: skillforge_lms
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_USER: lms_user
+      MYSQL_PASSWORD: lmspassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysqldata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./lms-backend
+      dockerfile: Dockerfile
+    container_name: skillforge-backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SERVER_PORT: 8080
+      DB_URL: jdbc:mysql://mysql:3306/skillforge_lms?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      DB_USERNAME: root
+      DB_PASSWORD: rootpassword
+      JWT_SECRET: ${JWT_SECRET:-SuperSecretProductionKeyMustBeAtLeast256BitsLong1234567890}
+      CORS_ORIGINS: http://localhost:5173,http://localhost:3000
+      APP_BASE_URL: http://localhost:5173
+      ADMIN_BOOTSTRAP_EMAIL: ${ADMIN_BOOTSTRAP_EMAIL:-admin@skillforge.com}
+      ADMIN_BOOTSTRAP_PASSWORD: ${ADMIN_BOOTSTRAP_PASSWORD:-AdminSecure2026!}
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-}
+      RAZORPAY_WEBHOOK_SECRET: ${RAZORPAY_WEBHOOK_SECRET:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      MSG91_AUTH_KEY: ${MSG91_AUTH_KEY:-}
+      WHATSAPP_ACCESS_TOKEN: ${WHATSAPP_ACCESS_TOKEN:-}
+    ports:
+      - "8080:8080"
+    volumes:
+      - backend-uploads:/app/data/uploads
+
+  frontend:
+    build:
+      context: ./lms-frontend
+      dockerfile: Dockerfile
+    container_name: skillforge-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "5173:80"
+
+volumes:
+  mysqldata:
+  backend-uploads:

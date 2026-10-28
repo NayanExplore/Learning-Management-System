@@ -1,0 +1,11 @@
+# Backend-specific ignore
+.env
+.env.*
+!.env.example
+target/
+data/
+logs/
+*.log
+.vscode/
+.idea/
+*.iml

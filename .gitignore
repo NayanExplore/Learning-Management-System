@@ -1,0 +1,55 @@
+# =================================================================
+# SkillForge LMS - Git Ignore Configuration
+# =================================================================
+
+# --- Environment & Sensitive Secrets (PROTECTED - NEVER COMMIT) ---
+.env
+.env.*
+!.env.example
+*.env
+*.env.local
+*.env.production
+
+# --- Java & Maven Build Outputs ---
+target/
+**/target/
+*.class
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# --- Node & Frontend Build Outputs ---
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+.npm
+.yarn/
+.vite/
+
+# --- Tools & Bundled Binaries ---
+tools/
+apache-maven-*/
+
+# --- User Data & Uploads ---
+data/
+**/data/uploads/*
+!**/data/uploads/.gitkeep
+logs/
+*.log
+
+# --- IDEs & Code Editors ---
+.vscode/
+.idea/
+*.iml
+*.iws
+*.ipr
+.settings/
+.project
+.classpath
+.DS_Store
+Thumbs.db

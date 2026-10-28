@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_LOWER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+  flyway:
+    enabled: false # H2 creates schema from JPA in unit/integration tests
+
+app:
+  jwt:
+    secret: "TestSecretKeyForAntigravityLmsTestingPurposesMustBeAtLeast256BitsLong12345"
+    expiration-ms: 3600000
+    refresh-expiration-ms: 86400000
+    cookie-name: "sf_token"
+  razorpay:
+    key-id: "rzp_test_mock"
+    key-secret: "mock_secret_key_12345"
+    webhook-secret: "mock_webhook_secret_12345"
+  sms:
+    otp-expiry-seconds: 300
+    otp-max-attempts: 5
+    otp-resend-cooldown-seconds: 10
+  certificate:
+    company-name: "SkillForge Academy"

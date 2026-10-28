@@ -1,0 +1,1 @@
+org.springframework.boot.env.EnvironmentPostProcessor=com.skillforge.lms.config.DotenvEnvironmentPostProcessor
