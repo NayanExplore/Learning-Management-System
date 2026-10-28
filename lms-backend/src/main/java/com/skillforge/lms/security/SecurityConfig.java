@@ -73,7 +73,7 @@ public class SecurityConfig {
                         // Swagger & OpenAPI
                         .requestMatchers("/v1/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         // Actuator health
-                        .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+                        .requestMatchers("/actuator/**", "/api/actuator/**").permitAll()
                         // Admin restricted endpoints
                         .requestMatchers("/v1/admin/**", "/api/v1/admin/**").hasRole("ADMIN")
                         // Student endpoints
