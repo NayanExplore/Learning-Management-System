@@ -19,6 +19,19 @@ import {
   BookOpen,
 } from 'lucide-react';
 
+const getEmbedUrl = (url?: string): string => {
+  if (!url) return '';
+  if (url.includes('youtube.com/watch?v=')) {
+    const videoId = url.split('v=')[1]?.split('&')[0];
+    return `https://www.youtube.com/embed/${videoId}`;
+  }
+  if (url.includes('youtu.be/')) {
+    const videoId = url.split('youtu.be/')[1]?.split('?')[0];
+    return `https://www.youtube.com/embed/${videoId}`;
+  }
+  return url;
+};
+
 export const CoursePlayerPage: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
@@ -257,7 +270,7 @@ export const CoursePlayerPage: React.FC = () => {
             <div className="aspect-video bg-black rounded-3xl overflow-hidden shadow-2xl border border-slate-800/80 relative flex items-center justify-center">
               {currentLesson.videoUrl ? (
                 <iframe
-                  src={currentLesson.videoUrl}
+                  src={getEmbedUrl(currentLesson.videoUrl)}
                   title={currentLesson.title}
                   className="w-full h-full"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

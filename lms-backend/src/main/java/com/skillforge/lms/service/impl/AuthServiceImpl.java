@@ -404,12 +404,14 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void setAuthCookie(HttpServletResponse response, String token) {
         var jwtConfig = appProperties.getJwt();
+        boolean secure = jwtConfig.isCookieSecure();
+        String sameSite = secure ? "None" : "Lax";
         ResponseCookie cookie = ResponseCookie.from(jwtConfig.getCookieName(), token)
                 .httpOnly(true)
-                .secure(jwtConfig.isCookieSecure())
+                .secure(secure)
                 .path("/")
                 .maxAge(jwtConfig.getExpirationMs() / 1000)
-                .sameSite("Lax")
+                .sameSite(sameSite)
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
@@ -417,12 +419,14 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void clearAuthCookie(HttpServletResponse response) {
         var jwtConfig = appProperties.getJwt();
+        boolean secure = jwtConfig.isCookieSecure();
+        String sameSite = secure ? "None" : "Lax";
         ResponseCookie cookie = ResponseCookie.from(jwtConfig.getCookieName(), "")
                 .httpOnly(true)
-                .secure(jwtConfig.isCookieSecure())
+                .secure(secure)
                 .path("/")
                 .maxAge(0)
-                .sameSite("Lax")
+                .sameSite(sameSite)
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
