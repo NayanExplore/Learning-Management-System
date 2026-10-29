@@ -11,6 +11,7 @@ import com.skillforge.lms.repository.CourseRepository;
 import com.skillforge.lms.repository.CourseSectionRepository;
 import com.skillforge.lms.repository.EnrollmentRepository;
 import com.skillforge.lms.repository.LessonRepository;
+import com.skillforge.lms.repository.LessonProgressRepository;
 import com.skillforge.lms.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -35,16 +37,19 @@ public class CourseServiceImpl implements CourseService {
     private final CourseSectionRepository sectionRepository;
     private final LessonRepository lessonRepository;
     private final EnrollmentRepository enrollmentRepository;
+    private final LessonProgressRepository lessonProgressRepository;
 
     public CourseServiceImpl(
             CourseRepository courseRepository,
             CourseSectionRepository sectionRepository,
             LessonRepository lessonRepository,
-            EnrollmentRepository enrollmentRepository) {
+            EnrollmentRepository enrollmentRepository,
+            LessonProgressRepository lessonProgressRepository) {
         this.courseRepository = courseRepository;
         this.sectionRepository = sectionRepository;
         this.lessonRepository = lessonRepository;
         this.enrollmentRepository = enrollmentRepository;
+        this.lessonProgressRepository = lessonProgressRepository;
     }
 
     private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
@@ -225,6 +230,53 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
+    public CourseSectionDto updateSection(Long sectionId, SectionCreateRequest request) {
+        CourseSection section = sectionRepository.findById(sectionId)
+                .orElseThrow(() -> new ResourceNotFoundException("CourseSection", "id", sectionId));
+
+        section.setTitle(request.getTitle().trim());
+        section.setDescription(request.getDescription());
+        if (request.getSortOrder() > 0) {
+            section.setSortOrder(request.getSortOrder());
+        }
+
+        section = sectionRepository.save(section);
+        return CourseSectionDto.fromEntity(section, true);
+    }
+
+    @Override
+    @Transactional
+    public void deleteSection(Long sectionId) {
+        CourseSection section = sectionRepository.findById(sectionId)
+                .orElseThrow(() -> new ResourceNotFoundException("CourseSection", "id", sectionId));
+
+        if (section.getLessons() != null && !section.getLessons().isEmpty()) {
+            List<Long> lessonIds = section.getLessons().stream().map(Lesson::getId).toList();
+            lessonProgressRepository.deleteByLessonIdIn(lessonIds);
+        }
+
+        sectionRepository.delete(section);
+    }
+
+    @Override
+    @Transactional
+    public void reorderSections(Long courseId, List<Long> sectionIds) {
+        if (sectionIds == null || sectionIds.isEmpty()) return;
+        List<CourseSection> sections = sectionRepository.findByCourseIdOrderBySortOrderAsc(courseId);
+        Map<Long, CourseSection> map = sections.stream()
+                .collect(Collectors.toMap(CourseSection::getId, s -> s));
+
+        for (int i = 0; i < sectionIds.size(); i++) {
+            CourseSection s = map.get(sectionIds.get(i));
+            if (s != null) {
+                s.setSortOrder(i + 1);
+                sectionRepository.save(s);
+            }
+        }
+    }
+
+    @Override
+    @Transactional
     public LessonDto addLesson(Long sectionId, LessonCreateRequest request) {
         CourseSection section = sectionRepository.findById(sectionId)
                 .orElseThrow(() -> new ResourceNotFoundException("CourseSection", "id", sectionId));
@@ -255,6 +307,12 @@ public class CourseServiceImpl implements CourseService {
         Lesson lesson = lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Lesson", "id", lessonId));
 
+        if (request.getSectionId() != null && !request.getSectionId().equals(lesson.getSection().getId())) {
+            CourseSection newSection = sectionRepository.findById(request.getSectionId())
+                    .orElseThrow(() -> new ResourceNotFoundException("CourseSection", "id", request.getSectionId()));
+            lesson.setSection(newSection);
+        }
+
         lesson.setTitle(request.getTitle().trim());
         lesson.setDescription(request.getDescription());
         lesson.setContentType(Lesson.ContentType.valueOf(request.getContentType()));
@@ -272,10 +330,27 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Transactional
     public void deleteLesson(Long lessonId) {
-        if (!lessonRepository.existsById(lessonId)) {
-            throw new ResourceNotFoundException("Lesson", "id", lessonId);
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new ResourceNotFoundException("Lesson", "id", lessonId));
+        lessonProgressRepository.deleteByLessonId(lessonId);
+        lessonRepository.delete(lesson);
+    }
+
+    @Override
+    @Transactional
+    public void reorderLessons(Long sectionId, List<Long> lessonIds) {
+        if (lessonIds == null || lessonIds.isEmpty()) return;
+        List<Lesson> lessons = lessonRepository.findBySectionIdOrderBySortOrderAsc(sectionId);
+        Map<Long, Lesson> map = lessons.stream()
+                .collect(Collectors.toMap(Lesson::getId, l -> l));
+
+        for (int i = 0; i < lessonIds.size(); i++) {
+            Lesson l = map.get(lessonIds.get(i));
+            if (l != null) {
+                l.setSortOrder(i + 1);
+                lessonRepository.save(l);
+            }
         }
-        lessonRepository.deleteById(lessonId);
     }
 
     @Override

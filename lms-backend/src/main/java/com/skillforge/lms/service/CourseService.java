@@ -20,8 +20,12 @@ public interface CourseService {
     CourseDetailDto updateCourse(Long id, CourseCreateRequest request);
     void setCourseStatus(Long id, Course.CourseStatus status);
     CourseSectionDto addSection(Long courseId, SectionCreateRequest request);
+    CourseSectionDto updateSection(Long sectionId, SectionCreateRequest request);
+    void deleteSection(Long sectionId);
+    void reorderSections(Long courseId, List<Long> sectionIds);
     LessonDto addLesson(Long sectionId, LessonCreateRequest request);
     LessonDto updateLesson(Long lessonId, LessonCreateRequest request);
     void deleteLesson(Long lessonId);
+    void reorderLessons(Long sectionId, List<Long> lessonIds);
     boolean hasEnrollmentAccess(Long userId, Long courseId);
 }

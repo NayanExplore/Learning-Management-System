@@ -27,6 +27,7 @@ import { QuizPlayerPage } from './pages/QuizPlayerPage';
 // Admin Pages
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { AdminCoursesPage } from './pages/admin/AdminCoursesPage';
+import { AdminCurriculumPage } from './pages/admin/AdminCurriculumPage';
 import { AdminEnrollmentsPage } from './pages/admin/AdminEnrollmentsPage';
 import { AdminStudentsPage } from './pages/admin/AdminStudentsPage';
 import { AdminOrdersPage } from './pages/admin/AdminOrdersPage';
@@ -95,6 +96,14 @@ export const App: React.FC = () => {
                 element={
                   <ProtectedRoute requiredRole="ADMIN">
                     <AdminCoursesPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/courses/:courseId/curriculum"
+                element={
+                  <ProtectedRoute requiredRole="ADMIN">
+                    <AdminCurriculumPage />
                   </ProtectedRoute>
                 }
               />

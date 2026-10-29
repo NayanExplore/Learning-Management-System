@@ -605,6 +605,14 @@ export const AdminCoursesPage: React.FC = () => {
 
                         {/* Actions */}
                         <td className="px-6 py-4 text-right space-x-1 whitespace-nowrap">
+                          <Link
+                            to={`/admin/courses/${course.id}/curriculum`}
+                            className="inline-flex items-center space-x-1 px-2.5 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg text-xs font-bold transition mr-1 shadow-2xs"
+                            title="Manage Course Curriculum, Sections & Lessons"
+                          >
+                            <Layers className="w-3.5 h-3.5 text-indigo-600" />
+                            <span>Curriculum</span>
+                          </Link>
                           <button
                             onClick={() => handleToggleStatus(course.id, course.status)}
                             className="p-1.5 text-slate-500 hover:text-slate-800 rounded-lg hover:bg-slate-100 transition"

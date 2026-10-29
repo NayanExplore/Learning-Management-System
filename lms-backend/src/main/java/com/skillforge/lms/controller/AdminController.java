@@ -126,6 +126,31 @@ public class AdminController {
         return ResponseEntity.ok(ApiResponse.success("Section added successfully", section));
     }
 
+    @PutMapping("/sections/{sectionId}")
+    @Operation(summary = "Update a course section title, description, or sort order")
+    public ResponseEntity<ApiResponse<CourseSectionDto>> updateSection(
+            @PathVariable Long sectionId,
+            @Valid @RequestBody SectionCreateRequest request) {
+        CourseSectionDto section = courseService.updateSection(sectionId, request);
+        return ResponseEntity.ok(ApiResponse.success("Section updated successfully", section));
+    }
+
+    @DeleteMapping("/sections/{sectionId}")
+    @Operation(summary = "Delete a course section and all its lessons")
+    public ResponseEntity<ApiResponse<Void>> deleteSection(@PathVariable Long sectionId) {
+        courseService.deleteSection(sectionId);
+        return ResponseEntity.ok(ApiResponse.success("Section deleted successfully", null));
+    }
+
+    @PatchMapping("/courses/{courseId}/sections/reorder")
+    @Operation(summary = "Reorder curriculum sections within a course")
+    public ResponseEntity<ApiResponse<Void>> reorderSections(
+            @PathVariable Long courseId,
+            @RequestBody List<Long> sectionIds) {
+        courseService.reorderSections(courseId, sectionIds);
+        return ResponseEntity.ok(ApiResponse.success("Sections reordered successfully", null));
+    }
+
     @PostMapping("/sections/{sectionId}/lessons")
     @Operation(summary = "Add a lesson to a course section")
     public ResponseEntity<ApiResponse<LessonDto>> addLesson(
@@ -149,6 +174,15 @@ public class AdminController {
     public ResponseEntity<ApiResponse<Void>> deleteLesson(@PathVariable Long lessonId) {
         courseService.deleteLesson(lessonId);
         return ResponseEntity.ok(ApiResponse.success("Lesson deleted successfully", null));
+    }
+
+    @PatchMapping("/sections/{sectionId}/lessons/reorder")
+    @Operation(summary = "Reorder lessons within a section")
+    public ResponseEntity<ApiResponse<Void>> reorderLessons(
+            @PathVariable Long sectionId,
+            @RequestBody List<Long> lessonIds) {
+        courseService.reorderLessons(sectionId, lessonIds);
+        return ResponseEntity.ok(ApiResponse.success("Lessons reordered successfully", null));
     }
 
     // ==========================================

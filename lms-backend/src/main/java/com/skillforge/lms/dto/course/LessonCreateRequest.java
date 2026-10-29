@@ -16,4 +16,5 @@ public class LessonCreateRequest {
     private int sortOrder;
     private boolean preview;
     private boolean mandatory = true;
+    private Long sectionId;
 }
