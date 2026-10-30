@@ -52,12 +52,17 @@ public class NotificationServiceImpl implements NotificationService {
         boolean delivered = false;
         var emailConfig = appProperties.getEmail();
 
-        // Send exclusively via Google SMTP (JavaMailSender)
-        if (mailSender.isPresent() && hasConfiguredSmtpHost(mailSender.get())) {
+        // 1. Send via Brevo HTTPS REST API (immune to Render's SMTP port blocks!)
+        if ("brevo".equalsIgnoreCase(emailConfig.getProvider()) || StringUtils.hasText(emailConfig.getBrevoApiKey())) {
+            delivered = sendViaBrevo(to, subject, bodyHtml, emailConfig, notifLog);
+        }
+
+        // 2. Fallback to JavaMailSender SMTP if Brevo not configured or failed
+        if (!delivered && mailSender.isPresent() && hasConfiguredSmtpHost(mailSender.get())) {
             delivered = sendViaSmtp(to, subject, bodyHtml, emailConfig, notifLog);
         }
 
-        // Fallback if SMTP could not deliver to inbox
+        // Fallback if email could not be delivered to inbox
         if (!delivered) {
             String cleanBody = bodyHtml.replaceAll("<[^>]*>", " ").replaceAll("\\s+", " ").trim();
             log.warn("================================================================================");
@@ -65,16 +70,67 @@ public class NotificationServiceImpl implements NotificationService {
             log.warn("📬  To: {}", to);
             log.warn("📝  Subject: {}", subject);
             log.warn("🔑  Content: {}", cleanBody);
-            log.warn("👉  Ensure Google SMTP credentials (MAIL_USERNAME and MAIL_PASSWORD) are set in .env.");
+            log.warn("👉  Set BREVO_API_KEY in Render to dispatch transactional emails via Brevo HTTPS API.");
             log.warn("================================================================================");
             notifLog.setStatus(NotificationLog.NotifStatus.FAILED);
             if (notifLog.getErrorMessage() == null) {
-                notifLog.setErrorMessage("Google SMTP credentials missing or authentication failed.");
+                notifLog.setErrorMessage("Email delivery failed: Brevo API or SMTP credentials missing/failed.");
             }
             notifLog.setProviderMessageId("DEV-FALLBACK-" + UUID.randomUUID());
         }
 
         notificationLogRepository.save(notifLog);
+    }
+
+    private boolean sendViaBrevo(String to, String subject, String bodyHtml, AppProperties.EmailProperties emailConfig, NotificationLog notifLog) {
+        String apiKey = emailConfig.getBrevoApiKey();
+        if (!StringUtils.hasText(apiKey)) {
+            return false;
+        }
+
+        try {
+            String fromAddress = StringUtils.hasText(emailConfig.getFrom()) ? emailConfig.getFrom().trim() : "heerakumar55304@gmail.com";
+            String fromName = StringUtils.hasText(emailConfig.getFromName()) ? emailConfig.getFromName().trim() : "SkillForge Academy";
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+            headers.set("api-key", apiKey.trim());
+
+            Map<String, Object> body = new HashMap<>();
+            body.put("sender", Map.of("name", fromName, "email", fromAddress));
+            body.put("to", List.of(Map.of("email", to)));
+            body.put("subject", subject);
+            body.put("htmlContent", bodyHtml);
+
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
+            ResponseEntity<String> response = restTemplate.postForEntity("https://api.brevo.com/v3/smtp/email", request, String.class);
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                notifLog.setStatus(NotificationLog.NotifStatus.SENT);
+                try {
+                    var json = objectMapper.readTree(response.getBody());
+                    if (json.has("messageId")) {
+                        notifLog.setProviderMessageId(json.get("messageId").asText());
+                    } else {
+                        notifLog.setProviderMessageId("BREVO-" + UUID.randomUUID());
+                    }
+                } catch (Exception ignored) {
+                    notifLog.setProviderMessageId("BREVO-" + UUID.randomUUID());
+                }
+                log.info("Email successfully delivered via Brevo HTTPS API ({}) to {}", fromAddress, to);
+                return true;
+            } else {
+                notifLog.setStatus(NotificationLog.NotifStatus.FAILED);
+                notifLog.setErrorMessage("Brevo API error: " + response.getStatusCode());
+                log.error("Brevo API error for {}: HTTP {}", to, response.getStatusCode());
+                return false;
+            }
+        } catch (Exception ex) {
+            log.error("Brevo API dispatch failed to {}: {}", to, ex.getMessage());
+            notifLog.setErrorMessage("Brevo API: " + ex.getMessage());
+            return false;
+        }
     }
 
     private boolean sendViaSmtp(String to, String subject, String bodyHtml, AppProperties.EmailProperties emailConfig, NotificationLog notifLog) {
@@ -111,7 +167,9 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public boolean isEmailConfigured() {
-        return mailSender.isPresent() && hasConfiguredSmtpHost(mailSender.get());
+        boolean brevoConfigured = StringUtils.hasText(appProperties.getEmail().getBrevoApiKey());
+        boolean smtpConfigured = mailSender.isPresent() && hasConfiguredSmtpHost(mailSender.get());
+        return brevoConfigured || smtpConfigured;
     }
 
     private boolean hasConfiguredSmtpHost(JavaMailSender sender) {

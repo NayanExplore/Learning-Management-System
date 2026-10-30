@@ -75,6 +75,7 @@ app:
 
   email:
     provider: ${EMAIL_PROVIDER:smtp}
+    brevo-api-key: ${BREVO_API_KEY:}
     from: ${EMAIL_FROM:heerakumar55304@gmail.com}
     from-name: ${EMAIL_FROM_NAME:SkillForge Academy}
 

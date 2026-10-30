@@ -1017,3 +1017,4 @@ export const AdminCurriculumPage: React.FC = () => {
     </div>
   );
 };
+

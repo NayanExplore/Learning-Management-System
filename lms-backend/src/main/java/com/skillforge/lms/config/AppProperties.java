@@ -62,6 +62,7 @@ public class AppProperties {
     @Getter @Setter
     public static class EmailProperties {
         private String provider = "smtp";
+        private String brevoApiKey;
         private String from;
         private String fromName;
     }
