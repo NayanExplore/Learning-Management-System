@@ -123,7 +123,16 @@ export const initiateRazorpayCheckout = async ({
     });
     rzpInstance.open();
   } catch (err: any) {
-    const errorMsg = err.response?.data?.message || err.message || 'Unable to initiate checkout.';
+    // err is the payload from the Axios response interceptor: { message, status }
+    const status = err?.status;
+    let errorMsg: string;
+    if (status === 401 || status === 403) {
+      errorMsg = 'Your session has expired. Please log in again to enroll.';
+    } else if (status === 400 && err?.message?.toLowerCase().includes('already enrolled')) {
+      errorMsg = 'You are already enrolled in this course!';
+    } else {
+      errorMsg = err?.message || 'Unable to initiate checkout.';
+    }
     onError(errorMsg);
   }
 };

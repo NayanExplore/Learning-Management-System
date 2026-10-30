@@ -29,12 +29,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (res.data?.success && res.data?.data) {
         setUser(res.data.data);
       } else {
+        // Only clear token on explicit auth failure, not on unexpected responses
         localStorage.removeItem('sf_token');
         setUser(null);
       }
-    } catch {
-      localStorage.removeItem('sf_token');
-      setUser(null);
+    } catch (err: any) {
+      // Only remove token on 401 (invalid/expired token).
+      // Do NOT remove on 5xx / network errors (e.g. Render cold-start timeout) —
+      // the token is still valid, the server was just warming up.
+      const status = err?.status ?? err?.response?.status;
+      if (status === 401 || status === 403) {
+        localStorage.removeItem('sf_token');
+        setUser(null);
+      } else {
+        // Server error or network issue: keep the token, set user to null for safety
+        // The user will need to retry (interceptor will re-attach the token on next request)
+        setUser(null);
+      }
     } finally {
       setLoading(false);
     }

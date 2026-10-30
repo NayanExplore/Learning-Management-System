@@ -17,13 +17,14 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Response interceptor to unwrap data and handle 401
+// Response interceptor: propagate errors with status intact so callers can distinguish 401 vs 5xx
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('sf_token');
-    }
-    return Promise.reject(error.response?.data || { message: error.message });
+    // Attach the HTTP status to the rejection payload so AuthContext can check it
+    const status = error.response?.status;
+    const payload = error.response?.data || { message: error.message };
+    payload.status = status;
+    return Promise.reject(payload);
   }
 );

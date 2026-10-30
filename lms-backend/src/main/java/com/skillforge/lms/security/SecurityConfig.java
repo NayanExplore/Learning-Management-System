@@ -92,7 +92,11 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         String allowedOrigins = appProperties.getCors().getAllowedOrigins();
         if (allowedOrigins != null && !allowedOrigins.isBlank()) {
-            configuration.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
+            List<String> originList = Arrays.stream(allowedOrigins.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .toList();
+            configuration.setAllowedOrigins(originList);
         } else {
             configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:3000"));
         }

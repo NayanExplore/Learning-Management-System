@@ -114,7 +114,18 @@ export const CourseDetailPage: React.FC = () => {
       },
       onError: (errMsg) => {
         setCheckoutLoading(false);
-        setCheckoutError(errMsg);
+        // Translate raw HTTP errors into user-friendly messages
+        let friendlyMsg = errMsg;
+        if (errMsg.includes('401') || errMsg.toLowerCase().includes('unauthorized')) {
+          friendlyMsg = 'Your session has expired. Please log in again to enroll.';
+        } else if (errMsg.includes('403') || errMsg.toLowerCase().includes('forbidden')) {
+          friendlyMsg = 'You do not have permission to enroll. Please contact support.';
+        } else if (errMsg.includes('500') || errMsg.toLowerCase().includes('server error')) {
+          friendlyMsg = 'Server error. Please try again in a moment.';
+        } else if (errMsg.toLowerCase().includes('network') || errMsg.toLowerCase().includes('failed to fetch')) {
+          friendlyMsg = 'Network error. Please check your connection and try again.';
+        }
+        setCheckoutError(friendlyMsg);
       },
     });
   };

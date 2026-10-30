@@ -126,6 +126,11 @@ public class NotificationServiceImpl implements NotificationService {
                 log.error("Brevo API error for {}: HTTP {}", to, response.getStatusCode());
                 return false;
             }
+        } catch (org.springframework.web.client.HttpStatusCodeException ex) {
+            String errBody = ex.getResponseBodyAsString();
+            log.error("Brevo API dispatch failed to {}: HTTP {} - {}", to, ex.getStatusCode(), errBody);
+            notifLog.setErrorMessage("Brevo API: " + ex.getStatusCode() + " - " + errBody);
+            return false;
         } catch (Exception ex) {
             log.error("Brevo API dispatch failed to {}: {}", to, ex.getMessage());
             notifLog.setErrorMessage("Brevo API: " + ex.getMessage());
