@@ -28,7 +28,7 @@ export const Footer: React.FC = () => {
             </Link>
 
             <p className="text-sm leading-relaxed text-[#697386] max-w-sm">
-              SkillForge provides structured, industry-aligned technical curricula designed to help developers and technology professionals build practical skills and verify their competencies.
+              SkillForge provides structured, industry-aligned technical curriculam designed to help developers and technology professionals build practical skills and verify their competencies.
             </p>
 
             <div className="pt-2">
@@ -36,7 +36,7 @@ export const Footer: React.FC = () => {
               {subscribed ? (
                 <div className="flex items-center gap-2 text-xs text-emerald-700 bg-emerald-50 px-3 py-2 rounded-lg border border-emerald-200">
                   <Check className="w-4 h-4 shrink-0" />
-                  <span>Thank you. You will receive updates on new curricula.</span>
+                  <span>Thank you. You will receive updates on new curriculam.</span>
                 </div>
               ) : (
                 <form onSubmit={handleSubscribe} className="flex gap-2 max-w-sm">
@@ -62,7 +62,7 @@ export const Footer: React.FC = () => {
           {/* Programs */}
           <div>
             <h4 className="text-xs font-semibold uppercase tracking-wider text-[#20252B] mb-3.5">
-              Curricula
+              Curriculam
             </h4>
             <ul className="space-y-2.5 text-sm">
               <li>

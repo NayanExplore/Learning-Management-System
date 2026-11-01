@@ -9,11 +9,19 @@
   }
 
   body {
-    @apply font-sans bg-[#FAFAF8] text-[#20252B] antialiased selection:bg-[#172B4D] selection:text-white;
+    @apply font-sans bg-[#FAFAF8] text-[#20252B] antialiased selection:bg-[#172B4D] selection:text-white transition-colors duration-150;
+  }
+
+  html.dark body {
+    @apply bg-slate-950 text-slate-100 selection:bg-[#287C78] selection:text-white;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply text-[#20252B] font-semibold tracking-tight;
+  }
+
+  html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5, html.dark h6 {
+    @apply text-slate-100;
   }
 }
 
@@ -32,6 +40,14 @@
   border-radius: 9999px;
 }
 
+html.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+
 ::-webkit-scrollbar-thumb:hover {
   background: #9CA3AF;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
 }

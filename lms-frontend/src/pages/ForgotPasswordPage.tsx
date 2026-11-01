@@ -172,22 +172,22 @@ export const ForgotPasswordPage: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center py-16 px-4 sm:px-6 bg-[#FAFAF8]">
-      <div className="max-w-md w-full bg-white p-8 rounded-xl border border-[#E5E7EB] shadow-xs space-y-6">
+    <div className="flex-1 flex items-center justify-center py-16 px-4 sm:px-6 bg-[#FAFAF8] dark:bg-slate-950 transition-colors">
+      <div className="max-w-md w-full bg-white dark:bg-slate-900 p-8 rounded-xl border border-[#E5E7EB] dark:border-slate-800 shadow-xs space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
           <Link to="/" className="inline-flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#172B4D] flex items-center justify-center text-white">
+            <div className="w-8 h-8 rounded-lg bg-[#172B4D] dark:bg-teal-700 flex items-center justify-center text-white">
               <GraduationCap className="w-5 h-5" />
             </div>
-            <span className="text-lg font-bold text-[#20252B]">SkillForge</span>
+            <span className="text-lg font-bold text-[#20252B] dark:text-white">SkillForge</span>
           </Link>
-          <h2 className="text-xl font-bold text-[#20252B] tracking-tight">
+          <h2 className="text-xl font-bold text-[#20252B] dark:text-white tracking-tight">
             {step === 'REQUEST' && 'Reset your password'}
             {step === 'VERIFY' && 'Enter verification code'}
             {step === 'NEW_PASSWORD' && 'Choose a new password'}
           </h2>
-          <p className="text-xs text-[#697386]">
+          <p className="text-xs text-[#697386] dark:text-slate-400">
             {step === 'REQUEST' && 'Enter your verified account email to receive a recovery code.'}
             {step === 'VERIFY' && `We sent a 6-digit code to ${email}`}
             {step === 'NEW_PASSWORD' && 'Create a strong password with at least 8 characters.'}
@@ -196,23 +196,23 @@ export const ForgotPasswordPage: React.FC = () => {
 
         {/* Step indicator */}
         <div className="flex items-center justify-center gap-2 text-xs">
-          <span className={`w-2 h-2 rounded-full ${step === 'REQUEST' ? 'bg-[#172B4D]' : 'bg-[#287C78]'}`} />
-          <span className={`w-6 h-0.5 ${step === 'REQUEST' ? 'bg-slate-200' : 'bg-[#287C78]'}`} />
-          <span className={`w-2 h-2 rounded-full ${step === 'VERIFY' ? 'bg-[#172B4D]' : step === 'NEW_PASSWORD' ? 'bg-[#287C78]' : 'bg-slate-200'}`} />
-          <span className={`w-6 h-0.5 ${step === 'NEW_PASSWORD' ? 'bg-[#287C78]' : 'bg-slate-200'}`} />
-          <span className={`w-2 h-2 rounded-full ${step === 'NEW_PASSWORD' ? 'bg-[#172B4D]' : 'bg-slate-200'}`} />
+          <span className={`w-2 h-2 rounded-full ${step === 'REQUEST' ? 'bg-[#172B4D] dark:bg-teal-400' : 'bg-[#287C78] dark:bg-teal-500'}`} />
+          <span className={`w-6 h-0.5 ${step === 'REQUEST' ? 'bg-slate-200 dark:bg-slate-800' : 'bg-[#287C78] dark:bg-teal-500'}`} />
+          <span className={`w-2 h-2 rounded-full ${step === 'VERIFY' ? 'bg-[#172B4D] dark:bg-teal-400' : step === 'NEW_PASSWORD' ? 'bg-[#287C78] dark:bg-teal-500' : 'bg-slate-200 dark:bg-slate-800'}`} />
+          <span className={`w-6 h-0.5 ${step === 'NEW_PASSWORD' ? 'bg-[#287C78] dark:bg-teal-500' : 'bg-slate-200 dark:bg-slate-800'}`} />
+          <span className={`w-2 h-2 rounded-full ${step === 'NEW_PASSWORD' ? 'bg-[#172B4D] dark:bg-teal-400' : 'bg-slate-200 dark:bg-slate-800'}`} />
         </div>
 
         {successMsg && (
-          <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-800 flex items-start gap-2">
-            <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600 mt-0.5" />
+          <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 rounded-lg text-xs text-emerald-800 dark:text-emerald-300 flex items-start gap-2">
+            <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600 dark:text-emerald-400 mt-0.5" />
             <span>{successMsg}</span>
           </div>
         )}
 
         {error && (
-          <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-xs text-rose-700 flex items-start gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
+          <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-lg text-xs text-rose-700 dark:text-rose-300 flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 dark:text-rose-400 mt-0.5" />
             <span>{error}</span>
           </div>
         )}
@@ -221,16 +221,16 @@ export const ForgotPasswordPage: React.FC = () => {
         {step === 'REQUEST' && (
           <form onSubmit={handleRequestOtp} className="space-y-4 text-xs">
             <div>
-              <label className="block font-semibold text-[#20252B] mb-1.5">Email Address</label>
+              <label className="block font-semibold text-[#20252B] dark:text-slate-200 mb-1.5">Email Address</label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Mail className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@company.com"
-                  className="w-full pl-9 pr-3.5 py-2 text-sm bg-slate-50 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white text-[#20252B]"
+                  className="w-full pl-9 pr-3.5 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-[#E5E7EB] dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 dark:focus:ring-teal-500/20 focus:bg-white dark:focus:bg-slate-900 text-[#20252B] dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
                 />
               </div>
             </div>
@@ -245,9 +245,9 @@ export const ForgotPasswordPage: React.FC = () => {
         {step === 'VERIFY' && (
           <form onSubmit={handleVerifyOtp} className="space-y-4 text-xs">
             <div>
-              <label className="block font-semibold text-[#20252B] mb-1.5">6-Digit Code</label>
+              <label className="block font-semibold text-[#20252B] dark:text-slate-200 mb-1.5">6-Digit Code</label>
               <div className="relative">
-                <KeyRound className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <KeyRound className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   maxLength={6}
@@ -255,13 +255,13 @@ export const ForgotPasswordPage: React.FC = () => {
                   value={otp}
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
                   placeholder="123456"
-                  className="w-full pl-9 pr-3.5 py-2 text-center font-mono text-lg tracking-widest bg-slate-50 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white text-[#20252B]"
+                  className="w-full pl-9 pr-3.5 py-2 text-center font-mono text-lg tracking-widest bg-slate-50 dark:bg-slate-800 border border-[#E5E7EB] dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 dark:focus:ring-teal-500/20 focus:bg-white dark:focus:bg-slate-900 text-[#20252B] dark:text-slate-100"
                   autoFocus
                 />
               </div>
             </div>
 
-            <div className="flex items-center justify-between text-xs text-[#697386]">
+            <div className="flex items-center justify-between text-xs text-[#697386] dark:text-slate-400">
               <button
                 type="button"
                 onClick={() => setStep('REQUEST')}
@@ -273,7 +273,7 @@ export const ForgotPasswordPage: React.FC = () => {
                 type="button"
                 onClick={handleResendOtp}
                 disabled={cooldown > 0 || resending}
-                className="font-medium text-[#172B4D] hover:underline disabled:opacity-50"
+                className="font-medium text-[#172B4D] dark:text-teal-400 hover:underline disabled:opacity-50"
               >
                 {cooldown > 0 ? `Resend in ${cooldown}s` : 'Resend code'}
               </button>
@@ -289,21 +289,22 @@ export const ForgotPasswordPage: React.FC = () => {
         {step === 'NEW_PASSWORD' && (
           <form onSubmit={handleResetPassword} className="space-y-4 text-xs">
             <div>
-              <label className="block font-semibold text-[#20252B] mb-1.5">New Password</label>
+              <label className="block font-semibold text-[#20252B] dark:text-slate-200 mb-1.5">New Password</label>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Lock className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-9 pr-10 py-2 text-sm bg-slate-50 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white text-[#20252B]"
+                  className="w-full pl-9 pr-10 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-[#E5E7EB] dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 dark:focus:ring-teal-500/20 focus:bg-white dark:focus:bg-slate-900 text-[#20252B] dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 focus:outline-none"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -311,21 +312,22 @@ export const ForgotPasswordPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block font-semibold text-[#20252B] mb-1.5">Confirm Password</label>
+              <label className="block font-semibold text-[#20252B] dark:text-slate-200 mb-1.5">Confirm Password</label>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Lock className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type={showConfirmPassword ? 'text' : 'password'}
                   required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-9 pr-10 py-2 text-sm bg-slate-50 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white text-[#20252B]"
+                  className="w-full pl-9 pr-10 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-[#E5E7EB] dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 dark:focus:ring-teal-500/20 focus:bg-white dark:focus:bg-slate-900 text-[#20252B] dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 focus:outline-none"
                 >
                   {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -333,27 +335,27 @@ export const ForgotPasswordPage: React.FC = () => {
             </div>
 
             {/* Checklist */}
-            <div className="p-3 bg-slate-50 rounded-lg border border-[#E5E7EB] space-y-1.5 text-[11px] text-[#697386]">
+            <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-lg border border-[#E5E7EB] dark:border-slate-700 space-y-1.5 text-[11px] text-[#697386] dark:text-slate-400">
               <div className="flex items-center gap-2">
-                <span className={`w-3 h-3 rounded-full flex items-center justify-center ${hasMinLength ? 'text-emerald-600' : 'text-slate-300'}`}>
+                <span className={`w-3 h-3 rounded-full flex items-center justify-center ${hasMinLength ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-300 dark:text-slate-600'}`}>
                   ✓
                 </span>
                 <span>At least 8 characters</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className={`w-3 h-3 rounded-full flex items-center justify-center ${hasUpperCase && hasLowerCase ? 'text-emerald-600' : 'text-slate-300'}`}>
+                <span className={`w-3 h-3 rounded-full flex items-center justify-center ${hasUpperCase && hasLowerCase ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-300 dark:text-slate-600'}`}>
                   ✓
                 </span>
                 <span>Upper and lowercase letters</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className={`w-3 h-3 rounded-full flex items-center justify-center ${hasNumber ? 'text-emerald-600' : 'text-slate-300'}`}>
+                <span className={`w-3 h-3 rounded-full flex items-center justify-center ${hasNumber ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-300 dark:text-slate-600'}`}>
                   ✓
                 </span>
                 <span>At least one number</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className={`w-3 h-3 rounded-full flex items-center justify-center ${passwordsMatch ? 'text-emerald-600' : 'text-slate-300'}`}>
+                <span className={`w-3 h-3 rounded-full flex items-center justify-center ${passwordsMatch ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-300 dark:text-slate-600'}`}>
                   ✓
                 </span>
                 <span>Passwords match</span>
@@ -366,8 +368,8 @@ export const ForgotPasswordPage: React.FC = () => {
           </form>
         )}
 
-        <div className="pt-2 text-center text-xs text-[#697386] border-t border-[#E5E7EB]">
-          <Link to="/login" className="font-medium text-[#172B4D] hover:underline inline-flex items-center gap-1">
+        <div className="pt-2 text-center text-xs text-[#697386] dark:text-slate-500 border-t border-[#E5E7EB] dark:border-slate-800">
+          <Link to="/login" className="font-medium text-[#172B4D] dark:text-teal-400 hover:underline inline-flex items-center gap-1">
             <ArrowLeft className="w-3.5 h-3.5" /> Return to login
           </Link>
         </div>

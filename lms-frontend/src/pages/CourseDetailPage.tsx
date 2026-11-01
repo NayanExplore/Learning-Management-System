@@ -126,22 +126,22 @@ export const CourseDetailPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center py-24 bg-[#FAFAF8]">
-        <div className="w-8 h-8 rounded-full border-2 border-slate-300 border-t-[#172B4D] animate-spin"></div>
-        <p className="mt-3 text-xs text-[#697386]">Loading course curriculum...</p>
+      <div className="flex-1 flex flex-col items-center justify-center py-24 bg-[#FAFAF8] dark:bg-slate-950">
+        <div className="w-8 h-8 rounded-full border-2 border-slate-300 dark:border-slate-700 border-t-[#172B4D] dark:border-t-teal-500 animate-spin"></div>
+        <p className="mt-3 text-xs text-[#697386] dark:text-slate-400">Loading course curriculum...</p>
       </div>
     );
   }
 
   if (error || !course) {
     return (
-      <div className="flex-1 flex items-center justify-center py-20 px-4 bg-[#FAFAF8]">
-        <div className="max-w-md w-full bg-white p-8 rounded-xl border border-[#E5E7EB] text-center shadow-xs space-y-4">
-          <div className="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto">
+      <div className="flex-1 flex items-center justify-center py-20 px-4 bg-[#FAFAF8] dark:bg-slate-950">
+        <div className="max-w-md w-full bg-white dark:bg-slate-900 p-8 rounded-xl border border-[#E5E7EB] dark:border-slate-800 text-center shadow-xs space-y-4">
+          <div className="w-12 h-12 rounded-full bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center mx-auto">
             <AlertCircle className="w-6 h-6" />
           </div>
-          <h2 className="text-lg font-semibold text-[#20252B]">Course Unavailable</h2>
-          <p className="text-xs text-[#697386]">{error || 'Could not find this course.'}</p>
+          <h2 className="text-lg font-semibold text-[#20252B] dark:text-white">Course Unavailable</h2>
+          <p className="text-xs text-[#697386] dark:text-slate-400">{error || 'Could not find this course.'}</p>
           <Link to="/courses">
             <Button variant="primary" size="sm">
               Return to Catalog
@@ -159,56 +159,56 @@ export const CourseDetailPage: React.FC = () => {
       : null;
 
   return (
-    <div className="flex-1 bg-[#FAFAF8]">
+    <div className="flex-1 bg-[#FAFAF8] dark:bg-slate-950 transition-colors">
       {/* 1. Header Area */}
-      <section className="bg-white border-b border-[#E5E7EB] py-10 lg:py-12">
+      <section className="bg-white dark:bg-slate-900 border-b border-[#E5E7EB] dark:border-slate-800 py-10 lg:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl space-y-4">
             <div className="flex flex-wrap items-center gap-2">
-              <Link to="/courses" className="text-xs text-[#697386] hover:text-[#20252B] transition-colors">
+              <Link to="/courses" className="text-xs text-[#697386] dark:text-slate-400 hover:text-[#20252B] dark:hover:text-white transition-colors">
                 Courses
               </Link>
-              <span className="text-slate-300">/</span>
+              <span className="text-slate-300 dark:text-slate-700">/</span>
               <Badge variant="teal" size="sm">
                 {course.level}
               </Badge>
               {course.featured && (
-                <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-[#172B4D] text-white">
+                <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-[#172B4D] dark:bg-teal-700 text-white">
                   Featured Track
                 </span>
               )}
             </div>
 
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#20252B] tracking-tight leading-tight">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#20252B] dark:text-white tracking-tight leading-tight">
               {course.title}
             </h1>
 
             {course.shortDescription && (
-              <p className="text-sm sm:text-base text-[#697386] leading-relaxed">
+              <p className="text-sm sm:text-base text-[#697386] dark:text-slate-300 leading-relaxed">
                 {course.shortDescription}
               </p>
             )}
 
             {/* Metadata strip */}
-            <div className="flex flex-wrap items-center gap-4 text-xs text-[#697386] pt-2">
+            <div className="flex flex-wrap items-center gap-4 text-xs text-[#697386] dark:text-slate-400 pt-2">
               <span className="flex items-center gap-1.5">
-                <Clock className="w-4 h-4 text-slate-400" />
+                <Clock className="w-4 h-4 text-slate-400 dark:text-slate-500" />
                 <span>{formatDuration(course.durationHours)}</span>
               </span>
               <span className="flex items-center gap-1.5">
-                <BookOpen className="w-4 h-4 text-slate-400" />
+                <BookOpen className="w-4 h-4 text-slate-400 dark:text-slate-500" />
                 <span>{totalLessons} lessons</span>
               </span>
               {course.instructorName && (
                 <span className="flex items-center gap-1.5">
-                  <User className="w-4 h-4 text-slate-400" />
-                  <span>Instructor: <strong className="text-[#20252B]">{course.instructorName}</strong></span>
+                  <User className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+                  <span>Instructor: <strong className="text-[#20252B] dark:text-slate-200">{course.instructorName}</strong></span>
                 </span>
               )}
               <button
                 type="button"
                 onClick={handleShare}
-                className="inline-flex items-center gap-1 text-slate-500 hover:text-[#20252B] transition-colors ml-auto sm:ml-0"
+                className="inline-flex items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-[#20252B] dark:hover:text-white transition-colors ml-auto sm:ml-0"
               >
                 <Share2 className="w-3.5 h-3.5" />
                 <span>{copiedLink ? 'Link copied' : 'Share'}</span>
@@ -225,12 +225,12 @@ export const CourseDetailPage: React.FC = () => {
           <div className="lg:col-span-8 space-y-8">
             {/* What you will learn */}
             {course.learningOutcomes && course.learningOutcomes.length > 0 && (
-              <div className="bg-white p-6 sm:p-7 rounded-xl border border-[#E5E7EB] shadow-xs space-y-4">
-                <h2 className="text-base font-semibold text-[#20252B]">What you will learn</h2>
+              <div className="bg-white dark:bg-slate-900 p-6 sm:p-7 rounded-xl border border-[#E5E7EB] dark:border-slate-800 shadow-xs space-y-4">
+                <h2 className="text-base font-semibold text-[#20252B] dark:text-white">What you will learn</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {course.learningOutcomes.map((outcome, idx) => (
-                    <div key={idx} className="flex items-start gap-2.5 text-xs text-[#20252B] leading-relaxed">
-                      <Check className="w-4 h-4 text-[#287C78] shrink-0 mt-0.5" />
+                    <div key={idx} className="flex items-start gap-2.5 text-xs text-[#20252B] dark:text-slate-300 leading-relaxed">
+                      <Check className="w-4 h-4 text-[#287C78] dark:text-teal-400 shrink-0 mt-0.5" />
                       <span>{outcome}</span>
                     </div>
                   ))}
@@ -239,11 +239,11 @@ export const CourseDetailPage: React.FC = () => {
             )}
 
             {/* Curriculum Accordion */}
-            <div className="bg-white rounded-xl border border-[#E5E7EB] shadow-xs overflow-hidden">
-              <div className="p-6 border-b border-[#E5E7EB] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div className="bg-white dark:bg-slate-900 rounded-xl border border-[#E5E7EB] dark:border-slate-800 shadow-xs overflow-hidden">
+              <div className="p-6 border-b border-[#E5E7EB] dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
-                  <h2 className="text-base font-semibold text-[#20252B]">Course Curriculum</h2>
-                  <p className="text-xs text-[#697386] mt-0.5">
+                  <h2 className="text-base font-semibold text-[#20252B] dark:text-white">Course Curriculum</h2>
+                  <p className="text-xs text-[#697386] dark:text-slate-400 mt-0.5">
                     {course.sections?.length || 0} sections &bull; {totalLessons} lessons &bull; {formatDuration(course.durationHours)} total duration
                   </p>
                 </div>
@@ -257,13 +257,13 @@ export const CourseDetailPage: React.FC = () => {
                     });
                     setExpandedSections(updated);
                   }}
-                  className="text-xs text-[#172B4D] font-medium hover:underline self-start sm:self-auto"
+                  className="text-xs text-[#172B4D] dark:text-teal-400 font-medium hover:underline self-start sm:self-auto"
                 >
                   {Object.values(expandedSections).every(Boolean) ? 'Collapse all sections' : 'Expand all sections'}
                 </button>
               </div>
 
-              <div className="divide-y divide-[#E5E7EB]">
+              <div className="divide-y divide-[#E5E7EB] dark:divide-slate-800">
                 {course.sections?.map((section, sIndex) => {
                   const isExpanded = expandedSections[section.id];
                   return (
@@ -271,42 +271,42 @@ export const CourseDetailPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => toggleSection(section.id)}
-                        className="w-full px-6 py-4 flex items-center justify-between bg-slate-50/70 hover:bg-slate-100/60 transition-colors text-left"
+                        className="w-full px-6 py-4 flex items-center justify-between bg-slate-50/70 dark:bg-slate-800/60 hover:bg-slate-100/60 dark:hover:bg-slate-800 transition-colors text-left"
                       >
                         <div className="flex items-center gap-3">
-                          <span className="text-xs font-mono font-semibold text-[#697386]">
+                          <span className="text-xs font-mono font-semibold text-[#697386] dark:text-slate-400">
                             {String(sIndex + 1).padStart(2, '0')}
                           </span>
-                          <span className="text-sm font-semibold text-[#20252B]">
+                          <span className="text-sm font-semibold text-[#20252B] dark:text-slate-200">
                             {section.title}
                           </span>
                         </div>
                         <div className="flex items-center gap-3">
-                          <span className="text-xs text-[#697386]">
+                          <span className="text-xs text-[#697386] dark:text-slate-400">
                             {section.lessons?.length || 0} lessons
                           </span>
                           <ChevronDown
                             className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
-                              isExpanded ? 'rotate-180 text-[#20252B]' : ''
+                              isExpanded ? 'rotate-180 text-[#20252B] dark:text-white' : ''
                             }`}
                           />
                         </div>
                       </button>
 
                       {isExpanded && (
-                        <div className="divide-y divide-slate-100 bg-white">
+                        <div className="divide-y divide-slate-100 dark:divide-slate-800/60 bg-white dark:bg-slate-900">
                           {section.lessons?.map((lesson, lIndex) => (
                             <div
                               key={lesson.id}
-                              className="px-6 py-3.5 flex items-center justify-between text-xs hover:bg-slate-50/50 transition-colors"
+                              className="px-6 py-3.5 flex items-center justify-between text-xs hover:bg-slate-50/50 dark:hover:bg-slate-850 transition-colors"
                             >
                               <div className="flex items-center gap-3 min-w-0 pr-3">
                                 {lesson.contentType === 'VIDEO' ? (
-                                  <PlayCircle className="w-4 h-4 text-slate-400 shrink-0" />
+                                  <PlayCircle className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0" />
                                 ) : (
-                                  <FileText className="w-4 h-4 text-slate-400 shrink-0" />
+                                  <FileText className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0" />
                                 )}
-                                <span className="font-medium text-[#20252B] truncate">
+                                <span className="font-medium text-[#20252B] dark:text-slate-300 truncate">
                                   {lIndex + 1}. {lesson.title}
                                 </span>
                               </div>
@@ -316,13 +316,13 @@ export const CourseDetailPage: React.FC = () => {
                                   <button
                                     type="button"
                                     onClick={() => setPreviewLesson(lesson)}
-                                    className="text-[11px] font-semibold text-[#287C78] hover:underline px-2 py-0.5 rounded bg-emerald-50 border border-emerald-200/70"
+                                    className="text-[11px] font-semibold text-[#287C78] dark:text-teal-400 hover:underline px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200/70 dark:border-emerald-800"
                                   >
                                     Preview
                                   </button>
                                 )}
                                 {lesson.videoDurationSeconds ? (
-                                  <span className="text-[#697386] font-mono">
+                                  <span className="text-[#697386] dark:text-slate-500 font-mono">
                                     {formatLessonDuration(lesson.videoDurationSeconds)}
                                   </span>
                                 ) : null}
@@ -338,21 +338,21 @@ export const CourseDetailPage: React.FC = () => {
             </div>
 
             {/* Course Description */}
-            <div className="bg-white p-6 sm:p-7 rounded-xl border border-[#E5E7EB] shadow-xs space-y-3">
-              <h2 className="text-base font-semibold text-[#20252B]">About this curriculum</h2>
-              <div className="text-sm text-[#20252B] leading-relaxed whitespace-pre-line">
+            <div className="bg-white dark:bg-slate-900 p-6 sm:p-7 rounded-xl border border-[#E5E7EB] dark:border-slate-800 shadow-xs space-y-3">
+              <h2 className="text-base font-semibold text-[#20252B] dark:text-white">About this curriculum</h2>
+              <div className="text-sm text-[#20252B] dark:text-slate-300 leading-relaxed whitespace-pre-line">
                 {course.description || course.shortDescription || 'Full curriculum details and syllabus.'}
               </div>
             </div>
 
             {/* Prerequisites */}
             {course.prerequisites && course.prerequisites.length > 0 && (
-              <div className="bg-white p-6 sm:p-7 rounded-xl border border-[#E5E7EB] shadow-xs space-y-3">
-                <h2 className="text-base font-semibold text-[#20252B]">Prerequisites & Requirements</h2>
+              <div className="bg-white dark:bg-slate-900 p-6 sm:p-7 rounded-xl border border-[#E5E7EB] dark:border-slate-800 shadow-xs space-y-3">
+                <h2 className="text-base font-semibold text-[#20252B] dark:text-white">Prerequisites & Requirements</h2>
                 <ul className="space-y-2">
                   {course.prerequisites.map((req, idx) => (
-                    <li key={idx} className="flex items-start gap-2.5 text-xs text-[#20252B]">
-                      <span className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 shrink-0" />
+                    <li key={idx} className="flex items-start gap-2.5 text-xs text-[#20252B] dark:text-slate-300">
+                      <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-600 mt-1.5 shrink-0" />
                       <span>{req}</span>
                     </li>
                   ))}
@@ -363,9 +363,9 @@ export const CourseDetailPage: React.FC = () => {
 
           {/* Right Column: Sticky Enrollment Box */}
           <div className="lg:col-span-4">
-            <div className="bg-white rounded-xl border border-[#E5E7EB] shadow-xs p-6 sticky top-24 space-y-5">
+            <div className="bg-white dark:bg-slate-900 rounded-xl border border-[#E5E7EB] dark:border-slate-800 shadow-xs p-6 sticky top-24 space-y-5">
               {/* Thumbnail */}
-              <div className="aspect-video w-full rounded-lg overflow-hidden bg-slate-100 border border-[#E5E7EB]">
+              <div className="aspect-video w-full rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800 border border-[#E5E7EB] dark:border-slate-800">
                 {course.thumbnailUrl ? (
                   <img
                     src={course.thumbnailUrl}
@@ -382,16 +382,16 @@ export const CourseDetailPage: React.FC = () => {
               {/* Price */}
               <div>
                 <div className="flex items-baseline gap-2.5">
-                  <span className="text-2xl font-bold text-[#20252B]">
+                  <span className="text-2xl font-bold text-[#20252B] dark:text-white">
                     {formatCurrency(course.price, course.currency)}
                   </span>
                   {course.originalPrice && course.originalPrice > course.price && (
                     <>
-                      <span className="text-sm text-[#697386] line-through">
+                      <span className="text-sm text-[#697386] dark:text-slate-500 line-through">
                         {formatCurrency(course.originalPrice, course.currency)}
                       </span>
                       {discountPct && (
-                        <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                        <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
                           {discountPct}% off
                         </span>
                       )}
@@ -401,7 +401,7 @@ export const CourseDetailPage: React.FC = () => {
               </div>
 
               {checkoutError && (
-                <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-xs text-rose-700">
+                <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-lg text-xs text-rose-700 dark:text-rose-300">
                   {checkoutError}
                 </div>
               )}
@@ -409,8 +409,8 @@ export const CourseDetailPage: React.FC = () => {
               {/* Action */}
               {course.isEnrolled ? (
                 <div className="space-y-2">
-                  <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-xs font-medium flex items-center gap-2">
-                    <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 text-emerald-800 dark:text-emerald-300 rounded-lg text-xs font-medium flex items-center gap-2">
+                    <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                     <span>You are enrolled in this track</span>
                   </div>
                   <Link to={`/learn/${course.id}`} className="block w-full">
@@ -432,22 +432,22 @@ export const CourseDetailPage: React.FC = () => {
               )}
 
               {/* Inclusions */}
-              <div className="pt-4 border-t border-[#E5E7EB] space-y-2.5 text-xs text-[#697386]">
-                <p className="font-semibold text-[#20252B]">This course includes:</p>
+              <div className="pt-4 border-t border-[#E5E7EB] dark:border-slate-800 space-y-2.5 text-xs text-[#697386] dark:text-slate-400">
+                <p className="font-semibold text-[#20252B] dark:text-slate-200">This course includes:</p>
                 <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-slate-400 shrink-0" />
+                  <Clock className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0" />
                   <span>{formatDuration(course.durationHours)} of structured lectures</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <BookOpen className="w-4 h-4 text-slate-400 shrink-0" />
+                  <BookOpen className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0" />
                   <span>{totalLessons} full curriculum modules & resources</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Award className="w-4 h-4 text-slate-400 shrink-0" />
+                  <Award className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0" />
                   <span>Verifiable Certificate upon completion</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-slate-400 shrink-0" />
+                  <ShieldCheck className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0" />
                   <span>Secure checkout via Razorpay</span>
                 </div>
               </div>
@@ -459,16 +459,16 @@ export const CourseDetailPage: React.FC = () => {
       {/* Lesson Preview Modal */}
       {previewLesson && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-xl max-w-2xl w-full overflow-hidden shadow-xl border border-[#E5E7EB]">
-            <div className="p-4 border-b border-[#E5E7EB] flex items-center justify-between">
+          <div className="bg-white dark:bg-slate-900 rounded-xl max-w-2xl w-full overflow-hidden shadow-xl border border-[#E5E7EB] dark:border-slate-800">
+            <div className="p-4 border-b border-[#E5E7EB] dark:border-slate-800 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <PlayCircle className="w-4 h-4 text-[#287C78]" />
-                <h3 className="font-semibold text-sm text-[#20252B] truncate">{previewLesson.title}</h3>
+                <PlayCircle className="w-4 h-4 text-[#287C78] dark:text-teal-400" />
+                <h3 className="font-semibold text-sm text-[#20252B] dark:text-white truncate">{previewLesson.title}</h3>
               </div>
               <button
                 type="button"
                 onClick={() => setPreviewLesson(null)}
-                className="p-1 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                className="p-1 rounded-md text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -492,7 +492,7 @@ export const CourseDetailPage: React.FC = () => {
                 )}
               </div>
               {previewLesson.description && (
-                <p className="text-xs text-[#697386] leading-relaxed">{previewLesson.description}</p>
+                <p className="text-xs text-[#697386] dark:text-slate-400 leading-relaxed">{previewLesson.description}</p>
               )}
             </div>
           </div>

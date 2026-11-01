@@ -16,7 +16,7 @@ export const AboutPage: React.FC = () => {
             Bridging the gap between software theory and industry engineering standards.
           </h1>
           <p className="text-sm sm:text-base text-[#697386] leading-relaxed max-w-3xl">
-            SkillForge Academy was created to give aspiring and working software engineers structured access to real production patterns. Our curricula focus on architecture, clean code, database persistence, and cloud-native deployments.
+            SkillForge Academy was created to give aspiring and working software engineers structured access to real production patterns. Our curriculam focus on architecture, clean code, database persistence, and cloud-native deployments.
           </p>
         </div>
 
@@ -65,7 +65,7 @@ export const AboutPage: React.FC = () => {
           <div className="pt-2">
             <Link to="/courses">
               <Button variant="primary" size="md" iconRight={<ArrowRight className="w-4 h-4" />}>
-                Explore Curricula
+                Explore Curriculam
               </Button>
             </Link>
           </div>

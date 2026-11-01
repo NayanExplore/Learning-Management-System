@@ -45,100 +45,101 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center py-16 px-4 sm:px-6 bg-[#FAFAF8]">
-      <div className="max-w-md w-full bg-white p-8 rounded-xl border border-[#E5E7EB] shadow-xs space-y-6">
+    <div className="flex-1 flex items-center justify-center py-16 px-4 sm:px-6 bg-[#FAFAF8] dark:bg-slate-950 transition-colors">
+      <div className="max-w-md w-full bg-white dark:bg-slate-900 p-8 rounded-xl border border-[#E5E7EB] dark:border-slate-800 shadow-xs space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
           <Link to="/" className="inline-flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#172B4D] flex items-center justify-center text-white">
+            <div className="w-8 h-8 rounded-lg bg-[#172B4D] dark:bg-teal-700 flex items-center justify-center text-white">
               <GraduationCap className="w-5 h-5" />
             </div>
-            <span className="text-lg font-bold text-[#20252B]">SkillForge</span>
+            <span className="text-lg font-bold text-[#20252B] dark:text-white">SkillForge</span>
           </Link>
-          <h2 className="text-xl font-bold text-[#20252B] tracking-tight">Create your account</h2>
-          <p className="text-xs text-[#697386]">
+          <h2 className="text-xl font-bold text-[#20252B] dark:text-white tracking-tight">Create your account</h2>
+          <p className="text-xs text-[#697386] dark:text-slate-400">
             Already have an account?{' '}
-            <Link to="/login" className="font-semibold text-[#172B4D] hover:underline">
+            <Link to="/login" className="font-semibold text-[#172B4D] dark:text-teal-400 hover:underline">
               Sign in
             </Link>
           </p>
         </div>
 
         {serverError && (
-          <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-xs text-rose-700 flex items-start gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
+          <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-lg text-xs text-rose-700 dark:text-rose-300 flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 dark:text-rose-400 mt-0.5" />
             <span>{serverError}</span>
           </div>
         )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-xs">
           <div>
-            <label className="block font-semibold text-[#20252B] mb-1.5">Full Name</label>
+            <label className="block font-semibold text-[#20252B] dark:text-slate-200 mb-1.5">Full Name</label>
             <div className="relative">
-              <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <User className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 {...register('fullName')}
                 placeholder="Jane Doe"
-                className="w-full pl-9 pr-3.5 py-2 text-sm bg-slate-50 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white text-[#20252B]"
+                className="w-full pl-9 pr-3.5 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-[#E5E7EB] dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 dark:focus:ring-teal-500/20 focus:bg-white dark:focus:bg-slate-900 text-[#20252B] dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
               />
             </div>
-            {errors.fullName && <p className="text-xs text-rose-600 mt-1 font-medium">{errors.fullName.message}</p>}
+            {errors.fullName && <p className="text-xs text-rose-600 dark:text-rose-400 mt-1 font-medium">{errors.fullName.message}</p>}
           </div>
 
           <div>
-            <label className="block font-semibold text-[#20252B] mb-1.5">Email Address</label>
+            <label className="block font-semibold text-[#20252B] dark:text-slate-200 mb-1.5">Email Address</label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Mail className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="email"
                 {...register('email')}
                 placeholder="you@company.com"
-                className="w-full pl-9 pr-3.5 py-2 text-sm bg-slate-50 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white text-[#20252B]"
+                className="w-full pl-9 pr-3.5 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-[#E5E7EB] dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 dark:focus:ring-teal-500/20 focus:bg-white dark:focus:bg-slate-900 text-[#20252B] dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
               />
             </div>
-            {errors.email && <p className="text-xs text-rose-600 mt-1 font-medium">{errors.email.message}</p>}
+            {errors.email && <p className="text-xs text-rose-600 dark:text-rose-400 mt-1 font-medium">{errors.email.message}</p>}
           </div>
 
           <div>
-            <label className="block font-semibold text-[#20252B] mb-1.5">Phone Number (Optional)</label>
+            <label className="block font-semibold text-[#20252B] dark:text-slate-200 mb-1.5">Phone Number (Optional)</label>
             <div className="relative">
-              <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Phone className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="tel"
                 {...register('phone')}
                 placeholder="+91 98765 43210"
-                className="w-full pl-9 pr-3.5 py-2 text-sm bg-slate-50 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white text-[#20252B]"
+                className="w-full pl-9 pr-3.5 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-[#E5E7EB] dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 dark:focus:ring-teal-500/20 focus:bg-white dark:focus:bg-slate-900 text-[#20252B] dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
               />
             </div>
-            {errors.phone && <p className="text-xs text-rose-600 mt-1 font-medium">{errors.phone.message}</p>}
+            {errors.phone && <p className="text-xs text-rose-600 dark:text-rose-400 mt-1 font-medium">{errors.phone.message}</p>}
           </div>
 
           <div>
-            <label className="block font-semibold text-[#20252B] mb-1.5">Password (Minimum 8 characters)</label>
+            <label className="block font-semibold text-[#20252B] dark:text-slate-200 mb-1.5">Password (Minimum 8 characters)</label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Lock className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type={showPassword ? 'text' : 'password'}
                 {...register('password')}
                 placeholder="••••••••"
-                className="w-full pl-9 pr-10 py-2 text-sm bg-slate-50 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white text-[#20252B]"
+                className="w-full pl-9 pr-10 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-[#E5E7EB] dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 dark:focus:ring-teal-500/20 focus:bg-white dark:focus:bg-slate-900 text-[#20252B] dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 focus:outline-none"
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
-            {errors.password && <p className="text-xs text-rose-600 mt-1 font-medium">{errors.password.message}</p>}
+            {errors.password && <p className="text-xs text-rose-600 dark:text-rose-400 mt-1 font-medium">{errors.password.message}</p>}
           </div>
 
-          <p className="text-[11px] text-[#697386] leading-relaxed pt-1">
+          <p className="text-[11px] text-[#697386] dark:text-slate-400 leading-relaxed pt-1">
             By creating an account, you agree to SkillForge's{' '}
-            <Link to="/terms" className="text-[#172B4D] font-medium hover:underline">Terms</Link> and{' '}
-            <Link to="/privacy" className="text-[#172B4D] font-medium hover:underline">Privacy Policy</Link>.
+            <Link to="/terms" className="text-[#172B4D] dark:text-teal-400 font-medium hover:underline">Terms</Link> and{' '}
+            <Link to="/privacy" className="text-[#172B4D] dark:text-teal-400 font-medium hover:underline">Privacy Policy</Link>.
           </p>
 
           <Button type="submit" variant="primary" size="md" className="w-full mt-2" loading={loading}>
@@ -146,7 +147,7 @@ export const RegisterPage: React.FC = () => {
           </Button>
         </form>
 
-        <div className="pt-2 text-center text-[11px] text-[#697386] border-t border-[#E5E7EB]">
+        <div className="pt-2 text-center text-[11px] text-[#697386] dark:text-slate-500 border-t border-[#E5E7EB] dark:border-slate-800">
           Protected with 256-bit SSL encryption
         </div>
       </div>

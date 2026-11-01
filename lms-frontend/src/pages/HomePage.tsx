@@ -48,7 +48,7 @@ export const HomePage: React.FC = () => {
   }, []);
 
   const categories = [
-    { id: 'ALL', label: 'All Curricula' },
+    { id: 'ALL', label: 'All Curriculam' },
     { id: 'WEB', label: 'Web Engineering' },
     { id: 'BACKEND', label: 'Backend & Systems' },
     { id: 'CLOUD', label: 'Cloud & DevOps' },
@@ -98,7 +98,7 @@ export const HomePage: React.FC = () => {
             <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-xs font-medium text-[#20252B] border border-slate-200">
                 <span className="w-2 h-2 rounded-full bg-[#287C78]"></span>
-                <span>Practical engineering curricula</span>
+                <span>Practical engineering curriculam</span>
               </div>
 
               <h1 className="text-3xl sm:text-5xl lg:text-5xl font-bold tracking-tight text-[#20252B] leading-tight">
@@ -201,7 +201,7 @@ export const HomePage: React.FC = () => {
                 Explore Programs
               </p>
               <h2 className="text-2xl sm:text-3xl font-bold text-[#20252B]">
-                Featured Curricula
+                Featured Curriculam
               </h2>
               <p className="text-sm text-[#697386] mt-1 max-w-xl">
                 Select from our latest active courses curated for real-world development environments.
@@ -214,11 +214,10 @@ export const HomePage: React.FC = () => {
                 <button
                   key={c.id}
                   onClick={() => setActiveCategory(c.id)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
-                    activeCategory === c.id
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${activeCategory === c.id
                       ? 'bg-[#172B4D] text-white'
                       : 'bg-white border border-[#E5E7EB] text-[#20252B] hover:bg-slate-50'
-                  }`}
+                    }`}
                 >
                   {c.label}
                 </button>
@@ -378,9 +377,8 @@ export const HomePage: React.FC = () => {
                   >
                     <span>{faq.q}</span>
                     <ChevronDown
-                      className={`w-4 h-4 text-slate-400 shrink-0 ml-4 transition-transform duration-200 ${
-                        isOpen ? 'rotate-180 text-[#172B4D]' : ''
-                      }`}
+                      className={`w-4 h-4 text-slate-400 shrink-0 ml-4 transition-transform duration-200 ${isOpen ? 'rotate-180 text-[#172B4D]' : ''
+                        }`}
                     />
                   </button>
                   {isOpen && (

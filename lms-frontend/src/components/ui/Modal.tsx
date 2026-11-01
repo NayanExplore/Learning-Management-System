@@ -58,20 +58,20 @@ export const Modal: React.FC<ModalProps> = ({
         <div
           role="dialog"
           aria-modal="true"
-          className={`relative transform overflow-hidden rounded-xl bg-white text-left shadow-xl transition-all w-full my-8 border border-[#E5E7EB] ${maxWidthClass}`}
+          className={`relative transform overflow-hidden rounded-xl bg-white dark:bg-slate-900 text-left shadow-xl transition-all w-full my-8 border border-[#E5E7EB] dark:border-slate-800 ${maxWidthClass}`}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
           {(title || description) && (
-            <div className="px-6 pt-5 pb-4 border-b border-[#E5E7EB] flex items-start justify-between">
+            <div className="px-6 pt-5 pb-4 border-b border-[#E5E7EB] dark:border-slate-800 flex items-start justify-between">
               <div>
-                {title && <h3 className="text-base font-semibold text-[#20252B]">{title}</h3>}
-                {description && <p className="mt-1 text-xs text-[#697386]">{description}</p>}
+                {title && <h3 className="text-base font-semibold text-[#20252B] dark:text-white">{title}</h3>}
+                {description && <p className="mt-1 text-xs text-[#697386] dark:text-slate-400">{description}</p>}
               </div>
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-md p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors focus:outline-none"
+                className="rounded-md p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none"
                 aria-label="Close modal"
               >
                 <X className="w-5 h-5" />

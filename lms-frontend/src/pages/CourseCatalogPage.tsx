@@ -61,38 +61,38 @@ export const CourseCatalogPage: React.FC = () => {
   ];
 
   return (
-    <div className="flex-1 bg-[#FAFAF8] py-10 lg:py-14">
+    <div className="flex-1 bg-[#FAFAF8] dark:bg-slate-950 py-10 lg:py-14 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {/* Header */}
         <div className="space-y-2">
-          <p className="text-xs font-semibold uppercase tracking-wider text-[#287C78]">
+          <p className="text-xs font-semibold uppercase tracking-wider text-[#287C78] dark:text-teal-400">
             Curriculum Catalog
           </p>
-          <h1 className="text-2xl sm:text-4xl font-bold text-[#20252B] tracking-tight">
+          <h1 className="text-2xl sm:text-4xl font-bold text-[#20252B] dark:text-white tracking-tight">
             Explore All Courses
           </h1>
-          <p className="text-sm text-[#697386] max-w-2xl">
+          <p className="text-sm text-[#697386] dark:text-slate-400 max-w-2xl">
             Choose from comprehensive development bootcamps and specialized technical tracks. Every course includes lifetime access and verifiable certification.
           </p>
         </div>
 
         {/* Filter and Search Bar */}
-        <div className="bg-white p-4 rounded-xl border border-[#E5E7EB] shadow-xs flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
+        <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-[#E5E7EB] dark:border-slate-800 shadow-xs flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
           {/* Search Box */}
           <div className="relative flex-1 max-w-md">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search by title, technology, or topic..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-9 py-2 text-sm bg-slate-50 border border-[#E5E7EB] rounded-lg text-[#20252B] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:border-[#172B4D] focus:bg-white transition-colors"
+              className="w-full pl-9 pr-9 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-[#E5E7EB] dark:border-slate-700 rounded-lg text-[#20252B] dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 dark:focus:ring-teal-500/20 focus:border-[#172B4D] dark:focus:border-teal-500 focus:bg-white dark:focus:bg-slate-800 transition-colors"
             />
             {searchTerm && (
               <button
                 type="button"
                 onClick={() => setSearchTerm('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-0.5"
                 aria-label="Clear search"
               >
                 <X className="w-4 h-4" />
@@ -110,8 +110,8 @@ export const CourseCatalogPage: React.FC = () => {
                   onClick={() => setSelectedLevel(lvl.id)}
                   className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors whitespace-nowrap ${
                     selectedLevel === lvl.id
-                      ? 'bg-[#172B4D] text-white'
-                      : 'bg-slate-100 hover:bg-slate-200 text-[#20252B]'
+                      ? 'bg-[#172B4D] dark:bg-teal-600 text-white'
+                      : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-[#20252B] dark:text-slate-300'
                   }`}
                 >
                   {lvl.label}
@@ -124,7 +124,7 @@ export const CourseCatalogPage: React.FC = () => {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="text-xs font-medium bg-white border border-[#E5E7EB] text-[#20252B] rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 pr-8 cursor-pointer"
+                className="text-xs font-medium bg-white dark:bg-slate-800 border border-[#E5E7EB] dark:border-slate-700 text-[#20252B] dark:text-slate-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 dark:focus:ring-teal-500/20 pr-8 cursor-pointer"
               >
                 <option value="default">Default Order</option>
                 <option value="price-low">Price: Low to High</option>
@@ -137,9 +137,9 @@ export const CourseCatalogPage: React.FC = () => {
 
         {/* Results Metadata */}
         {!loading && (
-          <div className="flex items-center justify-between text-xs text-[#697386]">
+          <div className="flex items-center justify-between text-xs text-[#697386] dark:text-slate-400">
             <span>
-              Showing <strong className="text-[#20252B] font-semibold">{sortedCourses.length}</strong>{' '}
+              Showing <strong className="text-[#20252B] dark:text-white font-semibold">{sortedCourses.length}</strong>{' '}
               {sortedCourses.length === 1 ? 'course' : 'courses'}
               {selectedLevel && <span> in <strong>{selectedLevel}</strong></span>}
               {searchTerm && <span> matching "<strong>{searchTerm}</strong>"</span>}
@@ -151,7 +151,7 @@ export const CourseCatalogPage: React.FC = () => {
                   setSelectedLevel('');
                   setSearchTerm('');
                 }}
-                className="text-[#172B4D] font-medium hover:underline"
+                className="text-[#172B4D] dark:text-teal-400 font-medium hover:underline"
               >
                 Clear all filters
               </button>

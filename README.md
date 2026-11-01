@@ -1,6 +1,6 @@
 # SkillForge LMS & Marketing Platform
 
-A production-ready, full-stack Learning Management System (LMS) and marketing website engineered for modern training organizations. SkillForge enables visitors to explore curricula, register, verify identities via SMS/Email OTP, purchase courses securely via Razorpay, stream structured video lectures, complete server-evaluated assessments, and automatically receive verifiable, cryptographically authenticated PDF certificates.
+A production-ready, full-stack Learning Management System (LMS) and marketing website engineered for modern training organizations. SkillForge enables visitors to explore curriculam, register, verify identities via SMS/Email OTP, purchase courses securely via Razorpay, stream structured video lectures, complete server-evaluated assessments, and automatically receive verifiable, cryptographically authenticated PDF certificates.
 
 ---
 

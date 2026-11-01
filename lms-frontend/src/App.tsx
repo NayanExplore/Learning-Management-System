@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -35,11 +36,12 @@ import { AdminLogsPage } from './pages/admin/AdminLogsPage';
 
 export const App: React.FC = () => {
   return (
-    <AuthProvider>
-      <Router>
-        <div className="min-h-screen flex flex-col bg-[#FAFAF8] text-[#20252B]">
-          <Navbar />
-          <main className="flex-1 flex flex-col">
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <div className="min-h-screen flex flex-col bg-[#FAFAF8] dark:bg-slate-950 text-[#20252B] dark:text-slate-100 transition-colors duration-150">
+            <Navbar />
+            <main className="flex-1 flex flex-col">
             <Routes>
               {/* Public Routes */}
               <Route path="/" element={<HomePage />} />
@@ -145,7 +147,8 @@ export const App: React.FC = () => {
         </div>
       </Router>
     </AuthProvider>
-  );
+  </ThemeProvider>
+);
 };
 
 export default App;
