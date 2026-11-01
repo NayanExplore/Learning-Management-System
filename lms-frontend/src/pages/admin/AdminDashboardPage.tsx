@@ -49,29 +49,29 @@ export const AdminDashboardPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex-1 bg-[#FAFAF8] pb-16">
+    <div className="flex-1 bg-slate-950 text-slate-100 pb-16">
       <AdminNav />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {/* Top Header & Fast Actions */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-[#20252B] tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
               Administration Console
             </h1>
-            <p className="text-xs sm:text-sm text-[#697386] mt-1">
+            <p className="text-xs sm:text-sm text-slate-400 mt-1">
               Oversee course catalog and fees, monitor student progress, and inspect platform transactions.
             </p>
           </div>
 
           <div className="flex items-center gap-2.5">
             <Link to="/admin/enrollments">
-              <Button variant="outline" size="sm" icon={<UserPlus className="w-4 h-4 text-[#287C78]" />}>
+              <Button variant="outline" size="sm" icon={<UserPlus className="w-4 h-4 text-teal-400" />} className="border-slate-700 text-slate-200">
                 Enroll Student
               </Button>
             </Link>
             <Link to="/admin/courses">
-              <Button variant="primary" size="sm" icon={<Plus className="w-4 h-4" />}>
+              <Button variant="teal" size="sm" icon={<Plus className="w-4 h-4" />}>
                 Create Course
               </Button>
             </Link>
@@ -80,59 +80,59 @@ export const AdminDashboardPage: React.FC = () => {
 
         {/* Real Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white p-5 rounded-xl border border-[#E5E7EB] shadow-xs space-y-2">
-            <div className="flex items-center justify-between text-xs text-[#697386]">
+          <div className="bg-slate-900 p-5 rounded-xl border border-slate-800 shadow-xs space-y-2">
+            <div className="flex items-center justify-between text-xs text-slate-400">
               <span className="font-semibold uppercase tracking-wider text-[11px]">Verified Revenue</span>
-              <CreditCard className="w-4 h-4 text-[#287C78]" />
+              <CreditCard className="w-4 h-4 text-teal-400" />
             </div>
-            <p className="text-2xl font-bold text-[#20252B]">
+            <p className="text-2xl font-bold text-white">
               {formatCurrency(stats?.totalRevenue || 0, 'INR')}
             </p>
-            <p className="text-[11px] text-[#697386]">From completed orders</p>
+            <p className="text-[11px] text-slate-400">From completed orders</p>
           </div>
 
-          <div className="bg-white p-5 rounded-xl border border-[#E5E7EB] shadow-xs space-y-2">
-            <div className="flex items-center justify-between text-xs text-[#697386]">
+          <div className="bg-slate-900 p-5 rounded-xl border border-slate-800 shadow-xs space-y-2">
+            <div className="flex items-center justify-between text-xs text-slate-400">
               <span className="font-semibold uppercase tracking-wider text-[11px]">Total Students</span>
-              <Users className="w-4 h-4 text-[#172B4D]" />
+              <Users className="w-4 h-4 text-teal-400" />
             </div>
-            <p className="text-2xl font-bold text-[#20252B]">
+            <p className="text-2xl font-bold text-white">
               {stats?.totalStudents || 0}
             </p>
-            <p className="text-[11px] text-[#697386]">Registered learner accounts</p>
+            <p className="text-[11px] text-slate-400">Registered learner accounts</p>
           </div>
 
-          <div className="bg-white p-5 rounded-xl border border-[#E5E7EB] shadow-xs space-y-2">
-            <div className="flex items-center justify-between text-xs text-[#697386]">
+          <div className="bg-slate-900 p-5 rounded-xl border border-slate-800 shadow-xs space-y-2">
+            <div className="flex items-center justify-between text-xs text-slate-400">
               <span className="font-semibold uppercase tracking-wider text-[11px]">Active Enrollments</span>
-              <GraduationCap className="w-4 h-4 text-[#287C78]" />
+              <GraduationCap className="w-4 h-4 text-teal-400" />
             </div>
-            <p className="text-2xl font-bold text-[#20252B]">
+            <p className="text-2xl font-bold text-white">
               {stats?.totalEnrollments || 0}
             </p>
-            <p className="text-[11px] text-[#697386]">Course enrollment seats</p>
+            <p className="text-[11px] text-slate-400">Course enrollment seats</p>
           </div>
 
-          <div className="bg-white p-5 rounded-xl border border-[#E5E7EB] shadow-xs space-y-2">
-            <div className="flex items-center justify-between text-xs text-[#697386]">
+          <div className="bg-slate-900 p-5 rounded-xl border border-slate-800 shadow-xs space-y-2">
+            <div className="flex items-center justify-between text-xs text-slate-400">
               <span className="font-semibold uppercase tracking-wider text-[11px]">Published Courses</span>
-              <BookOpen className="w-4 h-4 text-[#172B4D]" />
+              <BookOpen className="w-4 h-4 text-teal-400" />
             </div>
-            <p className="text-2xl font-bold text-[#20252B]">
+            <p className="text-2xl font-bold text-white">
               {stats?.publishedCourses || 0}
             </p>
-            <p className="text-[11px] text-[#697386]">Active catalog programs</p>
+            <p className="text-[11px] text-slate-400">Active catalog programs</p>
           </div>
         </div>
 
         {/* Recent Enrollments Table */}
-        <div className="bg-white rounded-xl border border-[#E5E7EB] shadow-xs overflow-hidden">
-          <div className="p-5 border-b border-[#E5E7EB] flex items-center justify-between">
+        <div className="bg-slate-900 rounded-xl border border-slate-800 shadow-xs overflow-hidden">
+          <div className="p-5 border-b border-slate-800 flex items-center justify-between">
             <div>
-              <h2 className="text-sm font-semibold text-[#20252B]">Recent Student Enrollments</h2>
-              <p className="text-xs text-[#697386] mt-0.5">Real-time enrollments and current completion progress.</p>
+              <h2 className="text-sm font-semibold text-white">Recent Student Enrollments</h2>
+              <p className="text-xs text-slate-400 mt-0.5">Real-time enrollments and current completion progress.</p>
             </div>
-            <Link to="/admin/enrollments" className="text-xs font-medium text-[#172B4D] hover:underline flex items-center gap-1">
+            <Link to="/admin/enrollments" className="text-xs font-medium text-teal-400 hover:underline flex items-center gap-1">
               <span>View all enrollments</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
@@ -140,7 +140,7 @@ export const AdminDashboardPage: React.FC = () => {
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 border-b border-[#E5E7EB] text-[#697386]">
+              <thead className="bg-slate-850 border-b border-slate-800 text-slate-400">
                 <tr>
                   <th className="px-5 py-3 font-semibold">Student</th>
                   <th className="px-5 py-3 font-semibold">Course</th>
@@ -149,26 +149,26 @@ export const AdminDashboardPage: React.FC = () => {
                   <th className="px-5 py-3 font-semibold">Date</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E5E7EB]">
+              <tbody className="divide-y divide-slate-800">
                 {recentEnrollments.length > 0 ? (
                   recentEnrollments.map((item) => (
-                    <tr key={item.id} className="hover:bg-slate-50/50">
+                    <tr key={item.id} className="hover:bg-slate-800/40">
                       <td className="px-5 py-3.5">
-                        <div className="font-semibold text-[#20252B]">{item.student?.fullName}</div>
-                        <div className="text-[11px] text-[#697386]">{item.student?.email}</div>
+                        <div className="font-semibold text-white">{item.student?.fullName}</div>
+                        <div className="text-[11px] text-slate-400">{item.student?.email}</div>
                       </td>
-                      <td className="px-5 py-3.5 font-medium text-[#20252B] max-w-xs truncate">
+                      <td className="px-5 py-3.5 font-medium text-slate-200 max-w-xs truncate">
                         {item.course?.title}
                       </td>
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-2">
-                          <div className="w-20 bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                          <div className="w-20 bg-slate-800 h-1.5 rounded-full overflow-hidden">
                             <div
-                              className="bg-[#287C78] h-full rounded-full"
+                              className="bg-teal-500 h-full rounded-full"
                               style={{ width: `${item.progressPct || 0}%` }}
                             />
                           </div>
-                          <span className="font-mono text-[11px] text-[#697386]">{item.progressPct || 0}%</span>
+                          <span className="font-mono text-[11px] text-slate-400">{item.progressPct || 0}%</span>
                         </div>
                       </td>
                       <td className="px-5 py-3.5">
@@ -179,14 +179,14 @@ export const AdminDashboardPage: React.FC = () => {
                           {item.status}
                         </Badge>
                       </td>
-                      <td className="px-5 py-3.5 text-[#697386] text-[11px]">
+                      <td className="px-5 py-3.5 text-slate-400 text-[11px]">
                         {item.enrolledAt ? new Date(item.enrolledAt).toLocaleDateString() : '—'}
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={5} className="px-5 py-8 text-center text-xs text-[#697386]">
+                    <td colSpan={5} className="px-5 py-8 text-center text-xs text-slate-400">
                       No enrollments found yet.
                     </td>
                   </tr>
@@ -200,42 +200,42 @@ export const AdminDashboardPage: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <Link
             to="/admin/courses"
-            className="p-5 rounded-xl border border-[#E5E7EB] bg-white hover:border-slate-300 hover:shadow-xs transition-all group"
+            className="p-5 rounded-xl border border-slate-800 bg-slate-900 hover:border-slate-700 hover:shadow-xs transition-all group"
           >
-            <div className="w-9 h-9 rounded-lg bg-slate-100 text-[#172B4D] flex items-center justify-center mb-3 group-hover:bg-[#172B4D] group-hover:text-white transition-colors">
+            <div className="w-9 h-9 rounded-lg bg-slate-800 text-teal-400 flex items-center justify-center mb-3 group-hover:bg-teal-600 group-hover:text-white transition-colors">
               <BookOpen className="w-4 h-4" />
             </div>
-            <h3 className="text-sm font-semibold text-[#20252B] mb-1">Courses & Fees</h3>
-            <p className="text-xs text-[#697386] mb-3">Create and edit courses, adjust pricing, and manage publishing state.</p>
-            <span className="text-xs font-semibold text-[#172B4D] flex items-center gap-1 group-hover:underline">
+            <h3 className="text-sm font-semibold text-white mb-1">Courses & Fees</h3>
+            <p className="text-xs text-slate-400 mb-3">Create and edit courses, adjust pricing, and manage publishing state.</p>
+            <span className="text-xs font-semibold text-teal-400 flex items-center gap-1 group-hover:underline">
               Manage courses →
             </span>
           </Link>
 
           <Link
             to="/admin/enrollments"
-            className="p-5 rounded-xl border border-[#E5E7EB] bg-white hover:border-slate-300 hover:shadow-xs transition-all group"
+            className="p-5 rounded-xl border border-slate-800 bg-slate-900 hover:border-slate-700 hover:shadow-xs transition-all group"
           >
-            <div className="w-9 h-9 rounded-lg bg-slate-100 text-[#287C78] flex items-center justify-center mb-3 group-hover:bg-[#287C78] group-hover:text-white transition-colors">
+            <div className="w-9 h-9 rounded-lg bg-slate-800 text-teal-400 flex items-center justify-center mb-3 group-hover:bg-teal-600 group-hover:text-white transition-colors">
               <GraduationCap className="w-4 h-4" />
             </div>
-            <h3 className="text-sm font-semibold text-[#20252B] mb-1">Enrollment Matrix</h3>
-            <p className="text-xs text-[#697386] mb-3">Inspect all student enrollments, progress, and issue manual admissions.</p>
-            <span className="text-xs font-semibold text-[#172B4D] flex items-center gap-1 group-hover:underline">
+            <h3 className="text-sm font-semibold text-white mb-1">Enrollment Matrix</h3>
+            <p className="text-xs text-slate-400 mb-3">Inspect all student enrollments, progress, and issue manual admissions.</p>
+            <span className="text-xs font-semibold text-teal-400 flex items-center gap-1 group-hover:underline">
               View enrollments →
             </span>
           </Link>
 
           <Link
             to="/admin/students"
-            className="p-5 rounded-xl border border-[#E5E7EB] bg-white hover:border-slate-300 hover:shadow-xs transition-all group"
+            className="p-5 rounded-xl border border-slate-800 bg-slate-900 hover:border-slate-700 hover:shadow-xs transition-all group"
           >
-            <div className="w-9 h-9 rounded-lg bg-slate-100 text-[#172B4D] flex items-center justify-center mb-3 group-hover:bg-[#172B4D] group-hover:text-white transition-colors">
+            <div className="w-9 h-9 rounded-lg bg-slate-800 text-teal-400 flex items-center justify-center mb-3 group-hover:bg-teal-600 group-hover:text-white transition-colors">
               <Users className="w-4 h-4" />
             </div>
-            <h3 className="text-sm font-semibold text-[#20252B] mb-1">Student Accounts</h3>
-            <p className="text-xs text-[#697386] mb-3">Manage user registrations, verification statuses, and account controls.</p>
-            <span className="text-xs font-semibold text-[#172B4D] flex items-center gap-1 group-hover:underline">
+            <h3 className="text-sm font-semibold text-white mb-1">Student Accounts</h3>
+            <p className="text-xs text-slate-400 mb-3">Manage user registrations, verification statuses, and account controls.</p>
+            <span className="text-xs font-semibold text-teal-400 flex items-center gap-1 group-hover:underline">
               Inspect directory →
             </span>
           </Link>

@@ -107,26 +107,26 @@ export const QuizPlayerPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center py-32 bg-slate-50">
+      <div className="flex-1 flex flex-col items-center justify-center py-32 bg-slate-950 text-slate-100">
         <div className="relative">
-          <div className="w-16 h-16 rounded-full border-4 border-indigo-200 border-t-indigo-600 animate-spin"></div>
-          <Sparkles className="w-6 h-6 text-indigo-600 absolute inset-0 m-auto animate-pulse" />
+          <div className="w-16 h-16 rounded-full border-4 border-slate-800 border-t-teal-500 animate-spin"></div>
+          <Sparkles className="w-6 h-6 text-teal-400 absolute inset-0 m-auto animate-pulse" />
         </div>
-        <p className="mt-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Preparing Knowledge Assessment...</p>
+        <p className="mt-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Preparing Knowledge Assessment...</p>
       </div>
     );
   }
 
   if (error || !quiz) {
     return (
-      <div className="flex-1 flex items-center justify-center py-24 p-4 bg-slate-50">
-        <div className="bg-white p-8 rounded-3xl border border-slate-200 text-center max-w-md shadow-xl">
-          <div className="w-14 h-14 rounded-2xl bg-rose-50 border border-rose-100 flex items-center justify-center mx-auto mb-4 text-rose-500">
+      <div className="flex-1 flex items-center justify-center py-24 p-4 bg-slate-950 text-slate-100">
+        <div className="bg-slate-900 p-8 rounded-3xl border border-slate-800 text-center max-w-md shadow-xl">
+          <div className="w-14 h-14 rounded-2xl bg-rose-950/40 border border-rose-900 flex items-center justify-center mx-auto mb-4 text-rose-400">
             <AlertCircle className="w-8 h-8" />
           </div>
-          <h2 className="text-xl font-bold mb-2 text-slate-900">Quiz Unavailable</h2>
-          <p className="text-slate-600 text-sm mb-6 leading-relaxed">{error || 'Could not load quiz questions.'}</p>
-          <Link to="/dashboard" className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white px-6 py-3 rounded-xl text-sm font-bold shadow-lg shadow-indigo-600/25">
+          <h2 className="text-xl font-bold mb-2 text-white">Quiz Unavailable</h2>
+          <p className="text-slate-400 text-sm mb-6 leading-relaxed">{error || 'Could not load quiz questions.'}</p>
+          <Link to="/dashboard" className="bg-teal-600 hover:bg-teal-500 text-white px-6 py-3 rounded-xl text-sm font-bold shadow-lg transition">
             Return to Dashboard
           </Link>
         </div>
@@ -135,37 +135,34 @@ export const QuizPlayerPage: React.FC = () => {
   }
 
   return (
-    <div className="flex-1 bg-[#FAFAF8] py-12 relative overflow-hidden">
-      {/* Subtle ambient light */}
-      <div className="absolute top-0 right-1/4 w-96 h-96 bg-indigo-100/40 rounded-full blur-3xl pointer-events-none"></div>
-
+    <div className="flex-1 bg-slate-950 py-12 relative overflow-hidden text-slate-100">
       <div className="relative max-w-3xl mx-auto px-4 sm:px-6">
         {/* Header Breadcrumb */}
         <div className="flex items-center justify-between mb-6">
           <Link
             to={`/learn/${quiz.courseId}`}
-            className="inline-flex items-center space-x-2 text-xs font-bold text-slate-500 hover:text-slate-900 transition group"
+            className="inline-flex items-center space-x-2 text-xs font-bold text-slate-400 hover:text-white transition group"
           >
-            <div className="w-7 h-7 rounded-lg bg-white border border-slate-200 flex items-center justify-center group-hover:bg-slate-100 transition shadow-sm">
+            <div className="w-7 h-7 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center group-hover:bg-slate-800 transition shadow-sm text-slate-300">
               <ChevronLeft className="w-4 h-4" />
             </div>
-            <span>Back to Classroom Theater</span>
+            <span>Back to Classroom</span>
           </Link>
 
-          <div className="flex items-center space-x-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-3.5 py-1.5 rounded-full shadow-sm">
+          <div className="flex items-center space-x-2 text-xs font-bold text-teal-400 bg-teal-950/40 border border-teal-900 px-3.5 py-1.5 rounded-full shadow-sm">
             <span>Passing Mark: {quiz.passingScore}%</span>
           </div>
         </div>
 
         {/* Title Card */}
-        <div className="bg-white p-7 sm:p-9 rounded-3xl border border-slate-200/90 shadow-card-elevated mb-8 relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-indigo-600 to-purple-600"></div>
-          <div className="flex items-center space-x-2 text-indigo-600 mb-2">
+        <div className="bg-slate-900 p-7 sm:p-9 rounded-2xl border border-slate-800 shadow-sm mb-8 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-2 h-full bg-teal-500"></div>
+          <div className="flex items-center space-x-2 text-teal-400 mb-2">
             <HelpCircle className="w-5 h-5" />
-            <span className="text-[11px] font-bold uppercase tracking-widest text-indigo-600">Graded Knowledge Evaluation</span>
+            <span className="text-[11px] font-bold uppercase tracking-widest text-teal-400">Graded Knowledge Evaluation</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-display mb-2">{quiz.title}</h1>
-          <p className="text-slate-600 text-sm leading-relaxed">{quiz.description}</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mb-2">{quiz.title}</h1>
+          <p className="text-slate-400 text-sm leading-relaxed">{quiz.description}</p>
         </div>
 
         {/* Result Banner (if submitted) */}
@@ -242,11 +239,11 @@ export const QuizPlayerPage: React.FC = () => {
             return (
               <div
                 key={q.id}
-                className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/90 shadow-card-elevated space-y-4"
+                className="bg-slate-900 p-6 sm:p-8 rounded-2xl border border-slate-800 shadow-sm space-y-4"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center space-x-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                    <span className="text-indigo-600 font-black">Question {qIndex + 1}</span>
+                    <span className="text-teal-400 font-bold">Question {qIndex + 1}</span>
                     <span>&bull;</span>
                     <span>of {quiz.questions.length}</span>
                     <span>&bull;</span>
@@ -257,18 +254,18 @@ export const QuizPlayerPage: React.FC = () => {
                     <span
                       className={`text-xs font-bold px-3 py-1 rounded-full flex items-center space-x-1.5 ${
                         feedback.correct
-                          ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                          : 'bg-rose-100 text-rose-800 border border-rose-200'
+                          ? 'bg-emerald-950/50 text-emerald-300 border border-emerald-800'
+                          : 'bg-rose-950/50 text-rose-300 border border-rose-800'
                       }`}
                     >
                       {feedback.correct ? (
                         <>
-                          <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
+                          <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
                           <span>Correct</span>
                         </>
                       ) : (
                         <>
-                          <XCircle className="w-3.5 h-3.5 text-rose-600" />
+                          <XCircle className="w-3.5 h-3.5 text-rose-400" />
                           <span>Incorrect</span>
                         </>
                       )}
@@ -276,9 +273,9 @@ export const QuizPlayerPage: React.FC = () => {
                   )}
                 </div>
 
-                <h3 className="text-base sm:text-lg font-bold text-slate-900 leading-snug">{q.questionText}</h3>
+                <h3 className="text-base sm:text-lg font-bold text-white leading-snug">{q.questionText}</h3>
                 {isMultiple && (
-                  <p className="text-xs text-indigo-600 font-bold bg-indigo-50 inline-block px-2.5 py-0.5 rounded-md">
+                  <p className="text-xs text-teal-400 font-bold bg-teal-950/40 inline-block px-2.5 py-0.5 rounded-md border border-teal-900">
                     Select all options that apply
                   </p>
                 )}
@@ -289,14 +286,14 @@ export const QuizPlayerPage: React.FC = () => {
                     const isSelected = (selectedAnswers[q.id] || []).includes(opt.id);
                     const isAnswerCorrect = feedback?.correctOptionIds.includes(opt.id);
 
-                    let optionBorder = 'border-slate-200 hover:border-indigo-400 bg-slate-50/60';
+                    let optionBorder = 'border-slate-800 hover:border-teal-500/60 bg-slate-850 text-slate-200';
                     if (isSelected && !result) {
-                      optionBorder = 'border-indigo-600 bg-indigo-50/50 text-indigo-950 font-bold shadow-sm';
+                      optionBorder = 'border-teal-500 bg-teal-950/40 text-white font-bold ring-1 ring-teal-500';
                     } else if (result) {
                       if (isAnswerCorrect) {
-                        optionBorder = 'border-emerald-500 bg-emerald-50/60 text-emerald-950 font-bold shadow-sm';
+                        optionBorder = 'border-emerald-500 bg-emerald-950/50 text-emerald-200 font-bold';
                       } else if (isSelected && !isAnswerCorrect) {
-                        optionBorder = 'border-rose-400 bg-rose-50/60 text-rose-950';
+                        optionBorder = 'border-rose-500 bg-rose-950/50 text-rose-200';
                       }
                     }
 
@@ -306,14 +303,14 @@ export const QuizPlayerPage: React.FC = () => {
                         type="button"
                         onClick={() => handleOptionSelect(q.id, opt.id, isMultiple)}
                         disabled={!!result}
-                        className={`w-full text-left p-4 rounded-2xl border text-sm transition flex items-center justify-between ${optionBorder}`}
+                        className={`w-full text-left p-4 rounded-xl border text-sm transition flex items-center justify-between ${optionBorder}`}
                       >
                         <span className="pr-4 leading-relaxed font-medium">{opt.optionText}</span>
                         <div
                           className={`w-5 h-5 rounded-${
                             isMultiple ? 'md' : 'full'
                           } border flex items-center justify-center shrink-0 transition ${
-                            isSelected ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-slate-300'
+                            isSelected ? 'bg-teal-600 border-teal-600 text-white' : 'border-slate-600'
                           }`}
                         >
                           {isSelected && (
@@ -327,8 +324,8 @@ export const QuizPlayerPage: React.FC = () => {
 
                 {/* Explanation feedback */}
                 {feedback && feedback.explanation && (
-                  <div className="mt-4 p-4.5 bg-slate-50 rounded-2xl border border-slate-200 text-xs text-slate-700 leading-relaxed">
-                    <span className="font-bold text-slate-900">Explanation: </span>
+                  <div className="mt-4 p-4.5 bg-slate-800/80 rounded-xl border border-slate-700 text-xs text-slate-300 leading-relaxed">
+                    <span className="font-bold text-white">Explanation: </span>
                     {feedback.explanation}
                   </div>
                 )}
@@ -347,7 +344,7 @@ export const QuizPlayerPage: React.FC = () => {
                     setResult(null);
                     setSelectedAnswers({});
                   }}
-                  className="inline-flex items-center space-x-2 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold text-xs px-6 py-3.5 rounded-2xl transition shadow-lg shadow-indigo-600/25"
+                  className="inline-flex items-center space-x-2 bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs px-6 py-3.5 rounded-xl transition shadow-lg"
                 >
                   <RotateCcw className="w-4 h-4" />
                   <span>Retake Assessment</span>
@@ -355,16 +352,16 @@ export const QuizPlayerPage: React.FC = () => {
               )}
               <Link
                 to={`/learn/${quiz.courseId}`}
-                className="bg-white hover:bg-slate-100 text-slate-800 font-bold text-xs px-6 py-3.5 rounded-2xl border border-slate-200 transition shadow-sm"
+                className="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs px-6 py-3.5 rounded-xl border border-slate-700 transition"
               >
-                Back to Classroom Theater
+                Back to Classroom
               </Link>
             </div>
           ) : (
             <button
               onClick={handleSubmitQuiz}
               disabled={submitting}
-              className="bg-gradient-to-r from-indigo-600 via-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-extrabold text-sm px-9 py-4 rounded-2xl transition shadow-lg shadow-indigo-600/30 disabled:opacity-50"
+              className="bg-teal-600 hover:bg-teal-500 text-white font-bold text-sm px-9 py-4 rounded-xl transition shadow-lg disabled:opacity-50"
             >
               {submitting ? 'Evaluating Assessment Answers...' : 'Submit Assessment Answers'}
             </button>

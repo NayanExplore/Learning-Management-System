@@ -20,7 +20,7 @@ export const AdminNav: React.FC = () => {
   ];
 
   return (
-    <div className="bg-white border-b border-[#E5E7EB] sticky top-16 z-40 mb-8">
+    <div className="bg-slate-900 border-b border-slate-800 sticky top-16 z-40 mb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-1 overflow-x-auto py-2.5">
           {navItems.map((item) => {
@@ -33,8 +33,8 @@ export const AdminNav: React.FC = () => {
                 className={({ isActive }) =>
                   `flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                     isActive
-                      ? 'bg-[#172B4D] text-white'
-                      : 'text-[#697386] hover:text-[#20252B] hover:bg-slate-100'
+                      ? 'bg-teal-600 text-white'
+                      : 'text-slate-400 hover:text-white hover:bg-slate-800'
                   }`
                 }
               >

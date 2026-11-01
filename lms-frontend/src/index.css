@@ -6,10 +6,11 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    color-scheme: dark;
   }
 
   body {
-    @apply font-sans bg-[#FAFAF8] text-[#20252B] antialiased selection:bg-[#172B4D] selection:text-white transition-colors duration-150;
+    @apply font-sans bg-slate-950 text-slate-100 antialiased selection:bg-[#287C78] selection:text-white;
   }
 
   html.dark body {
@@ -17,7 +18,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply text-[#20252B] font-semibold tracking-tight;
+    @apply text-slate-100 font-semibold tracking-tight;
   }
 
   html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5, html.dark h6 {
@@ -25,7 +26,7 @@
   }
 }
 
-/* Subtle, clean scrollbar */
+/* Subtle, clean dark scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -36,7 +37,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #D1D5DB;
+  background: #334155;
   border-radius: 9999px;
 }
 
@@ -45,7 +46,7 @@ html.dark ::-webkit-scrollbar-thumb {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #9CA3AF;
+  background: #475569;
 }
 
 html.dark ::-webkit-scrollbar-thumb:hover {

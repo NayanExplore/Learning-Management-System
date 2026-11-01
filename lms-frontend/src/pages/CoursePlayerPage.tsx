@@ -178,12 +178,12 @@ export const CoursePlayerPage: React.FC = () => {
 
   if (!course) {
     return (
-      <div className="flex-1 flex items-center justify-center py-20 px-4 bg-[#FAFAF8]">
-        <div className="max-w-md w-full bg-white p-8 rounded-xl border border-[#E5E7EB] text-center shadow-xs space-y-4">
-          <AlertCircle className="w-8 h-8 text-rose-600 mx-auto" />
-          <h2 className="text-base font-semibold text-[#20252B]">Course not found</h2>
+      <div className="flex-1 flex items-center justify-center py-20 px-4 bg-slate-950 text-slate-100">
+        <div className="max-w-md w-full bg-slate-900 p-8 rounded-xl border border-slate-800 text-center shadow-xs space-y-4">
+          <AlertCircle className="w-8 h-8 text-rose-500 mx-auto" />
+          <h2 className="text-base font-semibold text-white">Course not found</h2>
           <Link to="/dashboard">
-            <Button variant="primary" size="sm">
+            <Button variant="teal" size="sm">
               Return to Dashboard
             </Button>
           </Link>

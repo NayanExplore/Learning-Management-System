@@ -89,99 +89,99 @@ export const HomePage: React.FC = () => {
   ];
 
   return (
-    <div className="flex-1 flex flex-col bg-[#FAFAF8]">
+    <div className="flex-1 flex flex-col bg-slate-950 text-slate-100">
       {/* 1. Hero Section */}
-      <section className="bg-white border-b border-[#E5E7EB] py-16 sm:py-20 lg:py-24">
+      <section className="bg-slate-900/60 border-b border-slate-800 py-16 sm:py-20 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* Left Content */}
             <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-xs font-medium text-[#20252B] border border-slate-200">
-                <span className="w-2 h-2 rounded-full bg-[#287C78]"></span>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/80 text-xs font-medium text-slate-300 border border-slate-700">
+                <span className="w-2 h-2 rounded-full bg-teal-400"></span>
                 <span>Practical engineering curriculam</span>
               </div>
 
-              <h1 className="text-3xl sm:text-5xl lg:text-5xl font-bold tracking-tight text-[#20252B] leading-tight">
+              <h1 className="text-3xl sm:text-5xl lg:text-5xl font-bold tracking-tight text-white leading-tight">
                 Build skills that move your career forward.
               </h1>
 
-              <p className="text-base sm:text-lg text-[#697386] leading-relaxed max-w-2xl mx-auto lg:mx-0">
+              <p className="text-base sm:text-lg text-slate-400 leading-relaxed max-w-2xl mx-auto lg:mx-0">
                 SkillForge provides structured, project-driven software development tracks. Learn directly from real codebases, master architecture fundamentals, and earn verifiable credentials.
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-2">
                 <Link to="/courses">
-                  <Button variant="primary" size="lg" iconRight={<ArrowRight className="w-4 h-4" />}>
+                  <Button variant="teal" size="lg" iconRight={<ArrowRight className="w-4 h-4" />}>
                     Explore Courses
                   </Button>
                 </Link>
                 <Link to="/register">
-                  <Button variant="outline" size="lg">
+                  <Button variant="outline" size="lg" className="border-slate-700 text-slate-200 hover:bg-slate-850 hover:text-white">
                     Get Started Free
                   </Button>
                 </Link>
               </div>
 
               {/* Trust Indicators */}
-              <div className="pt-6 border-t border-[#E5E7EB] flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-[#697386]">
+              <div className="pt-6 border-t border-slate-800 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-slate-400">
                 <div className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#287C78]" />
+                  <Check className="w-4 h-4 text-teal-400" />
                   <span>Verifiable credentials</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#287C78]" />
+                  <Check className="w-4 h-4 text-teal-400" />
                   <span>Lifetime course access</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#287C78]" />
+                  <Check className="w-4 h-4 text-teal-400" />
                   <span>Self-paced learning</span>
                 </div>
               </div>
             </div>
 
-            {/* Right Educational Visual (Clean, real mockup rather than AI floating blobs) */}
+            {/* Right Educational Visual */}
             <div className="lg:col-span-5">
-              <div className="rounded-xl border border-[#E5E7EB] bg-white shadow-sm overflow-hidden">
-                <div className="px-4 py-3 bg-slate-50 border-b border-[#E5E7EB] flex items-center justify-between">
+              <div className="rounded-xl border border-slate-800 bg-slate-900 shadow-sm overflow-hidden">
+                <div className="px-4 py-3 bg-slate-850/80 border-b border-slate-800 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-slate-200"></span>
-                    <span className="w-3 h-3 rounded-full bg-slate-200"></span>
-                    <span className="w-3 h-3 rounded-full bg-slate-200"></span>
+                    <span className="w-3 h-3 rounded-full bg-slate-700"></span>
+                    <span className="w-3 h-3 rounded-full bg-slate-700"></span>
+                    <span className="w-3 h-3 rounded-full bg-slate-700"></span>
                   </div>
-                  <span className="text-xs font-mono text-[#697386]">curriculum-overview.ts</span>
+                  <span className="text-xs font-mono text-slate-400">curriculum-overview.ts</span>
                 </div>
 
                 <div className="p-6 space-y-4">
                   <div className="space-y-2">
-                    <span className="text-xs font-semibold uppercase tracking-wider text-[#287C78]">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-teal-400">
                       Featured Track
                     </span>
-                    <h3 className="text-lg font-semibold text-[#20252B]">
+                    <h3 className="text-lg font-semibold text-white">
                       Production Full-Stack Architecture
                     </h3>
-                    <p className="text-xs text-[#697386] leading-relaxed">
+                    <p className="text-xs text-slate-400 leading-relaxed">
                       Hands-on modules covering React, TypeScript, Spring Boot microservices, and secure deployments.
                     </p>
                   </div>
 
-                  <div className="space-y-2 pt-2 border-t border-[#E5E7EB]">
-                    <div className="flex items-center justify-between text-xs py-1.5 px-2.5 rounded-lg bg-slate-50">
-                      <span className="text-[#20252B] font-medium">01. Architecture & Design</span>
-                      <span className="text-emerald-700 font-semibold">Completed</span>
+                  <div className="space-y-2 pt-2 border-t border-slate-800">
+                    <div className="flex items-center justify-between text-xs py-2 px-3 rounded-lg bg-slate-800/60 border border-slate-800">
+                      <span className="text-slate-200 font-medium">01. Architecture & Design</span>
+                      <span className="text-emerald-400 font-semibold">Completed</span>
                     </div>
-                    <div className="flex items-center justify-between text-xs py-1.5 px-2.5 rounded-lg bg-slate-50">
-                      <span className="text-[#20252B] font-medium">02. RESTful APIs & Data Models</span>
-                      <span className="text-[#287C78] font-semibold">In Progress</span>
+                    <div className="flex items-center justify-between text-xs py-2 px-3 rounded-lg bg-slate-800/60 border border-slate-800">
+                      <span className="text-slate-200 font-medium">02. RESTful APIs & Data Models</span>
+                      <span className="text-teal-400 font-semibold">In Progress</span>
                     </div>
-                    <div className="flex items-center justify-between text-xs py-1.5 px-2.5 rounded-lg bg-slate-50">
-                      <span className="text-[#20252B] font-medium">03. Production Deployment & CI/CD</span>
-                      <span className="text-slate-400">Upcoming</span>
+                    <div className="flex items-center justify-between text-xs py-2 px-3 rounded-lg bg-slate-800/60 border border-slate-800">
+                      <span className="text-slate-200 font-medium">03. Production Deployment & CI/CD</span>
+                      <span className="text-slate-500">Upcoming</span>
                     </div>
                   </div>
 
-                  <div className="pt-3 flex items-center justify-between text-xs text-[#697386]">
+                  <div className="pt-3 flex items-center justify-between text-xs text-slate-400">
                     <span>Includes source code & assignments</span>
-                    <Link to="/courses" className="text-[#172B4D] font-semibold hover:underline">
+                    <Link to="/courses" className="text-teal-400 font-semibold hover:underline">
                       Browse catalog →
                     </Link>
                   </div>
@@ -197,13 +197,13 @@ export const HomePage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-[#287C78] mb-1">
+              <p className="text-xs font-semibold uppercase tracking-wider text-teal-400 mb-1">
                 Explore Programs
               </p>
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#20252B]">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white">
                 Featured Curriculam
               </h2>
-              <p className="text-sm text-[#697386] mt-1 max-w-xl">
+              <p className="text-sm text-slate-400 mt-1 max-w-xl">
                 Select from our latest active courses curated for real-world development environments.
               </p>
             </div>
@@ -215,8 +215,8 @@ export const HomePage: React.FC = () => {
                   key={c.id}
                   onClick={() => setActiveCategory(c.id)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${activeCategory === c.id
-                      ? 'bg-[#172B4D] text-white'
-                      : 'bg-white border border-[#E5E7EB] text-[#20252B] hover:bg-slate-50'
+                      ? 'bg-teal-600 text-white'
+                      : 'bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800'
                     }`}
                 >
                   {c.label}
@@ -259,47 +259,47 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* 3. Why Learn with SkillForge? (Genuine, practical benefits) */}
-      <section className="bg-white border-y border-[#E5E7EB] py-16 sm:py-20">
+      <section className="bg-slate-900/40 border-y border-slate-800 py-16 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#287C78] mb-1">
+            <p className="text-xs font-semibold uppercase tracking-wider text-teal-400 mb-1">
               Methodology
             </p>
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#20252B]">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white">
               Designed for practical competency
             </h2>
-            <p className="text-sm text-[#697386] mt-2">
+            <p className="text-sm text-slate-400 mt-2">
               Our curriculum focuses on engineering fundamentals and applied projects over superficial theory.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="p-6 rounded-xl border border-[#E5E7EB] bg-[#FAFAF8] space-y-3">
-              <div className="w-10 h-10 rounded-lg bg-white border border-[#E5E7EB] flex items-center justify-center text-[#172B4D]">
+            <div className="p-6 rounded-xl border border-slate-800 bg-slate-900/80 space-y-3">
+              <div className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-teal-400">
                 <Code2 className="w-5 h-5" />
               </div>
-              <h3 className="text-base font-semibold text-[#20252B]">Real Codebases & Tools</h3>
-              <p className="text-xs text-[#697386] leading-relaxed">
+              <h3 className="text-base font-semibold text-white">Real Codebases & Tools</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
                 Work with production patterns, Git workflows, database schema migrations, and REST APIs rather than isolated toy exercises.
               </p>
             </div>
 
-            <div className="p-6 rounded-xl border border-[#E5E7EB] bg-[#FAFAF8] space-y-3">
-              <div className="w-10 h-10 rounded-lg bg-white border border-[#E5E7EB] flex items-center justify-center text-[#287C78]">
+            <div className="p-6 rounded-xl border border-slate-800 bg-slate-900/80 space-y-3">
+              <div className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-teal-400">
                 <ShieldCheck className="w-5 h-5" />
               </div>
-              <h3 className="text-base font-semibold text-[#20252B]">Verifiable Credentials</h3>
-              <p className="text-xs text-[#697386] leading-relaxed">
+              <h3 className="text-base font-semibold text-white">Verifiable Credentials</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
                 Upon curriculum completion, receive a certificate with a unique permanent identifier that can be verified by employers.
               </p>
             </div>
 
-            <div className="p-6 rounded-xl border border-[#E5E7EB] bg-[#FAFAF8] space-y-3">
-              <div className="w-10 h-10 rounded-lg bg-white border border-[#E5E7EB] flex items-center justify-center text-[#172B4D]">
+            <div className="p-6 rounded-xl border border-slate-800 bg-slate-900/80 space-y-3">
+              <div className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-teal-400">
                 <Compass className="w-5 h-5" />
               </div>
-              <h3 className="text-base font-semibold text-[#20252B]">Self-Paced Mastery</h3>
-              <p className="text-xs text-[#697386] leading-relaxed">
+              <h3 className="text-base font-semibold text-white">Self-Paced Mastery</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
                 Learn around your schedule with lifetime access, organized lecture notes, downloadable resources, and continuous progress saving.
               </p>
             </div>
@@ -311,38 +311,38 @@ export const HomePage: React.FC = () => {
       <section className="py-16 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#287C78] mb-1">
+            <p className="text-xs font-semibold uppercase tracking-wider text-teal-400 mb-1">
               Workflow
             </p>
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#20252B]">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white">
               How learning on SkillForge works
             </h2>
-            <p className="text-sm text-[#697386] mt-2">
+            <p className="text-sm text-slate-400 mt-2">
               A straightforward path from course selection to credential verification.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-            <div className="space-y-3 relative">
-              <div className="text-2xl font-bold text-[#172B4D] font-mono">01</div>
-              <h3 className="text-base font-semibold text-[#20252B]">Select your course</h3>
-              <p className="text-xs text-[#697386] leading-relaxed">
+            <div className="space-y-3 relative p-6 rounded-xl bg-slate-900/50 border border-slate-800">
+              <div className="text-2xl font-bold text-teal-400 font-mono">01</div>
+              <h3 className="text-base font-semibold text-white">Select your course</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
                 Browse our curriculum catalog, inspect lesson syllabus previews, and enroll securely through Razorpay.
               </p>
             </div>
 
-            <div className="space-y-3 relative">
-              <div className="text-2xl font-bold text-[#287C78] font-mono">02</div>
-              <h3 className="text-base font-semibold text-[#20252B]">Study & apply concepts</h3>
-              <p className="text-xs text-[#697386] leading-relaxed">
+            <div className="space-y-3 relative p-6 rounded-xl bg-slate-900/50 border border-slate-800">
+              <div className="text-2xl font-bold text-teal-400 font-mono">02</div>
+              <h3 className="text-base font-semibold text-white">Study & apply concepts</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
                 Follow high-definition lectures, review code samples, and mark lessons complete as you progress.
               </p>
             </div>
 
-            <div className="space-y-3 relative">
-              <div className="text-2xl font-bold text-[#172B4D] font-mono">03</div>
-              <h3 className="text-base font-semibold text-[#20252B]">Earn your credential</h3>
-              <p className="text-xs text-[#697386] leading-relaxed">
+            <div className="space-y-3 relative p-6 rounded-xl bg-slate-900/50 border border-slate-800">
+              <div className="text-2xl font-bold text-teal-400 font-mono">03</div>
+              <h3 className="text-base font-semibold text-white">Earn your credential</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
                 Complete all mandatory lessons to generate your verifiable certificate, ready to share on LinkedIn or resumes.
               </p>
             </div>
@@ -351,21 +351,21 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* 5. Frequently Asked Questions */}
-      <section className="bg-white border-t border-[#E5E7EB] py-16 sm:py-20">
+      <section className="bg-slate-900/40 border-t border-slate-800 py-16 sm:py-20">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           <div className="text-center">
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#287C78] mb-1">
+            <p className="text-xs font-semibold uppercase tracking-wider text-teal-400 mb-1">
               Support
             </p>
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#20252B]">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white">
               Frequently Asked Questions
             </h2>
-            <p className="text-sm text-[#697386] mt-1">
+            <p className="text-sm text-slate-400 mt-1">
               Common questions about enrollment, course content, and certificates.
             </p>
           </div>
 
-          <div className="divide-y divide-[#E5E7EB] border-y border-[#E5E7EB]">
+          <div className="divide-y divide-slate-800 border-y border-slate-800">
             {faqs.map((faq, index) => {
               const isOpen = openFaq === index;
               return (
@@ -373,16 +373,16 @@ export const HomePage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setOpenFaq(isOpen ? null : index)}
-                    className="w-full flex items-center justify-between text-left font-semibold text-sm text-[#20252B] hover:text-[#172B4D] transition-colors"
+                    className="w-full flex items-center justify-between text-left font-semibold text-sm text-slate-100 hover:text-teal-400 transition-colors"
                   >
                     <span>{faq.q}</span>
                     <ChevronDown
-                      className={`w-4 h-4 text-slate-400 shrink-0 ml-4 transition-transform duration-200 ${isOpen ? 'rotate-180 text-[#172B4D]' : ''
+                      className={`w-4 h-4 text-slate-400 shrink-0 ml-4 transition-transform duration-200 ${isOpen ? 'rotate-180 text-teal-400' : ''
                         }`}
                     />
                   </button>
                   {isOpen && (
-                    <div className="mt-2 text-xs sm:text-sm text-[#697386] leading-relaxed pr-8">
+                    <div className="mt-2 text-xs sm:text-sm text-slate-400 leading-relaxed pr-8">
                       {faq.a}
                     </div>
                   )}
@@ -394,7 +394,7 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* 6. Clean Call to Action */}
-      <section className="bg-[#172B4D] text-white py-16">
+      <section className="bg-gradient-to-b from-slate-900 to-slate-950 border-t border-slate-800 text-white py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
             Ready to start learning?
@@ -409,7 +409,7 @@ export const HomePage: React.FC = () => {
               </Button>
             </Link>
             <Link to="/register">
-              <Button variant="outline" size="md" className="border-slate-400 text-slate-900 bg-white hover:bg-slate-100">
+              <Button variant="outline" size="md" className="border-slate-700 text-slate-200 hover:bg-slate-800">
                 Create Account
               </Button>
             </Link>

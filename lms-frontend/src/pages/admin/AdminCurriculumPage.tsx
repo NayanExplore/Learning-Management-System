@@ -309,7 +309,7 @@ export const AdminCurriculumPage: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 bg-[#FAFAF8] pb-16">
+    <div className="flex-1 bg-slate-950 text-slate-100 pb-16 min-h-screen">
       <AdminNav />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
@@ -318,15 +318,15 @@ export const AdminCurriculumPage: React.FC = () => {
           <div
             className={`p-3.5 rounded-lg border text-xs flex items-center justify-between ${
               statusMsg.type === 'success'
-                ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
-                : 'bg-rose-50 border-rose-200 text-rose-800'
+                ? 'bg-emerald-950/40 border-emerald-800/60 text-emerald-300'
+                : 'bg-rose-950/40 border-rose-800/60 text-rose-300'
             }`}
           >
             <div className="flex items-center gap-2">
               {statusMsg.type === 'success' ? (
-                <Check className="w-4 h-4 text-emerald-600" />
+                <Check className="w-4 h-4 text-emerald-400" />
               ) : (
-                <AlertCircle className="w-4 h-4 text-rose-600" />
+                <AlertCircle className="w-4 h-4 text-rose-400" />
               )}
               <span>{statusMsg.text}</span>
             </div>
@@ -341,19 +341,19 @@ export const AdminCurriculumPage: React.FC = () => {
           <div className="flex items-center gap-3">
             <Link
               to="/admin/courses"
-              className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white text-[#697386] hover:text-[#20252B] transition-colors"
+              className="p-1.5 rounded-lg border border-slate-800 bg-slate-900 text-slate-400 hover:text-white transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
             </Link>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold uppercase tracking-wider text-[#287C78]">
+                <span className="text-xs font-semibold uppercase tracking-wider text-teal-400">
                   Curriculum Editor
                 </span>
-                <span className="text-slate-300">/</span>
-                <span className="text-xs text-[#697386]">Course #{courseId}</span>
+                <span className="text-slate-600">/</span>
+                <span className="text-xs text-slate-400">Course #{courseId}</span>
               </div>
-              <h1 className="text-xl sm:text-2xl font-bold text-[#20252B]">
+              <h1 className="text-xl sm:text-2xl font-bold text-white">
                 {course?.title || 'Loading Curriculum...'}
               </h1>
             </div>
@@ -371,7 +371,7 @@ export const AdminCurriculumPage: React.FC = () => {
 
         {/* Section List */}
         {loading ? (
-          <div className="bg-white p-12 rounded-xl border border-[#E5E7EB] text-center text-xs text-[#697386]">
+          <div className="bg-slate-900 p-12 rounded-xl border border-slate-800 text-center text-xs text-slate-400">
             Loading curriculum sections...
           </div>
         ) : course?.sections && course.sections.length > 0 ? (
@@ -381,15 +381,15 @@ export const AdminCurriculumPage: React.FC = () => {
               return (
                 <div
                   key={section.id}
-                  className="bg-white rounded-xl border border-[#E5E7EB] shadow-xs overflow-hidden"
+                  className="bg-slate-900 rounded-xl border border-slate-800 shadow-sm overflow-hidden"
                 >
                   {/* Section Bar */}
-                  <div className="px-5 py-4 bg-slate-50/80 border-b border-[#E5E7EB] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="px-5 py-4 bg-slate-800/60 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
                       <button
                         type="button"
                         onClick={() => toggleSectionCollapse(section.id)}
-                        className="p-1 text-slate-400 hover:text-[#20252B]"
+                        className="p-1 text-slate-400 hover:text-white"
                         aria-label="Toggle section"
                       >
                         <ChevronDown
@@ -399,16 +399,16 @@ export const AdminCurriculumPage: React.FC = () => {
                         />
                       </button>
 
-                      <span className="text-xs font-mono font-semibold text-[#697386]">
+                      <span className="text-xs font-mono font-semibold text-teal-400">
                         {String(sIndex + 1).padStart(2, '0')}
                       </span>
 
                       <div className="min-w-0">
-                        <h3 className="text-sm font-semibold text-[#20252B] truncate">
+                        <h3 className="text-sm font-semibold text-white truncate">
                           {section.title}
                         </h3>
                         {section.description && (
-                          <p className="text-xs text-[#697386] truncate">{section.description}</p>
+                          <p className="text-xs text-slate-400 truncate">{section.description}</p>
                         )}
                       </div>
                     </div>
@@ -417,7 +417,7 @@ export const AdminCurriculumPage: React.FC = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        icon={<Plus className="w-3.5 h-3.5 text-[#287C78]" />}
+                        icon={<Plus className="w-3.5 h-3.5 text-teal-400" />}
                         onClick={() => handleOpenAddLesson(section.id)}
                       >
                         Add Lecture
@@ -427,7 +427,7 @@ export const AdminCurriculumPage: React.FC = () => {
                         type="button"
                         onClick={() => handleMoveSection(sIndex, 'UP')}
                         disabled={sIndex === 0}
-                        className="p-1.5 text-slate-400 hover:text-[#20252B] disabled:opacity-30 rounded hover:bg-slate-200/60"
+                        className="p-1.5 text-slate-400 hover:text-white disabled:opacity-30 rounded hover:bg-slate-800"
                         title="Move Section Up"
                       >
                         <MoveUp className="w-3.5 h-3.5" />
@@ -437,7 +437,7 @@ export const AdminCurriculumPage: React.FC = () => {
                         type="button"
                         onClick={() => handleMoveSection(sIndex, 'DOWN')}
                         disabled={sIndex === (course.sections?.length || 0) - 1}
-                        className="p-1.5 text-slate-400 hover:text-[#20252B] disabled:opacity-30 rounded hover:bg-slate-200/60"
+                        className="p-1.5 text-slate-400 hover:text-white disabled:opacity-30 rounded hover:bg-slate-800"
                         title="Move Section Down"
                       >
                         <MoveDown className="w-3.5 h-3.5" />
@@ -446,7 +446,7 @@ export const AdminCurriculumPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => handleOpenEditSection(section)}
-                        className="p-1.5 text-slate-400 hover:text-[#172B4D] rounded hover:bg-slate-200/60"
+                        className="p-1.5 text-slate-400 hover:text-teal-300 rounded hover:bg-slate-800"
                         title="Edit Section"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
@@ -455,7 +455,7 @@ export const AdminCurriculumPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => handleDeleteSection(section)}
-                        className="p-1.5 text-slate-400 hover:text-rose-600 rounded hover:bg-slate-200/60"
+                        className="p-1.5 text-slate-400 hover:text-rose-400 rounded hover:bg-slate-800"
                         title="Delete Section"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -465,20 +465,20 @@ export const AdminCurriculumPage: React.FC = () => {
 
                   {/* Lessons */}
                   {!isCollapsed && (
-                    <div className="divide-y divide-[#E5E7EB]">
+                    <div className="divide-y divide-slate-800">
                       {section.lessons && section.lessons.length > 0 ? (
                         section.lessons.map((lesson, lIndex) => (
                           <div
                             key={lesson.id}
-                            className="px-5 py-3 flex items-center justify-between text-xs hover:bg-slate-50/50 transition-colors"
+                            className="px-5 py-3 flex items-center justify-between text-xs hover:bg-slate-800/40 transition-colors"
                           >
                             <div className="flex items-center gap-3 min-w-0 pr-3">
                               {lesson.contentType === 'VIDEO' ? (
-                                <Video className="w-4 h-4 text-[#287C78] shrink-0" />
+                                <Video className="w-4 h-4 text-teal-400 shrink-0" />
                               ) : (
-                                <FileText className="w-4 h-4 text-slate-400 shrink-0" />
+                                <FileText className="w-4 h-4 text-slate-500 shrink-0" />
                               )}
-                              <span className="font-medium text-[#20252B] truncate">
+                              <span className="font-medium text-slate-200 truncate">
                                 {lIndex + 1}. {lesson.title}
                               </span>
                               {lesson.preview && (
@@ -487,7 +487,7 @@ export const AdminCurriculumPage: React.FC = () => {
                                 </Badge>
                               )}
                               {lesson.videoDurationSeconds ? (
-                                <span className="text-[#697386] font-mono">
+                                <span className="text-slate-400 font-mono">
                                   {formatLessonDuration(lesson.videoDurationSeconds)}
                                 </span>
                               ) : null}
@@ -498,7 +498,7 @@ export const AdminCurriculumPage: React.FC = () => {
                                 type="button"
                                 onClick={() => handleMoveLesson(section.id, lIndex, 'UP')}
                                 disabled={lIndex === 0}
-                                className="p-1 text-slate-400 hover:text-[#20252B] disabled:opacity-30 rounded hover:bg-slate-100"
+                                className="p-1 text-slate-400 hover:text-white disabled:opacity-30 rounded hover:bg-slate-800"
                                 title="Move Lesson Up"
                               >
                                 <MoveUp className="w-3 h-3" />
@@ -508,7 +508,7 @@ export const AdminCurriculumPage: React.FC = () => {
                                 type="button"
                                 onClick={() => handleMoveLesson(section.id, lIndex, 'DOWN')}
                                 disabled={lIndex === section.lessons.length - 1}
-                                className="p-1 text-slate-400 hover:text-[#20252B] disabled:opacity-30 rounded hover:bg-slate-100"
+                                className="p-1 text-slate-400 hover:text-white disabled:opacity-30 rounded hover:bg-slate-800"
                                 title="Move Lesson Down"
                               >
                                 <MoveDown className="w-3 h-3" />
@@ -517,7 +517,7 @@ export const AdminCurriculumPage: React.FC = () => {
                               <button
                                 type="button"
                                 onClick={() => handleOpenEditLesson(section.id, lesson)}
-                                className="p-1 text-slate-400 hover:text-[#172B4D] rounded hover:bg-slate-100"
+                                className="p-1 text-slate-400 hover:text-teal-300 rounded hover:bg-slate-800"
                                 title="Edit Lesson"
                               >
                                 <Edit2 className="w-3.5 h-3.5" />
@@ -526,7 +526,7 @@ export const AdminCurriculumPage: React.FC = () => {
                               <button
                                 type="button"
                                 onClick={() => handleDeleteLesson(lesson)}
-                                className="p-1 text-slate-400 hover:text-rose-600 rounded hover:bg-slate-100"
+                                className="p-1 text-slate-400 hover:text-rose-400 rounded hover:bg-slate-800"
                                 title="Delete Lesson"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
@@ -535,7 +535,7 @@ export const AdminCurriculumPage: React.FC = () => {
                           </div>
                         ))
                       ) : (
-                        <div className="p-6 text-center text-xs text-[#697386]">
+                        <div className="p-6 text-center text-xs text-slate-400">
                           No lectures added to this section yet. Click "Add Lecture" to create one.
                         </div>
                       )}
@@ -546,10 +546,10 @@ export const AdminCurriculumPage: React.FC = () => {
             })}
           </div>
         ) : (
-          <div className="bg-white p-12 rounded-xl border border-[#E5E7EB] text-center space-y-3">
-            <Layers className="w-8 h-8 text-slate-300 mx-auto" />
-            <h3 className="text-sm font-semibold text-[#20252B]">No curriculum sections yet</h3>
-            <p className="text-xs text-[#697386]">Start by adding the first section for this course track.</p>
+          <div className="bg-slate-900 p-12 rounded-xl border border-slate-800 text-center space-y-3">
+            <Layers className="w-8 h-8 text-slate-600 mx-auto" />
+            <h3 className="text-sm font-semibold text-white">No curriculum sections yet</h3>
+            <p className="text-xs text-slate-400">Start by adding the first section for this course track.</p>
             <Button variant="primary" size="sm" onClick={handleOpenAddSection}>
               Add First Section
             </Button>
@@ -559,16 +559,16 @@ export const AdminCurriculumPage: React.FC = () => {
 
       {/* Section Modal */}
       {showSectionModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-xl max-w-md w-full p-6 space-y-4 shadow-xl border border-[#E5E7EB]">
-            <div className="flex items-center justify-between pb-3 border-b border-[#E5E7EB]">
-              <h3 className="text-base font-semibold text-[#20252B]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-4">
+          <div className="bg-slate-900 rounded-xl max-w-md w-full p-6 space-y-4 shadow-xl border border-slate-800 text-slate-100">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <h3 className="text-base font-semibold text-white">
                 {editingSection ? 'Edit Section' : 'Add Curriculum Section'}
               </h3>
               <button
                 type="button"
                 onClick={() => setShowSectionModal(false)}
-                className="p-1 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                className="p-1 rounded-md text-slate-400 hover:text-white hover:bg-slate-800"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -576,8 +576,8 @@ export const AdminCurriculumPage: React.FC = () => {
 
             <form onSubmit={handleSaveSection} className="space-y-4 text-xs">
               <div>
-                <label className="block font-semibold text-[#20252B] mb-1">
-                  Section Title <span className="text-rose-500">*</span>
+                <label className="block font-semibold text-slate-200 mb-1">
+                  Section Title <span className="text-rose-400">*</span>
                 </label>
                 <input
                   type="text"
@@ -585,22 +585,22 @@ export const AdminCurriculumPage: React.FC = () => {
                   value={sectionTitle}
                   onChange={(e) => setSectionTitle(e.target.value)}
                   placeholder="e.g. 01. Getting Started & Setup"
-                  className="w-full px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-sm text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-[#20252B] mb-1">Description (Optional)</label>
+                <label className="block font-semibold text-slate-200 mb-1">Description (Optional)</label>
                 <textarea
                   rows={2}
                   value={sectionDesc}
                   onChange={(e) => setSectionDesc(e.target.value)}
                   placeholder="Overview of this module..."
-                  className="w-full px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-xs text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-[#E5E7EB]">
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-800">
                 <Button variant="ghost" size="sm" onClick={() => setShowSectionModal(false)}>
                   Cancel
                 </Button>
@@ -615,16 +615,16 @@ export const AdminCurriculumPage: React.FC = () => {
 
       {/* Lesson Modal */}
       {showLessonModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white rounded-xl max-w-lg w-full p-6 space-y-4 shadow-xl border border-[#E5E7EB] my-8 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-3 border-b border-[#E5E7EB]">
-              <h3 className="text-base font-semibold text-[#20252B]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="bg-slate-900 rounded-xl max-w-lg w-full p-6 space-y-4 shadow-xl border border-slate-800 my-8 max-h-[90vh] overflow-y-auto text-slate-100">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <h3 className="text-base font-semibold text-white">
                 {editingLesson ? 'Edit Lecture' : 'Add Lecture'}
               </h3>
               <button
                 type="button"
                 onClick={() => setShowLessonModal(false)}
-                className="p-1 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                className="p-1 rounded-md text-slate-400 hover:text-white hover:bg-slate-800"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -632,8 +632,8 @@ export const AdminCurriculumPage: React.FC = () => {
 
             <form onSubmit={handleSaveLesson} className="space-y-4 text-xs">
               <div>
-                <label className="block font-semibold text-[#20252B] mb-1">
-                  Lecture Title <span className="text-rose-500">*</span>
+                <label className="block font-semibold text-slate-200 mb-1">
+                  Lecture Title <span className="text-rose-400">*</span>
                 </label>
                 <input
                   type="text"
@@ -641,17 +641,17 @@ export const AdminCurriculumPage: React.FC = () => {
                   value={lessonTitle}
                   onChange={(e) => setLessonTitle(e.target.value)}
                   placeholder="e.g. Introduction to Component Lifecycle"
-                  className="w-full px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-sm text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold text-[#20252B] mb-1">Type</label>
+                  <label className="block font-semibold text-slate-200 mb-1">Type</label>
                   <select
                     value={lessonType}
                     onChange={(e: any) => setLessonType(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-xs text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                   >
                     <option value="VIDEO">Video Lecture</option>
                     <option value="TEXT">Article / Text Note</option>
@@ -660,44 +660,44 @@ export const AdminCurriculumPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-[#20252B] mb-1">Duration (Minutes)</label>
+                  <label className="block font-semibold text-slate-200 mb-1">Duration (Minutes)</label>
                   <input
                     type="number"
                     value={lessonDurationMinutes}
                     onChange={(e) => setLessonDurationMinutes(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-xs text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                   />
                 </div>
               </div>
 
               {lessonType === 'VIDEO' && (
                 <div>
-                  <label className="block font-semibold text-[#20252B] mb-1">Video URL (YouTube or MP4)</label>
+                  <label className="block font-semibold text-slate-200 mb-1">Video URL (YouTube or MP4)</label>
                   <input
                     type="url"
                     value={lessonVideoUrl}
                     onChange={(e) => setLessonVideoUrl(e.target.value)}
                     placeholder="https://www.youtube.com/watch?v=..."
-                    className="w-full px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-xs text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                   />
                 </div>
               )}
 
               <div>
-                <label className="block font-semibold text-[#20252B] mb-1">Description / Summary</label>
+                <label className="block font-semibold text-slate-200 mb-1">Description / Summary</label>
                 <textarea
                   rows={2}
                   value={lessonDesc}
                   onChange={(e) => setLessonDesc(e.target.value)}
                   placeholder="Key takeaways from this lecture..."
-                  className="w-full px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-xs text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                 />
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="font-semibold text-[#20252B]">Notes & Resource Links</label>
-                  <label className="text-[11px] font-medium text-[#172B4D] hover:underline cursor-pointer flex items-center gap-1">
+                  <label className="font-semibold text-slate-200">Notes & Resource Links</label>
+                  <label className="text-[11px] font-medium text-teal-400 hover:text-teal-300 cursor-pointer flex items-center gap-1">
                     <Upload className="w-3 h-3" />
                     <span>{uploadingFile ? 'Uploading...' : 'Attach File'}</span>
                     <input
@@ -713,33 +713,33 @@ export const AdminCurriculumPage: React.FC = () => {
                   value={lessonContentText}
                   onChange={(e) => setLessonContentText(e.target.value)}
                   placeholder="Documentation, GitHub links, or code samples..."
-                  className="w-full px-3 py-2 font-mono text-xs bg-slate-50 border border-[#E5E7EB] rounded-lg text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+                  className="w-full px-3 py-2 font-mono text-xs bg-slate-800 border border-slate-700 rounded-lg text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                 />
               </div>
 
               <div className="flex items-center gap-4 pt-1">
-                <label className="flex items-center gap-2 cursor-pointer">
+                <label className="flex items-center gap-2 cursor-pointer text-slate-300">
                   <input
                     type="checkbox"
                     checked={lessonPreview}
                     onChange={(e) => setLessonPreview(e.target.checked)}
-                    className="rounded text-[#172B4D] focus:ring-[#172B4D]"
+                    className="rounded bg-slate-800 border-slate-700 text-teal-600 focus:ring-teal-500"
                   />
                   <span>Free demo preview (visible before enrolling)</span>
                 </label>
 
-                <label className="flex items-center gap-2 cursor-pointer">
+                <label className="flex items-center gap-2 cursor-pointer text-slate-300">
                   <input
                     type="checkbox"
                     checked={lessonMandatory}
                     onChange={(e) => setLessonMandatory(e.target.checked)}
-                    className="rounded text-[#172B4D] focus:ring-[#172B4D]"
+                    className="rounded bg-slate-800 border-slate-700 text-teal-600 focus:ring-teal-500"
                   />
                   <span>Mandatory completion</span>
                 </label>
               </div>
 
-              <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-[#E5E7EB]">
+              <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-slate-800">
                 <Button variant="ghost" size="sm" onClick={() => setShowLessonModal(false)}>
                   Cancel
                 </Button>

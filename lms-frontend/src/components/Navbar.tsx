@@ -10,7 +10,6 @@ import {
   LayoutDashboard,
   ChevronDown,
 } from 'lucide-react';
-import { ThemeToggle } from './ThemeToggle';
 
 export const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
@@ -104,9 +103,6 @@ export const Navbar: React.FC = () => {
 
           {/* Right Actions */}
           <div className="hidden md:flex items-center gap-3">
-            {/* Theme Toggle Button */}
-            <ThemeToggle />
-
             {user ? (
               <div className="relative">
                 <button
@@ -177,13 +173,12 @@ export const Navbar: React.FC = () => {
             )}
           </div>
 
-          {/* Mobile menu and theme toggle trigger */}
-          <div className="flex items-center gap-2 md:hidden">
-            <ThemeToggle />
+          {/* Mobile menu trigger */}
+          <div className="flex items-center md:hidden">
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
               aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}

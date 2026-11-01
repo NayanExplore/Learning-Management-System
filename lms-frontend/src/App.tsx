@@ -39,7 +39,7 @@ export const App: React.FC = () => {
     <ThemeProvider>
       <AuthProvider>
         <Router>
-          <div className="min-h-screen flex flex-col bg-[#FAFAF8] dark:bg-slate-950 text-[#20252B] dark:text-slate-100 transition-colors duration-150">
+          <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 transition-colors duration-150">
             <Navbar />
             <main className="flex-1 flex flex-col">
             <Routes>

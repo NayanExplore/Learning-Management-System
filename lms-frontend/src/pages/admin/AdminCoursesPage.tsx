@@ -278,17 +278,17 @@ export const AdminCoursesPage: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 bg-[#FAFAF8] pb-16">
+    <div className="flex-1 bg-slate-950 text-slate-100 pb-16">
       <AdminNav />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         {/* Header & Primary Actions */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-[#20252B] tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
               Course & Fee Management
             </h1>
-            <p className="text-xs sm:text-sm text-[#697386] mt-1">
+            <p className="text-xs sm:text-sm text-slate-400 mt-1">
               Create and publish courses, configure curriculum sections, adjust fees, and upload media.
             </p>
           </div>
@@ -299,11 +299,12 @@ export const AdminCoursesPage: React.FC = () => {
               size="sm"
               icon={<Upload className="w-4 h-4" />}
               onClick={() => setShowBulkModal(true)}
+              className="border-slate-700 text-slate-200 hover:bg-slate-800"
             >
               Bulk Import
             </Button>
             <Button
-              variant="primary"
+              variant="teal"
               size="sm"
               icon={<Plus className="w-4 h-4" />}
               onClick={handleOpenCreateModal}
@@ -314,7 +315,7 @@ export const AdminCoursesPage: React.FC = () => {
         </div>
 
         {/* Filter Bar */}
-        <div className="bg-white p-3.5 rounded-xl border border-[#E5E7EB] shadow-xs flex flex-col md:flex-row gap-3 items-center justify-between">
+        <div className="bg-slate-900 p-3.5 rounded-xl border border-slate-800 shadow-xs flex flex-col md:flex-row gap-3 items-center justify-between">
           <div className="relative w-full md:w-80">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
@@ -322,12 +323,12 @@ export const AdminCoursesPage: React.FC = () => {
               placeholder="Search courses..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-8 py-1.5 text-xs bg-slate-50 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+              className="w-full pl-9 pr-8 py-1.5 text-xs bg-slate-800 border border-slate-700 rounded-lg text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
             />
             {searchTerm && (
               <button
                 onClick={() => setSearchTerm('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -338,7 +339,7 @@ export const AdminCoursesPage: React.FC = () => {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="text-xs bg-white border border-[#E5E7EB] rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 text-[#20252B]"
+              className="text-xs bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-teal-500/20 text-slate-200"
             >
               <option value="">All Statuses</option>
               <option value="PUBLISHED">Published</option>
@@ -349,7 +350,7 @@ export const AdminCoursesPage: React.FC = () => {
             <select
               value={levelFilter}
               onChange={(e) => setLevelFilter(e.target.value)}
-              className="text-xs bg-white border border-[#E5E7EB] rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 text-[#20252B]"
+              className="text-xs bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-teal-500/20 text-slate-200"
             >
               <option value="">All Levels</option>
               <option value="BEGINNER">Beginner</option>
@@ -360,10 +361,10 @@ export const AdminCoursesPage: React.FC = () => {
         </div>
 
         {/* Courses Table */}
-        <div className="bg-white rounded-xl border border-[#E5E7EB] shadow-xs overflow-hidden">
+        <div className="bg-slate-900 rounded-xl border border-slate-800 shadow-xs overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 border-b border-[#E5E7EB] text-[#697386]">
+              <thead className="bg-slate-850 border-b border-slate-800 text-slate-400">
                 <tr>
                   <th className="px-5 py-3 font-semibold">Course</th>
                   <th className="px-5 py-3 font-semibold">Price</th>
@@ -372,42 +373,42 @@ export const AdminCoursesPage: React.FC = () => {
                   <th className="px-5 py-3 font-semibold text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E5E7EB]">
+              <tbody className="divide-y divide-slate-800">
                 {loading ? (
                   <tr>
-                    <td colSpan={5} className="px-5 py-12 text-center text-xs text-[#697386]">
-                      <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-slate-400" />
+                    <td colSpan={5} className="px-5 py-12 text-center text-xs text-slate-400">
+                      <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-slate-500" />
                       Loading course inventory...
                     </td>
                   </tr>
                 ) : courses.length > 0 ? (
                   courses.map((course) => (
-                    <tr key={course.id} className="hover:bg-slate-50/50">
+                    <tr key={course.id} className="hover:bg-slate-800/40">
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-9 bg-slate-100 rounded overflow-hidden shrink-0 border border-[#E5E7EB]">
+                          <div className="w-12 h-9 bg-slate-800 rounded overflow-hidden shrink-0 border border-slate-700">
                             {course.thumbnailUrl ? (
                               <img src={course.thumbnailUrl} alt={course.title} className="w-full h-full object-cover" />
                             ) : (
-                              <div className="w-full h-full flex items-center justify-center text-slate-300">
+                              <div className="w-full h-full flex items-center justify-center text-slate-500">
                                 <BookOpen className="w-4 h-4" />
                               </div>
                             )}
                           </div>
                           <div className="min-w-0">
-                            <span className="font-semibold text-[#20252B] line-clamp-1">{course.title}</span>
-                            <span className="text-[11px] text-[#697386]">{course.instructorName || 'SkillForge Faculty'}</span>
+                            <span className="font-semibold text-white line-clamp-1">{course.title}</span>
+                            <span className="text-[11px] text-slate-400">{course.instructorName || 'SkillForge Faculty'}</span>
                           </div>
                         </div>
                       </td>
 
-                      <td className="px-5 py-3.5 font-semibold text-[#20252B]">
+                      <td className="px-5 py-3.5 font-semibold text-white">
                         {formatCurrency(course.price, course.currency)}
                       </td>
 
-                      <td className="px-5 py-3.5 text-[#697386]">
-                        <div>{course.level}</div>
-                        <div className="text-[11px] text-slate-400">{formatDuration(course.durationHours)}</div>
+                      <td className="px-5 py-3.5 text-slate-400">
+                        <div className="text-slate-200">{course.level}</div>
+                        <div className="text-[11px] text-slate-500">{formatDuration(course.durationHours)}</div>
                       </td>
 
                       <td className="px-5 py-3.5">
@@ -423,7 +424,7 @@ export const AdminCoursesPage: React.FC = () => {
                         <div className="flex items-center justify-end gap-1.5">
                           <Link
                             to={`/admin/courses/${course.id}/curriculum`}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#287C78]/10 text-[#287C78] hover:bg-[#287C78]/20 font-medium text-[11px] transition-colors"
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-teal-500/10 text-teal-400 hover:bg-teal-500/20 font-medium text-[11px] transition-colors"
                             title="Manage curriculum sections and lectures"
                           >
                             <Layers className="w-3.5 h-3.5" />
@@ -433,7 +434,7 @@ export const AdminCoursesPage: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => handleToggleStatus(course.id, course.status)}
-                            className="p-1 rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                            className="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-800"
                             title={course.status === 'PUBLISHED' ? 'Unpublish to Draft' : 'Publish Course'}
                           >
                             {course.status === 'PUBLISHED' ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -442,7 +443,7 @@ export const AdminCoursesPage: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => handleOpenEditModal(course.id)}
-                            className="p-1 rounded text-slate-400 hover:text-[#172B4D] hover:bg-slate-100"
+                            className="p-1 rounded text-slate-400 hover:text-teal-400 hover:bg-slate-800"
                             title="Edit course details"
                           >
                             <Edit3 className="w-4 h-4" />
@@ -451,7 +452,7 @@ export const AdminCoursesPage: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => handleDeleteCourse(course.id, course.title)}
-                            className="p-1 rounded text-slate-400 hover:text-rose-600 hover:bg-slate-100"
+                            className="p-1 rounded text-slate-400 hover:text-rose-400 hover:bg-slate-800"
                             title="Delete course"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -462,7 +463,7 @@ export const AdminCoursesPage: React.FC = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={5} className="px-5 py-8 text-center text-xs text-[#697386]">
+                    <td colSpan={5} className="px-5 py-8 text-center text-xs text-slate-400">
                       No courses match your criteria.
                     </td>
                   </tr>
@@ -475,10 +476,10 @@ export const AdminCoursesPage: React.FC = () => {
 
       {/* Course Create / Edit Modal */}
       {(showCreateModal || showEditModal) && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white rounded-xl max-w-2xl w-full p-6 space-y-4 shadow-xl border border-[#E5E7EB] my-8 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-3 border-b border-[#E5E7EB]">
-              <h3 className="text-base font-semibold text-[#20252B]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="bg-slate-900 rounded-xl max-w-2xl w-full p-6 space-y-4 shadow-xl border border-slate-800 my-8 max-h-[90vh] overflow-y-auto text-slate-100">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <h3 className="text-base font-semibold text-white">
                 {editingCourseId ? 'Edit Course Details' : 'Create New Course'}
               </h3>
               <button
@@ -487,7 +488,7 @@ export const AdminCoursesPage: React.FC = () => {
                   setShowCreateModal(false);
                   setShowEditModal(false);
                 }}
-                className="p-1 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                className="p-1 rounded-md text-slate-400 hover:text-white hover:bg-slate-800"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -495,7 +496,7 @@ export const AdminCoursesPage: React.FC = () => {
 
             <form onSubmit={handleSubmitCourse} className="space-y-4 text-xs">
               <div>
-                <label className="block font-semibold text-[#20252B] mb-1">
+                <label className="block font-semibold text-slate-200 mb-1">
                   Course Title <span className="text-rose-500">*</span>
                 </label>
                 <input
@@ -504,38 +505,38 @@ export const AdminCoursesPage: React.FC = () => {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g. Full Stack React & Spring Boot"
-                  className="w-full px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-sm text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold text-[#20252B] mb-1">Price (INR)</label>
+                  <label className="block font-semibold text-slate-200 mb-1">Price (INR)</label>
                   <input
                     type="number"
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-sm text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-[#20252B] mb-1">Original Price (INR)</label>
+                  <label className="block font-semibold text-slate-200 mb-1">Original Price (INR)</label>
                   <input
                     type="number"
                     value={originalPrice}
                     onChange={(e) => setOriginalPrice(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-sm text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block font-semibold text-[#20252B] mb-1">Level</label>
+                  <label className="block font-semibold text-slate-200 mb-1">Level</label>
                   <select
                     value={level}
                     onChange={(e) => setLevel(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-xs text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
                   >
                     <option value="BEGINNER">Beginner</option>
                     <option value="INTERMEDIATE">Intermediate</option>
@@ -543,20 +544,20 @@ export const AdminCoursesPage: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block font-semibold text-[#20252B] mb-1">Duration (Hours)</label>
+                  <label className="block font-semibold text-slate-200 mb-1">Duration (Hours)</label>
                   <input
                     type="number"
                     value={duration}
                     onChange={(e) => setDuration(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-xs text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-[#20252B] mb-1">Status</label>
+                  <label className="block font-semibold text-slate-200 mb-1">Status</label>
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-xs text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
                   >
                     <option value="PUBLISHED">Published</option>
                     <option value="DRAFT">Draft</option>
@@ -565,16 +566,16 @@ export const AdminCoursesPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block font-semibold text-[#20252B] mb-1">Thumbnail URL</label>
+                <label className="block font-semibold text-slate-200 mb-1">Thumbnail URL</label>
                 <div className="flex gap-2">
                   <input
                     type="url"
                     value={thumbnailUrl}
                     onChange={(e) => setThumbnailUrl(e.target.value)}
                     placeholder="https://..."
-                    className="flex-1 px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-xs text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+                    className="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
                   />
-                  <label className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-[#20252B] rounded-lg cursor-pointer flex items-center gap-1 font-medium transition-colors">
+                  <label className="px-3 py-2 bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-200 rounded-lg cursor-pointer flex items-center gap-1 font-medium transition-colors">
                     <Upload className="w-3.5 h-3.5" />
                     <span>{uploadingImage ? 'Uploading...' : 'Upload'}</span>
                     <input
@@ -589,28 +590,28 @@ export const AdminCoursesPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block font-semibold text-[#20252B] mb-1">Short Description</label>
+                <label className="block font-semibold text-slate-200 mb-1">Short Description</label>
                 <input
                   type="text"
                   value={shortDesc}
                   onChange={(e) => setShortDesc(e.target.value)}
                   placeholder="One sentence summary of what is taught..."
-                  className="w-full px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-xs text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-[#20252B] mb-1">Full Description</label>
+                <label className="block font-semibold text-slate-200 mb-1">Full Description</label>
                 <textarea
                   rows={4}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Detailed course breakdown..."
-                  className="w-full px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-xs text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-[#E5E7EB]">
+              <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-slate-800">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -618,10 +619,11 @@ export const AdminCoursesPage: React.FC = () => {
                     setShowCreateModal(false);
                     setShowEditModal(false);
                   }}
+                  className="text-slate-400 hover:text-white"
                 >
                   Cancel
                 </Button>
-                <Button type="submit" variant="primary" size="sm" loading={submitting}>
+                <Button type="submit" variant="teal" size="sm" loading={submitting}>
                   {editingCourseId ? 'Save Changes' : 'Create Course'}
                 </Button>
               </div>
@@ -632,29 +634,29 @@ export const AdminCoursesPage: React.FC = () => {
 
       {/* Bulk Import Modal */}
       {showBulkModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-xl max-w-xl w-full p-6 space-y-4 shadow-xl border border-[#E5E7EB]">
-            <div className="flex items-center justify-between pb-3 border-b border-[#E5E7EB]">
-              <h3 className="text-base font-semibold text-[#20252B]">Bulk Import Courses</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-xs p-4">
+          <div className="bg-slate-900 rounded-xl max-w-xl w-full p-6 space-y-4 shadow-xl border border-slate-800 text-slate-100">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <h3 className="text-base font-semibold text-white">Bulk Import Courses</h3>
               <button
                 type="button"
                 onClick={() => setShowBulkModal(false)}
-                className="p-1 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                className="p-1 rounded-md text-slate-400 hover:text-white hover:bg-slate-800"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <p className="text-xs text-[#697386]">
+            <p className="text-xs text-slate-400">
               Paste a JSON array of course objects with title, price, description, and level.
             </p>
 
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-[#20252B]">JSON Payload</span>
+              <span className="text-xs font-semibold text-slate-200">JSON Payload</span>
               <button
                 type="button"
                 onClick={loadSampleBulkTemplate}
-                className="text-xs font-medium text-[#172B4D] hover:underline"
+                className="text-xs font-medium text-teal-400 hover:underline"
               >
                 Load Sample Template
               </button>
@@ -665,15 +667,15 @@ export const AdminCoursesPage: React.FC = () => {
               value={bulkJsonText}
               onChange={(e) => setBulkJsonText(e.target.value)}
               placeholder="Paste JSON array here..."
-              className="w-full p-3 font-mono text-xs bg-slate-50 border border-[#E5E7EB] rounded-lg text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15"
+              className="w-full p-3 font-mono text-xs bg-slate-800 border border-slate-700 rounded-lg text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
             />
 
-            <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-[#E5E7EB]">
-              <Button variant="ghost" size="sm" onClick={() => setShowBulkModal(false)}>
+            <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-800">
+              <Button variant="ghost" size="sm" onClick={() => setShowBulkModal(false)} className="text-slate-400 hover:text-white">
                 Cancel
               </Button>
               <Button
-                variant="primary"
+                variant="teal"
                 size="sm"
                 onClick={handleBulkUpload}
                 loading={bulkUploading}
