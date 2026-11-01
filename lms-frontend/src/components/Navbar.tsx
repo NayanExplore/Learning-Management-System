@@ -108,45 +108,45 @@ export const Navbar: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="flex items-center gap-2 pl-3 pr-2.5 py-1.5 rounded-lg border border-[#E5E7EB] dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-sm font-medium text-[#20252B] dark:text-slate-200"
+                  className="flex items-center gap-2 pl-2.5 pr-3 py-1.5 rounded-lg border border-slate-700 bg-slate-900/90 hover:bg-slate-800 transition-colors text-sm font-medium text-slate-100"
                 >
-                  <div className="w-6 h-6 rounded-full bg-[#172B4D] dark:bg-[#287C78] text-white text-xs flex items-center justify-center font-semibold">
+                  <div className="w-6 h-6 rounded-full bg-teal-600 text-white text-xs flex items-center justify-center font-bold">
                     {user.fullName ? user.fullName.charAt(0).toUpperCase() : 'U'}
                   </div>
-                  <span className="max-w-[140px] truncate">{user.fullName || user.email}</span>
+                  <span className="max-w-[140px] truncate text-slate-100 font-medium">{user.fullName || user.email}</span>
                   <ChevronDown className="w-4 h-4 text-slate-400" />
                 </button>
 
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-1.5 w-56 rounded-lg bg-white dark:bg-slate-850 border border-[#E5E7EB] dark:border-slate-700 shadow-lg py-1.5 z-50 animate-in fade-in duration-100">
-                    <div className="px-3.5 py-2 border-b border-[#E5E7EB] dark:border-slate-800">
-                      <p className="text-xs font-semibold text-[#20252B] dark:text-white truncate">{user.fullName}</p>
-                      <p className="text-xs text-[#697386] dark:text-slate-400 truncate">{user.email}</p>
+                  <div className="absolute right-0 mt-2 w-60 rounded-xl bg-slate-900 border border-slate-800 shadow-2xl py-1.5 z-50 animate-in fade-in duration-100 ring-1 ring-black/40">
+                    <div className="px-4 py-2.5 border-b border-slate-800">
+                      <p className="text-xs font-semibold text-white truncate">{user.fullName}</p>
+                      <p className="text-xs text-slate-400 truncate mt-0.5">{user.email}</p>
                     </div>
 
                     <div className="py-1">
                       <Link
                         to={user.role === 'ADMIN' ? '/admin' : '/dashboard'}
                         onClick={() => setDropdownOpen(false)}
-                        className="flex items-center gap-2 px-3.5 py-2 text-xs text-[#20252B] dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+                        className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-200 hover:text-white hover:bg-slate-800/80 transition-colors"
                       >
-                        <LayoutDashboard className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+                        <LayoutDashboard className="w-4 h-4 text-teal-400" />
                         <span>{user.role === 'ADMIN' ? 'Admin Console' : 'My Dashboard'}</span>
                       </Link>
                       <Link
                         to="/verify-certificate"
                         onClick={() => setDropdownOpen(false)}
-                        className="flex items-center gap-2 px-3.5 py-2 text-xs text-[#20252B] dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+                        className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-200 hover:text-white hover:bg-slate-800/80 transition-colors"
                       >
-                        <ShieldCheck className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+                        <ShieldCheck className="w-4 h-4 text-teal-400" />
                         <span>Verify Certificate</span>
                       </Link>
                     </div>
 
-                    <div className="border-t border-[#E5E7EB] dark:border-slate-800 pt-1">
+                    <div className="border-t border-slate-800 pt-1 mt-1">
                       <button
                         onClick={handleLogout}
-                        className="flex items-center gap-2 w-full text-left px-3.5 py-2 text-xs text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40"
+                        className="flex items-center gap-2.5 w-full text-left px-4 py-2 text-xs font-medium text-rose-400 hover:text-rose-300 hover:bg-rose-950/40 transition-colors"
                       >
                         <LogOut className="w-4 h-4" />
                         <span>Sign out</span>
@@ -226,23 +226,35 @@ export const Navbar: React.FC = () => {
             Contact
           </Link>
 
-          <div className="border-t border-[#E5E7EB] dark:border-slate-800 pt-3 mt-2">
+          <div className="border-t border-slate-800 pt-3 mt-2">
             {user ? (
-              <div className="space-y-1">
+              <div className="space-y-2">
+                <div className="px-3 py-2 bg-slate-800/60 rounded-lg border border-slate-700/60">
+                  <p className="text-xs font-semibold text-white truncate">{user.fullName}</p>
+                  <p className="text-xs text-slate-400 truncate mt-0.5">{user.email}</p>
+                </div>
                 <Link
                   to={user.role === 'ADMIN' ? '/admin' : '/dashboard'}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-2 py-2 px-3 rounded-md text-sm font-medium text-[#172B4D] dark:text-[#287C78] bg-slate-50 dark:bg-slate-800"
+                  className="flex items-center gap-2.5 py-2 px-3 rounded-md text-sm font-medium text-teal-400 bg-slate-800 hover:bg-slate-750 transition-colors"
                 >
                   <LayoutDashboard className="w-4 h-4" />
                   <span>{user.role === 'ADMIN' ? 'Admin Console' : 'My Dashboard'}</span>
+                </Link>
+                <Link
+                  to="/verify-certificate"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2.5 py-2 px-3 rounded-md text-sm font-medium text-slate-200 hover:text-white hover:bg-slate-800 transition-colors"
+                >
+                  <ShieldCheck className="w-4 h-4 text-teal-400" />
+                  <span>Verify Credential</span>
                 </Link>
                 <button
                   onClick={() => {
                     handleLogout();
                     setMobileMenuOpen(false);
                   }}
-                  className="flex items-center gap-2 w-full text-left py-2 px-3 text-sm text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-md"
+                  className="flex items-center gap-2.5 w-full text-left py-2 px-3 text-sm font-medium text-rose-400 hover:text-rose-300 hover:bg-rose-950/40 rounded-md transition-colors"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>Sign out</span>

@@ -12,6 +12,9 @@ export default {
         display: ['Inter', 'Plus Jakarta Sans', 'sans-serif'],
       },
       colors: {
+        slate: {
+          850: '#151f32',
+        },
         brand: {
           navy: '#172B4D',
           'navy-dark': '#0E1E38',
