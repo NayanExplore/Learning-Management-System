@@ -4,7 +4,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useAuth } from '../context/AuthContext';
-import { GraduationCap, Lock, Mail, AlertCircle, CheckCircle } from 'lucide-react';
+import { GraduationCap, Lock, Mail, AlertCircle, CheckCircle, Eye, EyeOff } from 'lucide-react';
+import { Button } from '../components/ui/Button';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -19,6 +20,7 @@ export const LoginPage: React.FC = () => {
   const location = useLocation();
   const [serverError, setServerError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const from = (location.state as any)?.from?.pathname || '/dashboard';
   const successMessage = (location.state as any)?.message;
@@ -49,55 +51,49 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8 relative bg-slate-50/80 overflow-hidden">
-      {/* Ambient background glows */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/10 blur-[100px] rounded-full pointer-events-none"></div>
-
-      <div className="max-w-md w-full bg-white p-8 sm:p-10 rounded-3xl border border-slate-200/90 shadow-card-elevated space-y-6 relative z-10 backdrop-blur-md">
-        <div className="text-center">
-          <Link to="/" className="inline-flex items-center space-x-2.5 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/25 group-hover:scale-105 transition-transform">
-              <GraduationCap className="w-6 h-6" />
+    <div className="flex-1 flex items-center justify-center py-16 px-4 sm:px-6 bg-[#FAFAF8]">
+      <div className="max-w-md w-full bg-white p-8 rounded-xl border border-[#E5E7EB] shadow-xs space-y-6">
+        {/* Header */}
+        <div className="text-center space-y-2">
+          <Link to="/" className="inline-flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-[#172B4D] flex items-center justify-center text-white">
+              <GraduationCap className="w-5 h-5" />
             </div>
-            <span className="font-display font-extrabold text-2xl tracking-tight text-slate-900">
-              SkillForge<span className="text-indigo-600">.</span>
-            </span>
+            <span className="text-lg font-bold text-[#20252B]">SkillForge</span>
           </Link>
-          <h2 className="mt-5 text-2xl sm:text-3xl font-display font-extrabold text-slate-900 tracking-tight">Welcome back</h2>
-          <p className="mt-1.5 text-xs sm:text-sm text-slate-500">
-            Don't have an account yet?{' '}
-            <Link to="/register" className="font-bold text-indigo-600 hover:text-indigo-700 underline">
+          <h2 className="text-xl font-bold text-[#20252B] tracking-tight">Log in to your account</h2>
+          <p className="text-xs text-[#697386]">
+            Don't have an account?{' '}
+            <Link to="/register" className="font-semibold text-[#172B4D] hover:underline">
               Create an account
             </Link>
           </p>
         </div>
 
         {successMessage && (
-          <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 flex items-start space-x-2.5">
-            <CheckCircle className="w-4 h-4 shrink-0 mt-0.5 text-emerald-600" />
+          <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-800 flex items-start gap-2">
+            <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600 mt-0.5" />
             <span>{successMessage}</span>
           </div>
         )}
 
         {serverError && (
-          <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 flex items-start space-x-2.5">
-            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-600" />
+          <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-xs text-rose-700 flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
             <span>{serverError}</span>
           </div>
         )}
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-xs">
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-              Email Address
-            </label>
+            <label className="block font-semibold text-[#20252B] mb-1.5">Email Address</label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="email"
                 {...register('email')}
-                placeholder="name@company.com"
-                className="w-full pl-10 pr-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white text-slate-900 transition-all"
+                placeholder="you@company.com"
+                className="w-full pl-9 pr-3.5 py-2 text-sm bg-slate-50 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white text-[#20252B]"
               />
             </div>
             {errors.email && <p className="text-xs text-rose-600 mt-1 font-medium">{errors.email.message}</p>}
@@ -105,36 +101,37 @@ export const LoginPage: React.FC = () => {
 
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-                Password
-              </label>
-              <Link to="/forgot-password" className="text-xs font-bold text-indigo-600 hover:text-indigo-700">
+              <label className="font-semibold text-[#20252B]">Password</label>
+              <Link to="/forgot-password" className="text-xs font-medium text-[#172B4D] hover:underline">
                 Forgot password?
               </Link>
             </div>
             <div className="relative">
-              <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 {...register('password')}
                 placeholder="••••••••"
-                className="w-full pl-10 pr-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white text-slate-900 transition-all"
+                className="w-full pl-9 pr-10 py-2 text-sm bg-slate-50 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white text-[#20252B]"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
             {errors.password && <p className="text-xs text-rose-600 mt-1 font-medium">{errors.password.message}</p>}
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold py-3 rounded-xl text-sm shadow-md shadow-indigo-600/25 hover:shadow-lg transition-all duration-200 disabled:opacity-50 transform hover:-translate-y-0.5"
-          >
-            {loading ? 'Signing in...' : 'Sign In to Dashboard'}
-          </button>
+          <Button type="submit" variant="primary" size="md" className="w-full mt-2" loading={loading}>
+            Sign In
+          </Button>
         </form>
 
-        <div className="pt-2 text-center text-xs text-slate-400 border-t border-slate-100">
-          <span>Protected with 256-Bit SSL encryption & secure session storage</span>
+        <div className="pt-2 text-center text-[11px] text-[#697386] border-t border-[#E5E7EB]">
+          Protected with 256-bit SSL encryption
         </div>
       </div>
     </div>

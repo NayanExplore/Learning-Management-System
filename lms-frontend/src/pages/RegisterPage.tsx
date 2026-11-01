@@ -4,7 +4,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useAuth } from '../context/AuthContext';
-import { GraduationCap, Lock, Mail, User, Phone, AlertCircle } from 'lucide-react';
+import { GraduationCap, Lock, Mail, User, Phone, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { Button } from '../components/ui/Button';
 
 const registerSchema = z.object({
   fullName: z.string().min(2, 'Full name must be at least 2 characters'),
@@ -20,6 +21,7 @@ export const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const [serverError, setServerError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -43,118 +45,109 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8 relative bg-slate-50/80 overflow-hidden">
-      {/* Ambient glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-500/10 blur-[120px] rounded-full pointer-events-none"></div>
-
-      <div className="max-w-md w-full bg-white p-8 sm:p-10 rounded-3xl border border-slate-200/90 shadow-card-elevated space-y-6 relative z-10 backdrop-blur-md">
-        <div className="text-center">
-          <Link to="/" className="inline-flex items-center space-x-2.5 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/25 group-hover:scale-105 transition-transform">
-              <GraduationCap className="w-6 h-6" />
+    <div className="flex-1 flex items-center justify-center py-16 px-4 sm:px-6 bg-[#FAFAF8]">
+      <div className="max-w-md w-full bg-white p-8 rounded-xl border border-[#E5E7EB] shadow-xs space-y-6">
+        {/* Header */}
+        <div className="text-center space-y-2">
+          <Link to="/" className="inline-flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-[#172B4D] flex items-center justify-center text-white">
+              <GraduationCap className="w-5 h-5" />
             </div>
-            <span className="font-display font-extrabold text-2xl tracking-tight text-slate-900">
-              SkillForge<span className="text-indigo-600">.</span>
-            </span>
+            <span className="text-lg font-bold text-[#20252B]">SkillForge</span>
           </Link>
-          <h2 className="mt-5 text-2xl sm:text-3xl font-display font-extrabold text-slate-900 tracking-tight">Create your account</h2>
-          <p className="mt-1.5 text-xs sm:text-sm text-slate-500">
+          <h2 className="text-xl font-bold text-[#20252B] tracking-tight">Create your account</h2>
+          <p className="text-xs text-[#697386]">
             Already have an account?{' '}
-            <Link to="/login" className="font-bold text-indigo-600 hover:text-indigo-700 underline">
-              Sign in here
+            <Link to="/login" className="font-semibold text-[#172B4D] hover:underline">
+              Sign in
             </Link>
           </p>
         </div>
 
         {serverError && (
-          <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 flex items-start space-x-2.5">
-            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-600" />
+          <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-xs text-rose-700 flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
             <span>{serverError}</span>
           </div>
         )}
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-xs">
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-              Full Name
-            </label>
+            <label className="block font-semibold text-[#20252B] mb-1.5">Full Name</label>
             <div className="relative">
-              <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 {...register('fullName')}
-                placeholder="Priya Sharma"
-                className="w-full pl-10 pr-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white text-slate-900 transition-all"
+                placeholder="Jane Doe"
+                className="w-full pl-9 pr-3.5 py-2 text-sm bg-slate-50 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white text-[#20252B]"
               />
             </div>
             {errors.fullName && <p className="text-xs text-rose-600 mt-1 font-medium">{errors.fullName.message}</p>}
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-              Email Address
-            </label>
+            <label className="block font-semibold text-[#20252B] mb-1.5">Email Address</label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="email"
                 {...register('email')}
-                placeholder="priya@example.com"
-                className="w-full pl-10 pr-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white text-slate-900 transition-all"
+                placeholder="you@company.com"
+                className="w-full pl-9 pr-3.5 py-2 text-sm bg-slate-50 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white text-[#20252B]"
               />
             </div>
             {errors.email && <p className="text-xs text-rose-600 mt-1 font-medium">{errors.email.message}</p>}
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-              Phone Number (For SMS & WhatsApp updates)
-            </label>
+            <label className="block font-semibold text-[#20252B] mb-1.5">Phone Number (Optional)</label>
             <div className="relative">
-              <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="tel"
                 {...register('phone')}
                 placeholder="+91 98765 43210"
-                className="w-full pl-10 pr-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white text-slate-900 transition-all"
+                className="w-full pl-9 pr-3.5 py-2 text-sm bg-slate-50 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white text-[#20252B]"
               />
             </div>
             {errors.phone && <p className="text-xs text-rose-600 mt-1 font-medium">{errors.phone.message}</p>}
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-              Password (Minimum 8 characters)
-            </label>
+            <label className="block font-semibold text-[#20252B] mb-1.5">Password (Minimum 8 characters)</label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 {...register('password')}
                 placeholder="••••••••"
-                className="w-full pl-10 pr-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white text-slate-900 transition-all"
+                className="w-full pl-9 pr-10 py-2 text-sm bg-slate-50 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white text-[#20252B]"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
             {errors.password && <p className="text-xs text-rose-600 mt-1 font-medium">{errors.password.message}</p>}
           </div>
 
-          <p className="text-xs text-slate-500 leading-relaxed pt-1">
+          <p className="text-[11px] text-[#697386] leading-relaxed pt-1">
             By creating an account, you agree to SkillForge's{' '}
-            <Link to="/terms" className="text-indigo-600 font-semibold underline">Terms of Service</Link> and{' '}
-            <Link to="/privacy" className="text-indigo-600 font-semibold underline">Privacy Policy</Link>.
+            <Link to="/terms" className="text-[#172B4D] font-medium hover:underline">Terms</Link> and{' '}
+            <Link to="/privacy" className="text-[#172B4D] font-medium hover:underline">Privacy Policy</Link>.
           </p>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold py-3 rounded-xl text-sm shadow-md shadow-indigo-600/25 hover:shadow-lg transition-all duration-200 disabled:opacity-50 transform hover:-translate-y-0.5"
-          >
-            {loading ? 'Creating Account...' : 'Complete Free Registration'}
-          </button>
+          <Button type="submit" variant="primary" size="md" className="w-full mt-2" loading={loading}>
+            Create Account
+          </Button>
         </form>
 
-        <div className="pt-2 text-center text-xs text-slate-400 border-t border-slate-100">
-          <span>Protected with 256-Bit SSL encryption & verifiable certificates</span>
+        <div className="pt-2 text-center text-[11px] text-[#697386] border-t border-[#E5E7EB]">
+          Protected with 256-bit SSL encryption
         </div>
       </div>
     </div>

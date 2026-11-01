@@ -45,7 +45,7 @@ export const AdminStudentsPage: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 bg-slate-50 pb-16">
+    <div className="flex-1 bg-[#FAFAF8] pb-16">
       <AdminNav />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">

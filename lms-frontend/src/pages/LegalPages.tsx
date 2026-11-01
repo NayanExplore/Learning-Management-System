@@ -1,8 +1,8 @@
 import React from 'react';
 
 export const PrivacyPolicyPage: React.FC = () => (
-  <div className="flex-1 bg-slate-50 py-16">
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 bg-white p-8 sm:p-12 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+  <div className="flex-1 bg-[#FAFAF8] py-16">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 bg-white p-8 sm:p-12 rounded-xl border border-[#E5E7EB] shadow-xs space-y-6">
       <h1 className="text-3xl font-extrabold text-slate-900">Privacy Policy</h1>
       <p className="text-xs text-slate-400">Last Updated: October 2026</p>
       <div className="prose prose-slate text-sm leading-relaxed text-slate-700 space-y-4">
@@ -27,8 +27,8 @@ export const PrivacyPolicyPage: React.FC = () => (
 );
 
 export const TermsPage: React.FC = () => (
-  <div className="flex-1 bg-slate-50 py-16">
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 bg-white p-8 sm:p-12 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+  <div className="flex-1 bg-[#FAFAF8] py-16">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 bg-white p-8 sm:p-12 rounded-xl border border-[#E5E7EB] shadow-xs space-y-6">
       <h1 className="text-3xl font-extrabold text-slate-900">Terms and Conditions</h1>
       <p className="text-xs text-slate-400">Last Updated: October 2026</p>
       <div className="prose prose-slate text-sm leading-relaxed text-slate-700 space-y-4">
@@ -50,8 +50,8 @@ export const TermsPage: React.FC = () => (
 );
 
 export const RefundPolicyPage: React.FC = () => (
-  <div className="flex-1 bg-slate-50 py-16">
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 bg-white p-8 sm:p-12 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+  <div className="flex-1 bg-[#FAFAF8] py-16">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 bg-white p-8 sm:p-12 rounded-xl border border-[#E5E7EB] shadow-xs space-y-6">
       <h1 className="text-3xl font-extrabold text-slate-900">Refund Policy</h1>
       <p className="text-xs text-slate-400">Last Updated: October 2026</p>
       <div className="prose prose-slate text-sm leading-relaxed text-slate-700 space-y-4">

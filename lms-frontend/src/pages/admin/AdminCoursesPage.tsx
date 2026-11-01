@@ -9,22 +9,18 @@ import {
   EyeOff,
   Edit3,
   X,
-  IndianRupee,
   Layers,
   Search,
-  Filter,
   Upload,
-  FileText,
   Trash2,
-  Users,
-  CheckCircle,
-  Clock,
-  Sparkles,
-  ArrowUpRight,
   RefreshCw,
   Image as ImageIcon,
+  ArrowRight,
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Button } from '../../components/ui/Button';
+import { Badge } from '../../components/ui/Badge';
+import { formatCurrency, formatDuration } from '../../utils/format';
 
 export const AdminCoursesPage: React.FC = () => {
   const navigate = useNavigate();
@@ -69,16 +65,16 @@ export const AdminCoursesPage: React.FC = () => {
     setLoading(true);
     try {
       const params: any = { size: 100 };
-      if (searchTerm) params.q = searchTerm;
+      if (searchTerm.trim()) params.q = searchTerm.trim();
       if (statusFilter) params.status = statusFilter;
       if (levelFilter) params.level = levelFilter;
 
       const res = await api.get('/v1/admin/courses', { params });
-      if (res.data?.success) {
+      if (res.data?.success && res.data.data?.content) {
         setCourses(res.data.data.content);
       }
     } catch (err) {
-      console.error('Failed to load courses', err);
+      console.error('Failed to load admin courses', err);
     } finally {
       setLoading(false);
     }
@@ -173,841 +169,518 @@ export const AdminCoursesPage: React.FC = () => {
         setPrice(String(c.price || 0));
         setOriginalPrice(String(c.originalPrice || 0));
         setCurrency(c.currency || 'INR');
-        setInstructor(c.instructorName || '');
+        setInstructor(c.instructorName || 'SkillForge Faculty');
         setInstructorBio(c.instructorBio || '');
         setDuration(String(c.durationHours || 40));
         setLevel(c.level || 'BEGINNER');
         setStatus(c.status || 'PUBLISHED');
         setThumbnailUrl(c.thumbnailUrl || '');
-        setLearningOutcomes(
-          Array.isArray(c.learningOutcomes) ? c.learningOutcomes.join(', ') : ''
-        );
-        setPrerequisites(
-          Array.isArray(c.prerequisites) ? c.prerequisites.join(', ') : ''
-        );
+        setLearningOutcomes((c.learningOutcomes || []).join(', '));
+        setPrerequisites((c.prerequisites || []).join(', '));
         setShowEditModal(true);
       }
-    } catch (err) {
-      alert('Failed to load course details for editing.');
+    } catch (err: any) {
+      alert('Failed to fetch course details for editing: ' + err.message);
     }
   };
 
-  const handleSaveCourse = async (e: React.FormEvent) => {
+  const handleSubmitCourse = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim()) return;
-
-    setSubmitting(true);
-    const outcomesArray = learningOutcomes
-      .split(',')
-      .map((s) => s.trim())
-      .filter(Boolean);
-    const prereqArray = prerequisites
-      .split(',')
-      .map((s) => s.trim())
-      .filter(Boolean);
+    if (!title.trim()) {
+      alert('Course title is required');
+      return;
+    }
 
     const payload = {
       title: title.trim(),
       slug: slug.trim() || undefined,
-      shortDescription: shortDesc.trim(),
-      description: description.trim(),
+      shortDescription: shortDesc.trim() || undefined,
+      description: description.trim() || undefined,
       price: parseFloat(price) || 0,
-      originalPrice: parseFloat(originalPrice) || 0,
-      currency,
-      instructorName: instructor.trim(),
-      instructorBio: instructorBio.trim(),
-      durationHours: parseInt(duration, 10) || 10,
+      originalPrice: parseFloat(originalPrice) || undefined,
+      currency: currency.trim() || 'INR',
+      instructorName: instructor.trim() || 'SkillForge Faculty',
+      instructorBio: instructorBio.trim() || undefined,
+      durationHours: parseInt(duration) || 40,
       level,
       status,
       thumbnailUrl: thumbnailUrl.trim() || undefined,
-      learningOutcomes: outcomesArray,
-      prerequisites: prereqArray,
+      learningOutcomes: learningOutcomes
+        ? learningOutcomes.split(',').map((s) => s.trim()).filter(Boolean)
+        : [],
+      prerequisites: prerequisites
+        ? prerequisites.split(',').map((s) => s.trim()).filter(Boolean)
+        : [],
     };
 
+    setSubmitting(true);
     try {
       if (editingCourseId) {
         await api.put(`/v1/admin/courses/${editingCourseId}`, payload);
+        alert('Course updated successfully.');
         setShowEditModal(false);
       } else {
         await api.post('/v1/admin/courses', payload);
+        alert('New course created successfully.');
         setShowCreateModal(false);
       }
-      resetForm();
       fetchCourses();
     } catch (err: any) {
-      alert(err.response?.data?.message || err.message || 'Failed to save course');
+      alert(err.response?.data?.message || err.message || 'Operation failed');
     } finally {
       setSubmitting(false);
-    }
-  };
-
-  const handleBulkUpload = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!bulkJsonText.trim()) return;
-
-    let parsed: any[];
-    try {
-      parsed = JSON.parse(bulkJsonText);
-      if (!Array.isArray(parsed)) {
-        throw new Error('JSON must be an array of course objects');
-      }
-    } catch (err: any) {
-      alert('Invalid JSON: ' + err.message);
-      return;
-    }
-
-    setBulkUploading(true);
-    try {
-      await api.post('/v1/admin/courses/bulk-upload', parsed);
-      setShowBulkModal(false);
-      setBulkJsonText('');
-      fetchCourses();
-      alert(`Successfully imported ${parsed.length} courses!`);
-    } catch (err: any) {
-      alert(err.response?.data?.message || err.message || 'Bulk upload failed');
-    } finally {
-      setBulkUploading(false);
     }
   };
 
   const loadSampleBulkTemplate = () => {
     const sample = [
       {
-        title: 'Full-Stack React & Spring Boot Mastery',
-        shortDescription: 'Master enterprise full-stack development with React 18 and Java Spring Boot 3.',
-        description: 'Comprehensive curriculum covering REST APIs, JWT authentication, MySQL, Docker, and AWS deployment.',
+        title: 'Full Stack Java & Spring Boot Mastery',
+        shortDescription: 'Master microservices, JPA Hibernate, Docker and React frontend.',
         price: 3499,
         originalPrice: 6999,
-        currency: 'INR',
-        instructorName: 'SkillForge Senior Architects',
-        durationHours: 65,
         level: 'INTERMEDIATE',
+        durationHours: 50,
         status: 'PUBLISHED',
-        learningOutcomes: ['Build reactive frontends', 'Design robust Spring Boot microservices', 'Deploy containerized web apps'],
-        prerequisites: ['Basic Java and JavaScript knowledge']
       },
       {
-        title: 'Cybersecurity Analyst & Threat Hunting',
-        shortDescription: 'Learn ethical hacking, network defense, penetration testing, and incident response.',
-        description: 'Hands-on security labs, vulnerability scanning, SIEM tool analysis, and SOC operations.',
-        price: 4999,
-        originalPrice: 9999,
-        currency: 'INR',
-        instructorName: 'Infosec Security Institute',
-        durationHours: 50,
+        title: 'Cloud DevOps with AWS & Terraform',
+        shortDescription: 'Infrastructure as Code, Kubernetes clusters, CI/CD pipelines.',
+        price: 3999,
+        originalPrice: 7999,
         level: 'ADVANCED',
+        durationHours: 45,
         status: 'PUBLISHED',
-        learningOutcomes: ['Identify security vulnerabilities', 'Execute penetration tests', 'Secure cloud environments'],
-        prerequisites: ['Basic networking and Linux commands']
-      }
+      },
     ];
     setBulkJsonText(JSON.stringify(sample, null, 2));
   };
 
-  // Metric computations
-  const totalCoursesCount = courses.length;
-  const publishedCount = courses.filter((c) => c.status === 'PUBLISHED').length;
-  const totalEnrollmentsAcrossCourses = courses.reduce(
-    (acc, c) => acc + (c.enrollmentCount || 0),
-    0
-  );
-  const avgCourseFee =
-    totalCoursesCount > 0
-      ? Math.round(
-          courses.reduce((acc, c) => acc + (Number(c.price) || 0), 0) / totalCoursesCount
-        )
-      : 0;
+  const handleBulkUpload = async () => {
+    if (!bulkJsonText.trim()) return;
+    try {
+      const parsed = JSON.parse(bulkJsonText);
+      if (!Array.isArray(parsed)) {
+        alert('Payload must be a JSON array of course objects.');
+        return;
+      }
+      setBulkUploading(true);
+      await api.post('/v1/admin/courses/bulk', parsed);
+      alert(`Successfully imported ${parsed.length} courses.`);
+      setShowBulkModal(false);
+      setBulkJsonText('');
+      fetchCourses();
+    } catch (err: any) {
+      alert('Bulk import failed: ' + (err.response?.data?.message || err.message));
+    } finally {
+      setBulkUploading(false);
+    }
+  };
 
   return (
-    <div className="flex-1 bg-slate-50 pb-16">
+    <div className="flex-1 bg-[#FAFAF8] pb-16">
       <AdminNav />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Top Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        {/* Header & Primary Actions */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-md">
-                <BookOpen className="w-6 h-6" />
-              </div>
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                  Course & Fees Management
-                </h1>
-                <p className="text-slate-500 text-sm mt-0.5">
-                  List company courses, configure course fees and discounts, upload media, and manage student access.
-                </p>
-              </div>
-            </div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#20252B] tracking-tight">
+              Course & Fee Management
+            </h1>
+            <p className="text-xs sm:text-sm text-[#697386] mt-1">
+              Create and publish courses, configure curriculum sections, adjust fees, and upload media.
+            </p>
           </div>
 
-          <div className="flex items-center space-x-3">
-            <button
-              onClick={() => {
-                setShowBulkModal(true);
-                if (!bulkJsonText) loadSampleBulkTemplate();
-              }}
-              className="inline-flex items-center space-x-2 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-sm px-4 py-2.5 rounded-xl border border-slate-200 shadow-xs transition"
+          <div className="flex items-center gap-2.5">
+            <Button
+              variant="outline"
+              size="sm"
+              icon={<Upload className="w-4 h-4" />}
+              onClick={() => setShowBulkModal(true)}
             >
-              <Upload className="w-4 h-4 text-indigo-600" />
-              <span>Bulk Import Courses</span>
-            </button>
-            <button
+              Bulk Import
+            </Button>
+            <Button
+              variant="primary"
+              size="sm"
+              icon={<Plus className="w-4 h-4" />}
               onClick={handleOpenCreateModal}
-              className="inline-flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm px-4 py-2.5 rounded-xl shadow-md transition"
             >
-              <Plus className="w-4 h-4" />
-              <span>List New Course</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Pricing & Course Metrics */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                Total Courses
-              </span>
-              <BookOpen className="w-4 h-4 text-indigo-600" />
-            </div>
-            <p className="text-2xl font-black text-slate-900">{totalCoursesCount}</p>
-            <p className="text-xs text-slate-500 mt-1">Listed in database</p>
-          </div>
-
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                Live & Published
-              </span>
-              <CheckCircle className="w-4 h-4 text-emerald-600" />
-            </div>
-            <p className="text-2xl font-black text-emerald-600">{publishedCount}</p>
-            <p className="text-xs text-slate-500 mt-1">Visible to students</p>
-          </div>
-
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                Avg. Course Fee
-              </span>
-              <IndianRupee className="w-4 h-4 text-purple-600" />
-            </div>
-            <p className="text-2xl font-black text-purple-600">₹{avgCourseFee.toLocaleString('en-IN')}</p>
-            <p className="text-xs text-slate-500 mt-1">Mean catalog price</p>
-          </div>
-
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                Total Enrolled Students
-              </span>
-              <Users className="w-4 h-4 text-blue-600" />
-            </div>
-            <p className="text-2xl font-black text-blue-600">{totalEnrollmentsAcrossCourses}</p>
-            <p className="text-xs text-slate-500 mt-1">Cumulative admissions</p>
+              Create Course
+            </Button>
           </div>
         </div>
 
         {/* Filter Bar */}
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs mb-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div className="flex flex-1 flex-col sm:flex-row items-center gap-3 w-full">
-              <div className="relative w-full sm:w-80">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  placeholder="Search courses by title or description..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition"
-                />
-              </div>
+        <div className="bg-white p-3.5 rounded-xl border border-[#E5E7EB] shadow-xs flex flex-col md:flex-row gap-3 items-center justify-between">
+          <div className="relative w-full md:w-80">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              placeholder="Search courses..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-9 pr-8 py-1.5 text-xs bg-slate-50 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
 
-              <div className="relative w-full sm:w-44">
-                <Filter className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <select
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                  className="w-full pl-10 pr-8 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white appearance-none cursor-pointer"
-                >
-                  <option value="">All Statuses</option>
-                  <option value="PUBLISHED">Published</option>
-                  <option value="DRAFT">Draft</option>
-                  <option value="ARCHIVED">Archived</option>
-                </select>
-              </div>
-
-              <div className="relative w-full sm:w-44">
-                <Layers className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <select
-                  value={levelFilter}
-                  onChange={(e) => setLevelFilter(e.target.value)}
-                  className="w-full pl-10 pr-8 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white appearance-none cursor-pointer"
-                >
-                  <option value="">All Levels</option>
-                  <option value="BEGINNER">Beginner</option>
-                  <option value="INTERMEDIATE">Intermediate</option>
-                  <option value="ADVANCED">Advanced</option>
-                </select>
-              </div>
-            </div>
-
-            <button
-              onClick={fetchCourses}
-              className="p-2 hover:bg-slate-100 rounded-lg text-slate-500 transition self-end sm:self-auto"
-              title="Refresh"
+          <div className="flex items-center gap-2 w-full md:w-auto">
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="text-xs bg-white border border-[#E5E7EB] rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 text-[#20252B]"
             >
-              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-indigo-600' : ''}`} />
-            </button>
+              <option value="">All Statuses</option>
+              <option value="PUBLISHED">Published</option>
+              <option value="DRAFT">Draft</option>
+              <option value="ARCHIVED">Archived</option>
+            </select>
+
+            <select
+              value={levelFilter}
+              onChange={(e) => setLevelFilter(e.target.value)}
+              className="text-xs bg-white border border-[#E5E7EB] rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 text-[#20252B]"
+            >
+              <option value="">All Levels</option>
+              <option value="BEGINNER">Beginner</option>
+              <option value="INTERMEDIATE">Intermediate</option>
+              <option value="ADVANCED">Advanced</option>
+            </select>
           </div>
         </div>
 
         {/* Courses Table */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-          {loading ? (
-            <div className="py-20 flex flex-col items-center justify-center text-slate-400">
-              <RefreshCw className="w-8 h-8 animate-spin mb-3 text-indigo-600" />
-              <p className="text-sm font-semibold">Loading courses catalog...</p>
-            </div>
-          ) : courses.length === 0 ? (
-            <div className="py-20 text-center px-4">
-              <div className="w-16 h-16 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto mb-4">
-                <BookOpen className="w-8 h-8" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900">No courses match your filter</h3>
-              <p className="text-sm text-slate-500 max-w-md mx-auto mt-1 mb-6">
-                Create your company's first course or import course batches with fees.
-              </p>
-              <button
-                onClick={handleOpenCreateModal}
-                className="inline-flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm px-5 py-2.5 rounded-xl shadow transition"
-              >
-                <Plus className="w-4 h-4" />
-                <span>Create New Course</span>
-              </button>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm text-slate-700">
-                <thead className="bg-slate-50 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-200">
+        <div className="bg-white rounded-xl border border-[#E5E7EB] shadow-xs overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-slate-50 border-b border-[#E5E7EB] text-[#697386]">
+                <tr>
+                  <th className="px-5 py-3 font-semibold">Course</th>
+                  <th className="px-5 py-3 font-semibold">Price</th>
+                  <th className="px-5 py-3 font-semibold">Level & Duration</th>
+                  <th className="px-5 py-3 font-semibold">Status</th>
+                  <th className="px-5 py-3 font-semibold text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#E5E7EB]">
+                {loading ? (
                   <tr>
-                    <th className="px-6 py-4">Course Info</th>
-                    <th className="px-6 py-4">Course Fees</th>
-                    <th className="px-6 py-4">Level & Hours</th>
-                    <th className="px-6 py-4">Enrolled Students</th>
-                    <th className="px-6 py-4">Status</th>
-                    <th className="px-6 py-4 text-right">Actions</th>
+                    <td colSpan={5} className="px-5 py-12 text-center text-xs text-[#697386]">
+                      <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-slate-400" />
+                      Loading course inventory...
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {courses.map((course) => {
-                    const discount =
-                      course.originalPrice && course.originalPrice > course.price
-                        ? Math.round(
-                            ((course.originalPrice - course.price) /
-                              course.originalPrice) *
-                              100
-                          )
-                        : 0;
-
-                    return (
-                      <tr key={course.id} className="hover:bg-slate-50/60 transition group">
-                        {/* Course Info */}
-                        <td className="px-6 py-4">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-12 h-12 rounded-xl bg-slate-100 overflow-hidden flex-shrink-0 border border-slate-200 flex items-center justify-center">
-                              {course.thumbnailUrl ? (
-                                <img
-                                  src={course.thumbnailUrl}
-                                  alt={course.title}
-                                  className="w-full h-full object-cover"
-                                  onError={(e) => {
-                                    (e.target as HTMLElement).style.display = 'none';
-                                  }}
-                                />
-                              ) : (
-                                <BookOpen className="w-5 h-5 text-slate-400" />
-                              )}
-                            </div>
-                            <div className="min-w-0">
-                              <p className="font-extrabold text-slate-900 group-hover:text-indigo-600 transition truncate max-w-xs sm:max-w-md">
-                                {course.title}
-                              </p>
-                              <p className="text-xs text-slate-400 font-mono truncate">
-                                slug: {course.slug}
-                              </p>
-                              <p className="text-[11px] text-slate-500 mt-0.5">
-                                By {course.instructorName || 'SkillForge Faculty'}
-                              </p>
-                            </div>
-                          </div>
-                        </td>
-
-                        {/* Fees Column */}
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex flex-col">
-                            <div className="flex items-center space-x-2">
-                              <span className="font-black text-slate-900 text-base">
-                                ₹{course.price.toLocaleString('en-IN')}
-                              </span>
-                              {discount > 0 && (
-                                <span className="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                  {discount}% OFF
-                                </span>
-                              )}
-                            </div>
-                            {course.originalPrice && course.originalPrice > course.price && (
-                              <span className="text-xs text-slate-400 line-through">
-                                ₹{course.originalPrice.toLocaleString('en-IN')}
-                              </span>
+                ) : courses.length > 0 ? (
+                  courses.map((course) => (
+                    <tr key={course.id} className="hover:bg-slate-50/50">
+                      <td className="px-5 py-3.5">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-9 bg-slate-100 rounded overflow-hidden shrink-0 border border-[#E5E7EB]">
+                            {course.thumbnailUrl ? (
+                              <img src={course.thumbnailUrl} alt={course.title} className="w-full h-full object-cover" />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-slate-300">
+                                <BookOpen className="w-4 h-4" />
+                              </div>
                             )}
                           </div>
-                        </td>
+                          <div className="min-w-0">
+                            <span className="font-semibold text-[#20252B] line-clamp-1">{course.title}</span>
+                            <span className="text-[11px] text-[#697386]">{course.instructorName || 'SkillForge Faculty'}</span>
+                          </div>
+                        </div>
+                      </td>
 
-                        {/* Level & Hours */}
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="px-2 py-0.5 text-xs font-bold rounded bg-slate-100 text-slate-700">
-                            {course.level}
-                          </span>
-                          <span className="text-xs text-slate-400 block mt-1">
-                            {course.durationHours || 0} Hours Duration
-                          </span>
-                        </td>
+                      <td className="px-5 py-3.5 font-semibold text-[#20252B]">
+                        {formatCurrency(course.price, course.currency)}
+                      </td>
 
-                        {/* Enrolled Students Matrix Link */}
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <Link
-                            to={`/admin/enrollments?courseId=${course.id}`}
-                            className="inline-flex items-center space-x-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-xl font-bold text-xs transition"
-                            title="Inspect all enrolled students for this course"
-                          >
-                            <Users className="w-3.5 h-3.5 text-indigo-600" />
-                            <span>{course.enrollmentCount} Enrolled</span>
-                            <ArrowUpRight className="w-3 h-3 text-indigo-500" />
-                          </Link>
-                        </td>
+                      <td className="px-5 py-3.5 text-[#697386]">
+                        <div>{course.level}</div>
+                        <div className="text-[11px] text-slate-400">{formatDuration(course.durationHours)}</div>
+                      </td>
 
-                        {/* Status */}
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span
-                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${
-                              course.status === 'PUBLISHED'
-                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                                : course.status === 'DRAFT'
-                                ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                                : 'bg-slate-100 text-slate-600 border border-slate-200'
-                            }`}
-                          >
-                            {course.status}
-                          </span>
-                        </td>
+                      <td className="px-5 py-3.5">
+                        <Badge
+                          variant={course.status === 'PUBLISHED' ? 'success' : 'neutral'}
+                          size="sm"
+                        >
+                          {course.status}
+                        </Badge>
+                      </td>
 
-                        {/* Actions */}
-                        <td className="px-6 py-4 text-right space-x-1 whitespace-nowrap">
+                      <td className="px-5 py-3.5 text-right">
+                        <div className="flex items-center justify-end gap-1.5">
                           <Link
                             to={`/admin/courses/${course.id}/curriculum`}
-                            className="inline-flex items-center space-x-1 px-2.5 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg text-xs font-bold transition mr-1 shadow-2xs"
-                            title="Manage Course Curriculum, Sections & Lessons"
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#287C78]/10 text-[#287C78] hover:bg-[#287C78]/20 font-medium text-[11px] transition-colors"
+                            title="Manage curriculum sections and lectures"
                           >
-                            <Layers className="w-3.5 h-3.5 text-indigo-600" />
+                            <Layers className="w-3.5 h-3.5" />
                             <span>Curriculum</span>
                           </Link>
+
                           <button
+                            type="button"
                             onClick={() => handleToggleStatus(course.id, course.status)}
-                            className="p-1.5 text-slate-500 hover:text-slate-800 rounded-lg hover:bg-slate-100 transition"
-                            title={
-                              course.status === 'PUBLISHED'
-                                ? 'Unpublish to Draft'
-                                : 'Publish for Students'
-                            }
+                            className="p-1 rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                            title={course.status === 'PUBLISHED' ? 'Unpublish to Draft' : 'Publish Course'}
                           >
-                            {course.status === 'PUBLISHED' ? (
-                              <EyeOff className="w-4 h-4 text-amber-600" />
-                            ) : (
-                              <Eye className="w-4 h-4 text-emerald-600" />
-                            )}
+                            {course.status === 'PUBLISHED' ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                           </button>
+
                           <button
+                            type="button"
                             onClick={() => handleOpenEditModal(course.id)}
-                            className="p-1.5 text-indigo-600 hover:text-indigo-800 rounded-lg hover:bg-indigo-50 transition"
-                            title="Edit Course & Fees"
+                            className="p-1 rounded text-slate-400 hover:text-[#172B4D] hover:bg-slate-100"
+                            title="Edit course details"
                           >
                             <Edit3 className="w-4 h-4" />
                           </button>
-                          <Link
-                            to={`/courses/${course.slug}`}
-                            className="inline-block p-1.5 text-slate-500 hover:text-slate-800 rounded-lg hover:bg-slate-100 transition"
-                            title="View Public Catalog Page"
-                            target="_blank"
-                          >
-                            <ArrowUpRight className="w-4 h-4" />
-                          </Link>
+
                           <button
+                            type="button"
                             onClick={() => handleDeleteCourse(course.id, course.title)}
-                            className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition"
-                            title="Delete / Archive Course"
+                            className="p-1 rounded text-slate-400 hover:text-rose-600 hover:bg-slate-100"
+                            title="Delete course"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={5} className="px-5 py-8 text-center text-xs text-[#697386]">
+                      No courses match your criteria.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
-      {/* Create / Edit Course Modal */}
+      {/* Course Create / Edit Modal */}
       {(showCreateModal || showEditModal) && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-6 shadow-2xl border border-slate-100 my-8">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center">
-                  <BookOpen className="w-5 h-5" />
-                </div>
-                <h2 className="text-xl font-extrabold text-slate-900">
-                  {editingCourseId ? 'Edit Course & Fees' : 'List New Course with Fees'}
-                </h2>
-              </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="bg-white rounded-xl max-w-2xl w-full p-6 space-y-4 shadow-xl border border-[#E5E7EB] my-8 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-3 border-b border-[#E5E7EB]">
+              <h3 className="text-base font-semibold text-[#20252B]">
+                {editingCourseId ? 'Edit Course Details' : 'Create New Course'}
+              </h3>
               <button
+                type="button"
                 onClick={() => {
                   setShowCreateModal(false);
                   setShowEditModal(false);
                 }}
-                className="text-slate-400 hover:text-slate-700 p-1 rounded-lg"
+                className="p-1 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleSaveCourse} className="space-y-4">
+            <form onSubmit={handleSubmitCourse} className="space-y-4 text-xs">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Course Title *
+                <label className="block font-semibold text-[#20252B] mb-1">
+                  Course Title <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="text"
                   required
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g. Master Artificial Intelligence with Python"
-                  className="w-full px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white"
+                  placeholder="e.g. Full Stack React & Spring Boot"
+                  className="w-full px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-sm text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
                 />
-              </div>
-
-              {/* Pricing & Fees Section */}
-              <div className="p-4 bg-indigo-50/50 rounded-2xl border border-indigo-100">
-                <div className="flex items-center space-x-1.5 mb-3">
-                  <IndianRupee className="w-4 h-4 text-indigo-600" />
-                  <span className="text-xs font-extrabold text-indigo-900 uppercase tracking-wider">
-                    Course Fees & Pricing Structure
-                  </span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">
-                      Selling Fee (Price) *
-                    </label>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs">
-                        ₹
-                      </span>
-                      <input
-                        type="number"
-                        required
-                        value={price}
-                        onChange={(e) => setPrice(e.target.value)}
-                        placeholder="2999"
-                        className="w-full pl-7 pr-3 py-2 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">
-                      Original Price (MRP)
-                    </label>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs">
-                        ₹
-                      </span>
-                      <input
-                        type="number"
-                        value={originalPrice}
-                        onChange={(e) => setOriginalPrice(e.target.value)}
-                        placeholder="5999"
-                        className="w-full pl-7 pr-3 py-2 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">
-                      Currency
-                    </label>
-                    <select
-                      value={currency}
-                      onChange={(e) => setCurrency(e.target.value)}
-                      className="w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold"
-                    >
-                      <option value="INR">INR (₹)</option>
-                      <option value="USD">USD ($)</option>
-                      <option value="EUR">EUR (€)</option>
-                    </select>
-                  </div>
-                </div>
-
-                {parseFloat(originalPrice) > parseFloat(price) && (
-                  <p className="text-xs text-emerald-700 font-semibold mt-2 flex items-center space-x-1">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>
-                      Students receive a{' '}
-                      {Math.round(
-                        ((parseFloat(originalPrice) - parseFloat(price)) /
-                          parseFloat(originalPrice)) *
-                          100
-                      )}
-                      % discount tag!
-                    </span>
-                  </p>
-                )}
-              </div>
-
-              {/* Course Media / Thumbnail Upload */}
-              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200">
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                  Course Thumbnail / Image
-                </label>
-                <div className="flex flex-col sm:flex-row items-center gap-4">
-                  <div className="w-20 h-20 rounded-xl bg-white border border-slate-200 overflow-hidden flex items-center justify-center flex-shrink-0">
-                    {thumbnailUrl ? (
-                      <img
-                        src={thumbnailUrl}
-                        alt="Thumbnail preview"
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <ImageIcon className="w-6 h-6 text-slate-300" />
-                    )}
-                  </div>
-
-                  <div className="flex-1 w-full space-y-2">
-                    <div className="flex items-center space-x-2">
-                      <label className="cursor-pointer inline-flex items-center space-x-2 bg-white hover:bg-slate-100 text-indigo-600 font-bold text-xs px-3.5 py-2 rounded-xl border border-slate-200 shadow-xs transition">
-                        <Upload className="w-3.5 h-3.5" />
-                        <span>{uploadingImage ? 'Uploading...' : 'Upload Image File'}</span>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageFileUpload}
-                          className="hidden"
-                          disabled={uploadingImage}
-                        />
-                      </label>
-                      <span className="text-xs text-slate-400">or paste URL below:</span>
-                    </div>
-
-                    <input
-                      type="url"
-                      value={thumbnailUrl}
-                      onChange={(e) => setThumbnailUrl(e.target.value)}
-                      placeholder="https://images.unsplash.com/... or uploaded URL"
-                      className="w-full px-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Short Description *
-                </label>
-                <textarea
-                  required
-                  rows={2}
-                  value={shortDesc}
-                  onChange={(e) => setShortDesc(e.target.value)}
-                  placeholder="Summary for course card and catalog..."
-                  className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                    Duration (Hours)
-                  </label>
-                  <input
-                    type="number"
-                    value={duration}
-                    onChange={(e) => setDuration(e.target.value)}
-                    className="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                    Level
-                  </label>
-                  <select
-                    value={level}
-                    onChange={(e) => setLevel(e.target.value)}
-                    className="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white"
-                  >
-                    <option value="BEGINNER">BEGINNER</option>
-                    <option value="INTERMEDIATE">INTERMEDIATE</option>
-                    <option value="ADVANCED">ADVANCED</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                    Publication Status
-                  </label>
-                  <select
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value)}
-                    className="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white font-bold"
-                  >
-                    <option value="PUBLISHED">PUBLISHED (Live)</option>
-                    <option value="DRAFT">DRAFT (Hidden)</option>
-                    <option value="ARCHIVED">ARCHIVED</option>
-                  </select>
-                </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                    Instructor / Company Name
-                  </label>
+                  <label className="block font-semibold text-[#20252B] mb-1">Price (INR)</label>
                   <input
-                    type="text"
-                    value={instructor}
-                    onChange={(e) => setInstructor(e.target.value)}
-                    className="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white"
+                    type="number"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-sm text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
                   />
                 </div>
-
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                    Custom Slug (Optional)
-                  </label>
+                  <label className="block font-semibold text-[#20252B] mb-1">Original Price (INR)</label>
                   <input
-                    type="text"
-                    value={slug}
-                    onChange={(e) => setSlug(e.target.value)}
-                    placeholder="auto-generated-from-title"
-                    className="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white font-mono text-xs"
+                    type="number"
+                    value={originalPrice}
+                    onChange={(e) => setOriginalPrice(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-sm text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
                   />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="block font-semibold text-[#20252B] mb-1">Level</label>
+                  <select
+                    value={level}
+                    onChange={(e) => setLevel(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-xs text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+                  >
+                    <option value="BEGINNER">Beginner</option>
+                    <option value="INTERMEDIATE">Intermediate</option>
+                    <option value="ADVANCED">Advanced</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block font-semibold text-[#20252B] mb-1">Duration (Hours)</label>
+                  <input
+                    type="number"
+                    value={duration}
+                    onChange={(e) => setDuration(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-xs text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-[#20252B] mb-1">Status</label>
+                  <select
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-xs text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+                  >
+                    <option value="PUBLISHED">Published</option>
+                    <option value="DRAFT">Draft</option>
+                  </select>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Learning Outcomes (comma separated)
-                </label>
+                <label className="block font-semibold text-[#20252B] mb-1">Thumbnail URL</label>
+                <div className="flex gap-2">
+                  <input
+                    type="url"
+                    value={thumbnailUrl}
+                    onChange={(e) => setThumbnailUrl(e.target.value)}
+                    placeholder="https://..."
+                    className="flex-1 px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-xs text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+                  />
+                  <label className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-[#20252B] rounded-lg cursor-pointer flex items-center gap-1 font-medium transition-colors">
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>{uploadingImage ? 'Uploading...' : 'Upload'}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageFileUpload}
+                      disabled={uploadingImage}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-semibold text-[#20252B] mb-1">Short Description</label>
                 <input
                   type="text"
-                  value={learningOutcomes}
-                  onChange={(e) => setLearningOutcomes(e.target.value)}
-                  placeholder="Master React, Build scalable APIs, Deploy to AWS"
-                  className="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white"
+                  value={shortDesc}
+                  onChange={(e) => setShortDesc(e.target.value)}
+                  placeholder="One sentence summary of what is taught..."
+                  className="w-full px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-xs text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
                 />
               </div>
 
-              <div className="flex justify-end space-x-3 pt-4 border-t border-slate-100">
-                <button
-                  type="button"
+              <div>
+                <label className="block font-semibold text-[#20252B] mb-1">Full Description</label>
+                <textarea
+                  rows={4}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Detailed course breakdown..."
+                  className="w-full px-3 py-2 bg-slate-50 border border-[#E5E7EB] rounded-lg text-xs text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-[#E5E7EB]">
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={() => {
                     setShowCreateModal(false);
                     setShowEditModal(false);
                   }}
-                  className="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition"
                 >
                   Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="px-6 py-2 text-sm font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md transition disabled:opacity-50 flex items-center space-x-2"
-                >
-                  {submitting && <RefreshCw className="w-4 h-4 animate-spin" />}
-                  <span>{submitting ? 'Saving Course...' : editingCourseId ? 'Update Course' : 'Publish Course'}</span>
-                </button>
+                </Button>
+                <Button type="submit" variant="primary" size="sm" loading={submitting}>
+                  {editingCourseId ? 'Save Changes' : 'Create Course'}
+                </Button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* Bulk Import / Upload Courses Modal */}
+      {/* Bulk Import Modal */}
       {showBulkModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-5 shadow-2xl border border-slate-100">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center">
-                  <Upload className="w-5 h-5" />
-                </div>
-                <h3 className="text-lg font-bold text-slate-900">
-                  Bulk Upload Courses & Fees
-                </h3>
-              </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-xl max-w-xl w-full p-6 space-y-4 shadow-xl border border-[#E5E7EB]">
+            <div className="flex items-center justify-between pb-3 border-b border-[#E5E7EB]">
+              <h3 className="text-base font-semibold text-[#20252B]">Bulk Import Courses</h3>
               <button
+                type="button"
                 onClick={() => setShowBulkModal(false)}
-                className="text-slate-400 hover:text-slate-600 p-1 rounded-lg"
+                className="p-1 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <p className="text-xs text-slate-500">
-              Paste a JSON array of course objects with title, fees (price, originalPrice), descriptions, and level to import multiple courses at once.
+            <p className="text-xs text-[#697386]">
+              Paste a JSON array of course objects with title, price, description, and level.
             </p>
 
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-                Course JSON Payload
-              </span>
+              <span className="text-xs font-semibold text-[#20252B]">JSON Payload</span>
               <button
                 type="button"
                 onClick={loadSampleBulkTemplate}
-                className="text-xs font-bold text-indigo-600 hover:text-indigo-800"
+                className="text-xs font-medium text-[#172B4D] hover:underline"
               >
                 Load Sample Template
               </button>
             </div>
 
             <textarea
-              rows={10}
+              rows={8}
               value={bulkJsonText}
               onChange={(e) => setBulkJsonText(e.target.value)}
               placeholder="Paste JSON array here..."
-              className="w-full p-3 font-mono text-xs bg-slate-900 text-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full p-3 font-mono text-xs bg-slate-50 border border-[#E5E7EB] rounded-lg text-[#20252B] focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15"
             />
 
-            <div className="flex items-center justify-end space-x-3 pt-3 border-t border-slate-100">
-              <button
-                type="button"
-                onClick={() => setShowBulkModal(false)}
-                className="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition"
-              >
+            <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-[#E5E7EB]">
+              <Button variant="ghost" size="sm" onClick={() => setShowBulkModal(false)}>
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
                 onClick={handleBulkUpload}
-                disabled={bulkUploading || !bulkJsonText.trim()}
-                className="px-6 py-2 text-sm font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md transition disabled:opacity-50 flex items-center space-x-2"
+                loading={bulkUploading}
+                disabled={!bulkJsonText.trim()}
               >
-                {bulkUploading && <RefreshCw className="w-4 h-4 animate-spin" />}
-                <span>{bulkUploading ? 'Importing Courses...' : 'Import Courses'}</span>
-              </button>
+                Import Courses
+              </Button>
             </div>
           </div>
         </div>

@@ -10,14 +10,17 @@ import {
   ChevronLeft,
   ChevronRight,
   Award,
-  HelpCircle,
   Download,
   AlertCircle,
   ListOrdered,
-  Sparkles,
-  ExternalLink,
+  ArrowLeft,
+  Menu,
+  X,
   BookOpen,
 } from 'lucide-react';
+import { Button } from '../components/ui/Button';
+import { Badge } from '../components/ui/Badge';
+import { formatLessonDuration } from '../utils/format';
 
 const getEmbedUrl = (url?: string): string => {
   if (!url) return '';
@@ -44,6 +47,7 @@ export const CoursePlayerPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [updatingProgress, setUpdatingProgress] = useState(false);
   const [certificateId, setCertificateId] = useState<string | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const fetchCourseData = async () => {
     setLoading(true);
@@ -59,29 +63,28 @@ export const CoursePlayerPage: React.FC = () => {
         const c: CourseDetail = courseRes.data.data;
         setCourse(c);
 
-        // Find first lesson to play
-        let firstLesson: Lesson | null = null;
-        for (const s of c.sections) {
-          if (s.lessons.length > 0) {
-            firstLesson = s.lessons[0];
+        // Find first incomplete or first lesson to play
+        let targetLesson: Lesson | null = null;
+        for (const s of c.sections || []) {
+          if (s.lessons && s.lessons.length > 0) {
+            targetLesson = s.lessons[0];
             break;
           }
         }
-        setCurrentLesson(firstLesson);
+        setCurrentLesson(targetLesson);
       }
 
-      if (progRes.data?.success) {
+      if (progRes.data?.success && progRes.data.data) {
         setCompletedLessonIds(progRes.data.data.completedLessonIds || []);
         setProgressPct(progRes.data.data.overallProgressPct || 0);
       }
 
-      if (quizRes.data?.success) {
+      if (quizRes.data?.success && Array.isArray(quizRes.data.data)) {
         setQuizzes(quizRes.data.data);
       }
 
-      if (certRes.data?.success) {
-        const userCerts = certRes.data.data;
-        const matchingCert = userCerts.find((cert: any) => cert.courseId === Number(courseId));
+      if (certRes.data?.success && Array.isArray(certRes.data.data)) {
+        const matchingCert = certRes.data.data.find((cert: any) => cert.courseId === Number(courseId));
         if (matchingCert) {
           setCertificateId(matchingCert.certificateId);
         }
@@ -97,7 +100,7 @@ export const CoursePlayerPage: React.FC = () => {
     fetchCourseData();
   }, [courseId]);
 
-  const allLessons: Lesson[] = course ? course.sections.flatMap((s) => s.lessons) : [];
+  const allLessons: Lesson[] = course ? (course.sections || []).flatMap((s) => s.lessons || []) : [];
   const currentIndex = currentLesson ? allLessons.findIndex((l) => l.id === currentLesson.id) : -1;
 
   const goToNextLesson = () => {
@@ -126,12 +129,12 @@ export const CoursePlayerPage: React.FC = () => {
       }
 
       const progRes = await api.get(`/v1/student/courses/${courseId}/progress`);
-      if (progRes.data?.success) {
+      if (progRes.data?.success && progRes.data.data) {
         setProgressPct(progRes.data.data.overallProgressPct);
       }
 
       const certRes = await api.get('/v1/student/certificates');
-      if (certRes.data?.success) {
+      if (certRes.data?.success && Array.isArray(certRes.data.data)) {
         const matchingCert = certRes.data.data.find((c: any) => c.courseId === Number(courseId));
         if (matchingCert) {
           setCertificateId(matchingCert.certificateId);
@@ -159,239 +162,245 @@ export const CoursePlayerPage: React.FC = () => {
       link.download = `${certificateId}.pdf`;
       link.click();
       window.URL.revokeObjectURL(url);
-    } catch (err) {
+    } catch {
       alert('Failed to download certificate.');
     }
   };
 
   if (loading) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center py-32 bg-slate-950 text-white">
-        <div className="relative">
-          <div className="w-16 h-16 rounded-full border-4 border-indigo-500/20 border-t-indigo-500 animate-spin"></div>
-          <Sparkles className="w-6 h-6 text-indigo-400 absolute inset-0 m-auto animate-pulse" />
-        </div>
-        <p className="mt-4 text-xs font-semibold text-slate-400 tracking-wider uppercase">Loading Learning Cockpit...</p>
+      <div className="flex-1 flex flex-col items-center justify-center py-24 bg-slate-900 text-white">
+        <div className="w-8 h-8 rounded-full border-2 border-slate-700 border-t-white animate-spin"></div>
+        <p className="mt-3 text-xs text-slate-400">Loading classroom...</p>
       </div>
     );
   }
 
   if (!course) {
     return (
-      <div className="flex-1 flex items-center justify-center py-24 p-4 bg-slate-950">
-        <div className="bg-slate-900 p-8 rounded-3xl border border-slate-800 text-center max-w-md shadow-2xl">
-          <div className="w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center mx-auto mb-4 text-rose-400">
-            <AlertCircle className="w-8 h-8" />
-          </div>
-          <h2 className="text-xl font-bold mb-2 text-white">Access Denied</h2>
-          <p className="text-slate-400 text-sm mb-6 leading-relaxed">
-            You must be enrolled in this course to access the classroom theater.
-          </p>
-          <Link
-            to="/courses"
-            className="inline-block bg-gradient-to-r from-indigo-600 to-indigo-700 text-white px-6 py-3 rounded-xl text-sm font-bold shadow-lg shadow-indigo-600/25"
-          >
-            Browse Courses
+      <div className="flex-1 flex items-center justify-center py-20 px-4 bg-[#FAFAF8]">
+        <div className="max-w-md w-full bg-white p-8 rounded-xl border border-[#E5E7EB] text-center shadow-xs space-y-4">
+          <AlertCircle className="w-8 h-8 text-rose-600 mx-auto" />
+          <h2 className="text-base font-semibold text-[#20252B]">Course not found</h2>
+          <Link to="/dashboard">
+            <Button variant="primary" size="sm">
+              Return to Dashboard
+            </Button>
           </Link>
         </div>
       </div>
     );
   }
 
-  const isCurrentLessonCompleted = currentLesson ? completedLessonIds.includes(currentLesson.id) : false;
+  const isCurrentDone = currentLesson ? completedLessonIds.includes(currentLesson.id) : false;
 
   return (
-    <div className="flex-1 bg-slate-950 text-slate-100 flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
-      {/* Main Classroom Player Area */}
-      <div className="flex-1 flex flex-col p-4 sm:p-6 lg:p-8 overflow-y-auto">
-        {/* Navigation Breadcrumb & Back */}
-        <div className="flex items-center justify-between mb-5">
-          <Link
-            to="/dashboard"
-            className="inline-flex items-center space-x-2 text-xs font-bold text-slate-400 hover:text-white transition group"
-          >
-            <div className="w-7 h-7 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center group-hover:bg-slate-800 transition">
-              <ChevronLeft className="w-4 h-4" />
-            </div>
-            <span>Dashboard</span>
-            <span className="text-slate-600">/</span>
-            <span className="text-indigo-400 font-semibold truncate max-w-xs">{course.title}</span>
-          </Link>
-
-          {certificateId && (
-            <button
-              onClick={downloadCert}
-              className="inline-flex items-center space-x-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold px-3.5 py-1.5 rounded-xl shadow-md transition"
+    <div className="flex-1 flex flex-col lg:flex-row min-h-[calc(100vh-64px)] bg-slate-900 text-slate-100">
+      {/* Main Video & Lesson Content Area */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Top Control Bar */}
+        <div className="bg-slate-950 px-4 sm:px-6 py-3 border-b border-slate-800 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-3 truncate">
+            <Link
+              to="/dashboard"
+              className="inline-flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors"
             >
-              <Award className="w-4 h-4" />
-              <span>Certificate Unlocked</span>
+              <ArrowLeft className="w-4 h-4" />
+              <span className="hidden sm:inline">Dashboard</span>
+            </Link>
+            <span className="text-slate-700 hidden sm:inline">|</span>
+            <span className="font-medium text-slate-200 truncate">{course.title}</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="lg:hidden p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white"
+              aria-label="Toggle curriculum sidebar"
+            >
+              {sidebarOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
+          </div>
+        </div>
+
+        {/* Certificate Conferred Alert (if 100% completed) */}
+        {certificateId && (
+          <div className="bg-emerald-950/70 border-b border-emerald-800/80 px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2 text-emerald-300 font-medium">
+              <Award className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span>Congratulations! You completed this curriculum. Credential #{certificateId} has been issued.</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Link
+                to={`/verify-certificate/${certificateId}`}
+                className="underline text-emerald-400 hover:text-emerald-300"
+              >
+                Verify Registry
+              </Link>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={downloadCert}
+                className="bg-transparent border-emerald-700 text-emerald-200 hover:bg-emerald-900/50"
+              >
+                <Download className="w-3.5 h-3.5 mr-1" /> PDF
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Video Player Theater */}
+        <div className="bg-black aspect-video w-full flex items-center justify-center relative">
+          {currentLesson ? (
+            currentLesson.contentType === 'VIDEO' && currentLesson.videoUrl ? (
+              <iframe
+                src={getEmbedUrl(currentLesson.videoUrl)}
+                title={currentLesson.title}
+                className="w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ) : currentLesson.contentType === 'TEXT' || currentLesson.contentText ? (
+              <div className="p-8 max-w-3xl w-full text-slate-200 overflow-y-auto max-h-full">
+                <h3 className="text-xl font-bold mb-4">{currentLesson.title}</h3>
+                <div className="text-sm leading-relaxed whitespace-pre-line text-slate-300">
+                  {currentLesson.contentText || currentLesson.description}
+                </div>
+              </div>
+            ) : (
+              <div className="text-center p-8 text-slate-400">
+                <PlayCircle className="w-12 h-12 mx-auto mb-2 opacity-40 text-slate-500" />
+                <p className="text-sm font-medium text-slate-300">{currentLesson.title}</p>
+                <p className="text-xs text-slate-500 mt-1">Ready for study</p>
+              </div>
+            )
+          ) : (
+            <div className="text-center p-8 text-slate-400">
+              <BookOpen className="w-12 h-12 mx-auto mb-2 opacity-40" />
+              <p className="text-sm">Select a lesson from the curriculum to begin</p>
+            </div>
           )}
         </div>
 
-        {/* Completion Celebration Banner */}
-        {certificateId && (
-          <div className="mb-6 bg-gradient-to-r from-emerald-950/80 via-slate-900 to-indigo-950/80 border border-emerald-500/40 p-5 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
-            <div className="flex items-center space-x-3.5 text-left">
-              <div className="w-12 h-12 bg-gradient-to-tr from-emerald-500 to-teal-400 rounded-2xl flex items-center justify-center text-slate-950 shrink-0 font-bold shadow-lg shadow-emerald-500/20">
-                <Award className="w-7 h-7" />
-              </div>
-              <div>
-                <h4 className="font-extrabold text-emerald-400 text-sm sm:text-base flex items-center space-x-1.5">
-                  <span>Congratulations! Course Completed</span>
-                  <Sparkles className="w-4 h-4 text-amber-400" />
-                </h4>
-                <p className="text-xs text-slate-300 mt-0.5">
-                  Your verified certificate <span className="font-mono text-emerald-300">#{certificateId}</span> is officially minted.
-                </p>
-              </div>
+        {/* Lesson Bottom Control & Notes Area */}
+        <div className="bg-slate-950 p-6 flex-1 space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+            <div>
+              <span className="text-xs text-slate-400 font-mono">
+                Lesson {currentIndex + 1} of {allLessons.length}
+              </span>
+              <h2 className="text-lg font-bold text-white mt-0.5">
+                {currentLesson?.title || 'Course Lecture'}
+              </h2>
             </div>
-            <div className="flex items-center space-x-2.5 shrink-0">
-              <button
-                onClick={downloadCert}
-                className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl flex items-center space-x-1.5 shadow transition"
+
+            <div className="flex items-center gap-3">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={goToPrevLesson}
+                disabled={currentIndex <= 0}
+                className="bg-slate-900 border-slate-700 text-slate-200 hover:bg-slate-800"
               >
-                <Download className="w-3.5 h-3.5" />
-                <span>Download PDF</span>
-              </button>
-              <Link
-                to={`/verify-certificate/${certificateId}`}
-                className="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-slate-700 transition"
+                <ChevronLeft className="w-4 h-4 mr-1" /> Previous
+              </Button>
+
+              <Button
+                variant={isCurrentDone ? 'secondary' : 'teal'}
+                size="sm"
+                onClick={handleMarkComplete}
+                loading={updatingProgress}
               >
-                Verify
-              </Link>
+                {isCurrentDone ? (
+                  <>
+                    <CheckCircle2 className="w-4 h-4 mr-1 text-emerald-500" />
+                    <span>Completed &bull; Next</span>
+                  </>
+                ) : (
+                  <span>Mark as Complete &rarr;</span>
+                )}
+              </Button>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={goToNextLesson}
+                disabled={currentIndex >= allLessons.length - 1}
+                className="bg-slate-900 border-slate-700 text-slate-200 hover:bg-slate-800"
+              >
+                Next <ChevronRight className="w-4 h-4 ml-1" />
+              </Button>
             </div>
           </div>
-        )}
 
-        {/* Video / Content Display */}
-        {currentLesson ? (
-          <div className="space-y-6">
-            <div className="aspect-video bg-black rounded-3xl overflow-hidden shadow-2xl border border-slate-800/80 relative flex items-center justify-center">
-              {currentLesson.videoUrl ? (
-                <iframe
-                  src={getEmbedUrl(currentLesson.videoUrl)}
-                  title={currentLesson.title}
-                  className="w-full h-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-              ) : (
-                <div className="text-center p-8 max-w-lg">
-                  <div className="w-16 h-16 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center mx-auto mb-4">
-                    <PlayCircle className="w-8 h-8" />
-                  </div>
-                  <h3 className="text-lg font-bold text-white mb-2">{currentLesson.title}</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">
-                    {currentLesson.description || 'Watch the video lesson attentively and follow along in your local development environment.'}
-                  </p>
-                </div>
-              )}
+          {/* Description & Resources */}
+          {currentLesson?.description && (
+            <div className="space-y-2">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                Lecture Summary
+              </h4>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-3xl">
+                {currentLesson.description}
+              </p>
             </div>
+          )}
 
-            {/* Lesson Title & Controls */}
-            <div className="bg-slate-900/90 backdrop-blur-xl p-5 sm:p-6 rounded-3xl border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg">
-              <div>
-                <span className="text-[11px] font-bold text-indigo-400 uppercase tracking-widest bg-indigo-500/10 border border-indigo-500/20 px-2.5 py-1 rounded-full">
-                  Lecture {currentIndex + 1} of {allLessons.length}
-                </span>
-                <h2 className="text-xl sm:text-2xl font-bold text-white mt-2 font-display">{currentLesson.title}</h2>
-                {currentLesson.description && (
-                  <p className="text-xs text-slate-400 mt-1 max-w-xl leading-relaxed">{currentLesson.description}</p>
-                )}
-              </div>
-
-              <div className="flex items-center space-x-3 shrink-0 w-full sm:w-auto justify-end pt-2 sm:pt-0">
-                <button
-                  onClick={goToPrevLesson}
-                  disabled={currentIndex <= 0}
-                  className="p-3 rounded-2xl bg-slate-800 hover:bg-slate-700 disabled:opacity-30 disabled:pointer-events-none transition text-slate-300 border border-slate-700/60"
-                  title="Previous Lesson"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-
-                <button
-                  onClick={handleMarkComplete}
-                  disabled={updatingProgress}
-                  className={`flex items-center space-x-2 px-6 py-3 rounded-2xl text-xs font-bold transition shadow-lg ${
-                    isCurrentLessonCompleted
-                      ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-emerald-600/20'
-                      : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-indigo-600/30'
-                  }`}
-                >
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>{isCurrentLessonCompleted ? 'Completed' : 'Mark Complete & Next'}</span>
-                </button>
-
-                <button
-                  onClick={goToNextLesson}
-                  disabled={currentIndex >= allLessons.length - 1}
-                  className="p-3 rounded-2xl bg-slate-800 hover:bg-slate-700 disabled:opacity-30 disabled:pointer-events-none transition text-slate-300 border border-slate-700/60"
-                  title="Next Lesson"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Lesson Text or Resources if available */}
-            {currentLesson.contentText && (
-              <div className="bg-slate-900/60 p-6 sm:p-8 rounded-3xl border border-slate-800 text-slate-300 text-sm leading-relaxed whitespace-pre-line">
-                <div className="flex items-center space-x-2 text-white font-bold text-base mb-3">
-                  <BookOpen className="w-4 h-4 text-indigo-400" />
-                  <span>Curriculum Notes & Resource Links</span>
-                </div>
+          {currentLesson?.contentText && currentLesson.contentType !== 'TEXT' && (
+            <div className="space-y-2 pt-2">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                Downloadable Notes & Code Samples
+              </h4>
+              <div className="p-4 rounded-lg bg-slate-900 border border-slate-800 font-mono text-xs text-slate-300 leading-relaxed whitespace-pre-wrap">
                 {currentLesson.contentText}
               </div>
-            )}
-          </div>
-        ) : (
-          <div className="text-center py-20 text-slate-500">Select a lesson to begin.</div>
-        )}
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Curriculum & Quizzes Sidebar Drawer */}
-      <div className="w-full lg:w-96 bg-slate-900/95 border-t lg:border-t-0 lg:border-l border-slate-800 flex flex-col shrink-0">
+      {/* Curriculum Sidebar */}
+      <aside
+        className={`${
+          sidebarOpen ? 'block' : 'hidden'
+        } lg:block w-full lg:w-80 bg-slate-950 border-t lg:border-t-0 lg:border-l border-slate-800 flex flex-col shrink-0`}
+      >
         {/* Progress header */}
-        <div className="p-5 border-b border-slate-800 bg-slate-950/60">
-          <div className="flex items-center justify-between text-xs font-bold mb-2">
-            <span className="text-slate-400 uppercase tracking-wider text-[11px]">Course Completion</span>
-            <span className="text-indigo-400 font-mono text-sm">{progressPct}%</span>
+        <div className="p-4 border-b border-slate-800 bg-slate-900/60">
+          <div className="flex items-center justify-between text-xs font-semibold mb-2">
+            <span className="text-slate-400 uppercase tracking-wider text-[11px]">Progress</span>
+            <span className="text-[#287C78] font-mono text-sm">{progressPct}%</span>
           </div>
-          <div className="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+          <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
             <div
-              className="bg-gradient-to-r from-indigo-500 to-purple-500 h-full rounded-full transition-all duration-300 shadow"
+              className="bg-[#287C78] h-full rounded-full transition-all duration-300"
               style={{ width: `${progressPct}%` }}
-            ></div>
+            />
           </div>
-          <p className="text-[11px] text-slate-400 mt-2 font-medium">
+          <p className="text-[11px] text-slate-400 mt-2">
             {completedLessonIds.length} of {allLessons.length} lessons completed
           </p>
         </div>
 
-        {/* Quizzes Button Section */}
+        {/* Quizzes / Assessments if present */}
         {quizzes.length > 0 && (
-          <div className="p-4 border-b border-slate-800 bg-indigo-950/20">
-            <p className="text-[11px] font-bold text-indigo-300 uppercase tracking-wider mb-2.5 flex items-center space-x-1.5">
-              <HelpCircle className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Required Assessments</span>
+          <div className="p-3 border-b border-slate-800 bg-slate-900/30">
+            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">
+              Assessments
             </p>
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               {quizzes.map((q) => (
                 <Link
                   key={q.id}
                   to={`/quiz/${q.id}`}
-                  className="flex items-center justify-between bg-slate-800/90 hover:bg-slate-800 p-3.5 rounded-2xl border border-indigo-500/30 transition text-xs font-bold text-white group"
+                  className="flex items-center justify-between p-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-medium text-slate-200"
                 >
-                  <div className="flex items-center space-x-2.5">
-                    <div className="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center group-hover:scale-105 transition">
-                      <ListOrdered className="w-4 h-4" />
-                    </div>
-                    <span>{q.title}</span>
+                  <div className="flex items-center gap-2 truncate pr-2">
+                    <ListOrdered className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    <span className="truncate">{q.title}</span>
                   </div>
-                  <span className="text-[11px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">
-                    Pass {q.passingScore}% &rarr;
+                  <span className="text-[11px] text-emerald-400 font-mono">
+                    Pass {q.passingScore}%
                   </span>
                 </Link>
               ))}
@@ -399,47 +408,49 @@ export const CoursePlayerPage: React.FC = () => {
           </div>
         )}
 
-        {/* Sections & Lessons List */}
+        {/* Sections & Lessons */}
         <div className="flex-1 overflow-y-auto divide-y divide-slate-800/60 p-2">
-          {course.sections.map((section, sIdx) => (
+          {course.sections?.map((section, sIndex) => (
             <div key={section.id} className="py-2">
-              <div className="px-3 py-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                Section {sIdx + 1}: {section.title}
+              <div className="px-3 py-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                Section {sIndex + 1}: {section.title}
               </div>
 
-              <div className="space-y-1">
-                {section.lessons.map((lesson) => {
+              <div className="space-y-0.5 mt-1">
+                {section.lessons?.map((lesson) => {
                   const isActive = currentLesson?.id === lesson.id;
                   const isDone = completedLessonIds.includes(lesson.id);
 
                   return (
                     <button
                       key={lesson.id}
-                      onClick={() => setCurrentLesson(lesson)}
-                      className={`w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-left transition ${
+                      type="button"
+                      onClick={() => {
+                        setCurrentLesson(lesson);
+                        setSidebarOpen(false);
+                      }}
+                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left transition-colors text-xs ${
                         isActive
-                          ? 'bg-indigo-600/20 text-white border border-indigo-500/40 shadow-sm'
-                          : 'hover:bg-slate-800/50 text-slate-300'
+                          ? 'bg-slate-800 text-white font-medium border border-slate-700'
+                          : 'text-slate-300 hover:bg-slate-900'
                       }`}
                     >
-                      <div className="flex items-center space-x-3 text-xs pr-2">
+                      <div className="flex items-center gap-2.5 min-w-0 pr-2">
                         {isDone ? (
                           <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                         ) : lesson.contentType === 'VIDEO' ? (
-                          <PlayCircle className={`w-4 h-4 shrink-0 ${isActive ? 'text-indigo-400' : 'text-slate-500'}`} />
+                          <PlayCircle className="w-4 h-4 text-slate-500 shrink-0" />
                         ) : (
-                          <FileText className={`w-4 h-4 shrink-0 ${isActive ? 'text-indigo-400' : 'text-slate-500'}`} />
+                          <FileText className="w-4 h-4 text-slate-500 shrink-0" />
                         )}
-                        <span className={`font-medium ${isActive ? 'text-white font-bold' : ''}`}>
-                          {lesson.title}
-                        </span>
+                        <span className="truncate">{lesson.title}</span>
                       </div>
 
-                      {lesson.videoDurationSeconds && (
+                      {lesson.videoDurationSeconds ? (
                         <span className="text-[10px] text-slate-500 font-mono shrink-0">
-                          {Math.round(lesson.videoDurationSeconds / 60)}m
+                          {formatLessonDuration(lesson.videoDurationSeconds)}
                         </span>
-                      )}
+                      ) : null}
                     </button>
                   );
                 })}
@@ -447,7 +458,7 @@ export const CoursePlayerPage: React.FC = () => {
             </div>
           ))}
         </div>
-      </div>
+      </aside>
     </div>
   );
 };

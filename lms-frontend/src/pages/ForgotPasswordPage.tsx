@@ -11,11 +11,9 @@ import {
   ArrowLeft,
   Eye,
   EyeOff,
-  RotateCcw,
   Check,
-  X,
-  ShieldCheck,
 } from 'lucide-react';
+import { Button } from '../components/ui/Button';
 
 export const ForgotPasswordPage: React.FC = () => {
   const navigate = useNavigate();
@@ -40,7 +38,7 @@ export const ForgotPasswordPage: React.FC = () => {
 
   // 60-Second Cooldown Countdown Timer
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+    let timer: any;
     if (cooldown > 0) {
       timer = setInterval(() => {
         setCooldown((prev) => (prev > 0 ? prev - 1 : 0));
@@ -54,11 +52,9 @@ export const ForgotPasswordPage: React.FC = () => {
   const hasUpperCase = /[A-Z]/.test(newPassword);
   const hasLowerCase = /[a-z]/.test(newPassword);
   const hasNumber = /[0-9]/.test(newPassword);
-  const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(newPassword);
   const passwordsMatch = newPassword.length > 0 && newPassword === confirmPassword;
 
-  const isPasswordValid =
-    hasMinLength && hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar && passwordsMatch;
+  const isPasswordValid = hasMinLength && hasUpperCase && hasLowerCase && hasNumber && passwordsMatch;
 
   // Step 1: Request OTP
   const handleRequestOtp = async (e: React.FormEvent) => {
@@ -77,28 +73,26 @@ export const ForgotPasswordPage: React.FC = () => {
 
       const devOtp = res?.data?.data?.devOtp || res?.data?.devOtp;
       if (devOtp) {
-        console.info('[Dev Fallback] Backend email service not configured. OTP:', devOtp);
-        setSuccessMsg(`A 6-digit verification code has been dispatched to ${email}. Valid for 10 minutes.`);
+        setOtp(devOtp);
+        setSuccessMsg(`A 6-digit verification code has been dispatched. (Dev Mode: ${devOtp})`);
       } else {
-        setSuccessMsg(`A 6-digit verification code has been dispatched to ${email}. Valid for 10 minutes.`);
+        setSuccessMsg(`A 6-digit verification code has been dispatched to ${email.trim()}.`);
       }
 
+      setCooldown(60);
       setStep('VERIFY');
-      setCooldown(60); // 60-second cooldown
     } catch (err: any) {
-      setError(err.message || 'No registered account found with this email address.');
+      setError(err.message || 'Failed to request password reset code.');
     } finally {
       setLoading(false);
     }
   };
 
-  // Resend OTP with 60-Second Cooldown
+  // Step 2: Resend OTP
   const handleResendOtp = async () => {
-    if (cooldown > 0 || !email.trim() || resending) return;
-
+    if (cooldown > 0 || !email.trim()) return;
     setResending(true);
     setError(null);
-    setSuccessMsg(null);
 
     try {
       const res: any = await api.post('/v1/auth/otp/request', {
@@ -108,25 +102,24 @@ export const ForgotPasswordPage: React.FC = () => {
 
       const devOtp = res?.data?.data?.devOtp || res?.data?.devOtp;
       if (devOtp) {
-        console.info('[Dev Fallback] Backend email service not configured. OTP:', devOtp);
-        setSuccessMsg(`A fresh verification code has been dispatched to ${email}. Valid for 10 minutes.`);
+        setOtp(devOtp);
+        setSuccessMsg(`New code dispatched. (Dev Mode: ${devOtp})`);
       } else {
-        setSuccessMsg(`A fresh verification code has been dispatched to ${email}. Valid for 10 minutes.`);
+        setSuccessMsg(`A new verification code has been dispatched to ${email.trim()}.`);
       }
-
       setCooldown(60);
     } catch (err: any) {
-      setError(err.message || 'Failed to resend verification code. Please wait before retrying.');
+      setError(err.message || 'Failed to resend code.');
     } finally {
       setResending(false);
     }
   };
 
-  // Step 2: Verify OTP
+  // Step 3: Verify OTP Code
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!otp || otp.length < 6) {
-      setError('Please enter the complete 6-digit verification code.');
+    if (otp.length < 6) {
+      setError('Please enter the full 6-digit code.');
       return;
     }
 
@@ -134,26 +127,26 @@ export const ForgotPasswordPage: React.FC = () => {
     setError(null);
 
     try {
-      await api.post('/v1/auth/otp/verify', {
+      await api.post('/v1/auth/verify-otp', {
         email: email.trim().toLowerCase(),
         otp: otp.trim(),
         purpose: 'PASSWORD_RESET',
       });
 
-      setSuccessMsg('Security code verified successfully! Now create your new password.');
+      setSuccessMsg('Code verified. Set your new password below.');
       setStep('NEW_PASSWORD');
     } catch (err: any) {
-      setError(err.message || 'Invalid or expired verification code. Maximum 3 attempts allowed.');
+      setError(err.message || 'Invalid or expired verification code.');
     } finally {
       setLoading(false);
     }
   };
 
-  // Step 3: Save New Password
+  // Step 4: Reset Password Confirmation
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isPasswordValid) {
-      setError('Please satisfy all password complexity requirements.');
+      setError('Please satisfy all password security requirements.');
       return;
     }
 
@@ -168,293 +161,216 @@ export const ForgotPasswordPage: React.FC = () => {
       });
 
       navigate('/login', {
-        state: {
-          message: 'Password reset successful! You can now log in with your new password.',
-        },
+        state: { message: 'Your password has been updated. Please log in with your new credentials.' },
+        replace: true,
       });
     } catch (err: any) {
-      setError(err.message || 'Password reset failed. Please request a new verification code.');
+      setError(err.message || 'Failed to reset password.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8 bg-slate-50 min-h-[calc(100vh-140px)] relative overflow-hidden">
-      {/* Radiant ambient glow spheres */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[400px] bg-gradient-to-tr from-indigo-200/40 via-purple-100/40 to-transparent rounded-full blur-3xl pointer-events-none"></div>
-
-      <div className="relative max-w-md w-full bg-white/95 backdrop-blur-xl p-8 sm:p-10 rounded-3xl border border-slate-200/90 shadow-2xl space-y-6">
-        {/* Header with App Brand */}
-        <div className="text-center">
-          <Link to="/" className="inline-flex items-center space-x-2.5 font-black text-2xl font-display text-slate-900 group">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-md shadow-indigo-600/30 group-hover:scale-105 transition">
-              <GraduationCap className="w-6 h-6" />
+    <div className="flex-1 flex items-center justify-center py-16 px-4 sm:px-6 bg-[#FAFAF8]">
+      <div className="max-w-md w-full bg-white p-8 rounded-xl border border-[#E5E7EB] shadow-xs space-y-6">
+        {/* Header */}
+        <div className="text-center space-y-2">
+          <Link to="/" className="inline-flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-[#172B4D] flex items-center justify-center text-white">
+              <GraduationCap className="w-5 h-5" />
             </div>
-            <span className="tracking-tight">Skill<span className="text-indigo-600">Forge</span></span>
+            <span className="text-lg font-bold text-[#20252B]">SkillForge</span>
           </Link>
-          <h2 className="mt-5 text-2xl font-black text-slate-900 tracking-tight font-display">
+          <h2 className="text-xl font-bold text-[#20252B] tracking-tight">
             {step === 'REQUEST' && 'Reset your password'}
-            {step === 'VERIFY' && 'Enter Verification Code'}
-            {step === 'NEW_PASSWORD' && 'Create New Password'}
+            {step === 'VERIFY' && 'Enter verification code'}
+            {step === 'NEW_PASSWORD' && 'Choose a new password'}
           </h2>
-          <p className="mt-1.5 text-xs text-slate-500 leading-relaxed">
-            {step === 'REQUEST' && 'Enter your registered email address to receive a secure 6-digit OTP.'}
-            {step === 'VERIFY' && `We've sent a 6-digit code to ${email}. Valid for 10 minutes.`}
-            {step === 'NEW_PASSWORD' && 'Enter a strong new password meeting all security requirements.'}
+          <p className="text-xs text-[#697386]">
+            {step === 'REQUEST' && 'Enter your verified account email to receive a recovery code.'}
+            {step === 'VERIFY' && `We sent a 6-digit code to ${email}`}
+            {step === 'NEW_PASSWORD' && 'Create a strong password with at least 8 characters.'}
           </p>
         </div>
 
-        {/* Step Progress Bar */}
-        <div className="flex items-center justify-between px-4 py-2.5 bg-slate-50/90 rounded-2xl border border-slate-100 text-xs font-semibold">
-          <div className={`flex items-center space-x-1.5 ${step === 'REQUEST' ? 'text-indigo-600' : 'text-emerald-600'}`}>
-            <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${step === 'REQUEST' ? 'bg-indigo-600 text-white' : 'bg-emerald-100 text-emerald-700'}`}>
-              1
-            </span>
-            <span>Email</span>
-          </div>
-          <div className="w-6 h-0.5 bg-slate-200" />
-          <div className={`flex items-center space-x-1.5 ${step === 'VERIFY' ? 'text-indigo-600' : step === 'NEW_PASSWORD' ? 'text-emerald-600' : 'text-slate-400'}`}>
-            <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${step === 'VERIFY' ? 'bg-indigo-600 text-white' : step === 'NEW_PASSWORD' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-500'}`}>
-              2
-            </span>
-            <span>Verify</span>
-          </div>
-          <div className="w-6 h-0.5 bg-slate-200" />
-          <div className={`flex items-center space-x-1.5 ${step === 'NEW_PASSWORD' ? 'text-indigo-600' : 'text-slate-400'}`}>
-            <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${step === 'NEW_PASSWORD' ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-500'}`}>
-              3
-            </span>
-            <span>Password</span>
-          </div>
+        {/* Step indicator */}
+        <div className="flex items-center justify-center gap-2 text-xs">
+          <span className={`w-2 h-2 rounded-full ${step === 'REQUEST' ? 'bg-[#172B4D]' : 'bg-[#287C78]'}`} />
+          <span className={`w-6 h-0.5 ${step === 'REQUEST' ? 'bg-slate-200' : 'bg-[#287C78]'}`} />
+          <span className={`w-2 h-2 rounded-full ${step === 'VERIFY' ? 'bg-[#172B4D]' : step === 'NEW_PASSWORD' ? 'bg-[#287C78]' : 'bg-slate-200'}`} />
+          <span className={`w-6 h-0.5 ${step === 'NEW_PASSWORD' ? 'bg-[#287C78]' : 'bg-slate-200'}`} />
+          <span className={`w-2 h-2 rounded-full ${step === 'NEW_PASSWORD' ? 'bg-[#172B4D]' : 'bg-slate-200'}`} />
         </div>
 
-        {/* Error Alert */}
-        {error && (
-          <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 flex items-start space-x-2 animate-fadeIn">
-            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-600" />
-            <span className="leading-relaxed">{error}</span>
-          </div>
-        )}
-
-        {/* Success Alert */}
         {successMsg && (
-          <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 flex items-start space-x-2 animate-fadeIn">
-            <CheckCircle className="w-4 h-4 shrink-0 mt-0.5 text-emerald-600" />
-            <span className="leading-relaxed">{successMsg}</span>
+          <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-800 flex items-start gap-2">
+            <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600 mt-0.5" />
+            <span>{successMsg}</span>
           </div>
         )}
 
-        {/* ================= STEP 1: REQUEST OTP ================= */}
+        {error && (
+          <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-xs text-rose-700 flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        {/* STEP 1: Request code */}
         {step === 'REQUEST' && (
-          <form onSubmit={handleRequestOtp} className="space-y-4">
+          <form onSubmit={handleRequestOtp} className="space-y-4 text-xs">
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                Registered Email Address
-              </label>
+              <label className="block font-semibold text-[#20252B] mb-1.5">Email Address</label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="name@example.com"
-                  autoFocus
-                  className="w-full pl-10 pr-3 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 transition"
+                  placeholder="you@company.com"
+                  className="w-full pl-9 pr-3.5 py-2 text-sm bg-slate-50 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white text-[#20252B]"
                 />
               </div>
             </div>
 
-            <button
-              type="submit"
-              disabled={loading || !email.trim()}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl text-sm shadow-md transition disabled:opacity-50 flex items-center justify-center space-x-2"
-            >
-              {loading ? <span>Validating & Sending Code...</span> : <span>Send Verification Code</span>}
-            </button>
-
-            <div className="pt-2 text-center">
-              <Link
-                to="/login"
-                className="inline-flex items-center space-x-1.5 text-xs font-semibold text-slate-600 hover:text-indigo-600 transition"
-              >
-                <ArrowLeft className="w-3.5 h-3.5" />
-                <span>Back to sign in</span>
-              </Link>
-            </div>
+            <Button type="submit" variant="primary" size="md" className="w-full mt-2" loading={loading}>
+              Send Verification Code
+            </Button>
           </form>
         )}
 
-        {/* ================= STEP 2: VERIFY OTP ================= */}
+        {/* STEP 2: Verify code */}
         {step === 'VERIFY' && (
-          <form onSubmit={handleVerifyOtp} className="space-y-4">
+          <form onSubmit={handleVerifyOtp} className="space-y-4 text-xs">
             <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-                  6-Digit Verification Code
-                </label>
-                <span className="text-[11px] text-amber-600 font-medium">Max 3 attempts</span>
-              </div>
+              <label className="block font-semibold text-[#20252B] mb-1.5">6-Digit Code</label>
               <div className="relative">
-                <KeyRound className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <KeyRound className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
-                  required
                   maxLength={6}
+                  required
                   value={otp}
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
                   placeholder="123456"
+                  className="w-full pl-9 pr-3.5 py-2 text-center font-mono text-lg tracking-widest bg-slate-50 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white text-[#20252B]"
                   autoFocus
-                  className="w-full pl-10 pr-4 py-3 text-center text-xl tracking-[0.5em] font-mono font-bold bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 transition"
                 />
               </div>
             </div>
 
-            {/* Resend OTP button with 60s cooldown */}
-            <div className="flex items-center justify-between text-xs text-slate-500 pt-1">
-              <span>Didn't receive the email?</span>
+            <div className="flex items-center justify-between text-xs text-[#697386]">
+              <button
+                type="button"
+                onClick={() => setStep('REQUEST')}
+                className="hover:underline flex items-center gap-1"
+              >
+                <ArrowLeft className="w-3 h-3" /> Change email
+              </button>
               <button
                 type="button"
                 onClick={handleResendOtp}
                 disabled={cooldown > 0 || resending}
-                className="inline-flex items-center space-x-1 font-semibold text-indigo-600 hover:text-indigo-800 disabled:text-slate-400 transition"
+                className="font-medium text-[#172B4D] hover:underline disabled:opacity-50"
               >
-                <RotateCcw className={`w-3 h-3 ${resending ? 'animate-spin' : ''}`} />
-                <span>
-                  {cooldown > 0
-                    ? `Resend OTP (${cooldown}s)`
-                    : resending
-                    ? 'Resending...'
-                    : 'Resend OTP'}
-                </span>
+                {cooldown > 0 ? `Resend in ${cooldown}s` : 'Resend code'}
               </button>
             </div>
 
-            <button
-              type="submit"
-              disabled={loading || otp.length < 6}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl text-sm shadow-md transition disabled:opacity-50 flex items-center justify-center space-x-2"
-            >
-              {loading ? <span>Verifying Code...</span> : <span>Verify & Continue</span>}
-            </button>
-
-            <div className="pt-2 text-center">
-              <button
-                type="button"
-                onClick={() => {
-                  setStep('REQUEST');
-                  setError(null);
-                  setSuccessMsg(null);
-                }}
-                className="inline-flex items-center space-x-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 transition"
-              >
-                <ArrowLeft className="w-3.5 h-3.5" />
-                <span>Change email address</span>
-              </button>
-            </div>
+            <Button type="submit" variant="primary" size="md" className="w-full mt-2" loading={loading}>
+              Verify Code
+            </Button>
           </form>
         )}
 
-        {/* ================= STEP 3: CREATE NEW PASSWORD ================= */}
+        {/* STEP 3: New password */}
         {step === 'NEW_PASSWORD' && (
-          <form onSubmit={handleResetPassword} className="space-y-4">
-            {/* New Password */}
+          <form onSubmit={handleResetPassword} className="space-y-4 text-xs">
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                New Password
-              </label>
+              <label className="block font-semibold text-[#20252B] mb-1.5">New Password</label>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="••••••••"
-                  autoFocus
-                  className="w-full pl-10 pr-10 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 transition"
+                  className="w-full pl-9 pr-10 py-2 text-sm bg-slate-50 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white text-[#20252B]"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
 
-            {/* Confirm New Password */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                Confirm New Password
-              </label>
+              <label className="block font-semibold text-[#20252B] mb-1.5">Confirm Password</label>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type={showConfirmPassword ? 'text' : 'password'}
                   required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-10 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 transition"
+                  className="w-full pl-9 pr-10 py-2 text-sm bg-slate-50 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#172B4D]/15 focus:bg-white text-[#20252B]"
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                 >
                   {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
 
-            {/* Live Password Rules Checklist */}
-            <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-1.5">
-              <span className="font-bold text-slate-700 block mb-1">Password Requirements:</span>
-              <div className={`flex items-center space-x-2 ${hasMinLength ? 'text-emerald-700' : 'text-slate-500'}`}>
-                {hasMinLength ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <X className="w-3.5 h-3.5 text-slate-400" />}
+            {/* Checklist */}
+            <div className="p-3 bg-slate-50 rounded-lg border border-[#E5E7EB] space-y-1.5 text-[11px] text-[#697386]">
+              <div className="flex items-center gap-2">
+                <span className={`w-3 h-3 rounded-full flex items-center justify-center ${hasMinLength ? 'text-emerald-600' : 'text-slate-300'}`}>
+                  ✓
+                </span>
                 <span>At least 8 characters</span>
               </div>
-              <div className={`flex items-center space-x-2 ${hasUpperCase ? 'text-emerald-700' : 'text-slate-500'}`}>
-                {hasUpperCase ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <X className="w-3.5 h-3.5 text-slate-400" />}
-                <span>At least one uppercase letter (A-Z)</span>
+              <div className="flex items-center gap-2">
+                <span className={`w-3 h-3 rounded-full flex items-center justify-center ${hasUpperCase && hasLowerCase ? 'text-emerald-600' : 'text-slate-300'}`}>
+                  ✓
+                </span>
+                <span>Upper and lowercase letters</span>
               </div>
-              <div className={`flex items-center space-x-2 ${hasLowerCase ? 'text-emerald-700' : 'text-slate-500'}`}>
-                {hasLowerCase ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <X className="w-3.5 h-3.5 text-slate-400" />}
-                <span>At least one lowercase letter (a-z)</span>
+              <div className="flex items-center gap-2">
+                <span className={`w-3 h-3 rounded-full flex items-center justify-center ${hasNumber ? 'text-emerald-600' : 'text-slate-300'}`}>
+                  ✓
+                </span>
+                <span>At least one number</span>
               </div>
-              <div className={`flex items-center space-x-2 ${hasNumber ? 'text-emerald-700' : 'text-slate-500'}`}>
-                {hasNumber ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <X className="w-3.5 h-3.5 text-slate-400" />}
-                <span>At least one number (0-9)</span>
-              </div>
-              <div className={`flex items-center space-x-2 ${hasSpecialChar ? 'text-emerald-700' : 'text-slate-500'}`}>
-                {hasSpecialChar ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <X className="w-3.5 h-3.5 text-slate-400" />}
-                <span>At least one special character (!@#$%^&*...)</span>
-              </div>
-              <div className={`flex items-center space-x-2 ${passwordsMatch ? 'text-emerald-700' : 'text-slate-500'}`}>
-                {passwordsMatch ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <X className="w-3.5 h-3.5 text-slate-400" />}
+              <div className="flex items-center gap-2">
+                <span className={`w-3 h-3 rounded-full flex items-center justify-center ${passwordsMatch ? 'text-emerald-600' : 'text-slate-300'}`}>
+                  ✓
+                </span>
                 <span>Passwords match</span>
               </div>
             </div>
 
-            <button
-              type="submit"
-              disabled={loading || !isPasswordValid}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl text-sm shadow-md transition disabled:opacity-50 flex items-center justify-center space-x-2"
-            >
-              {loading ? (
-                <span>Resetting Password...</span>
-              ) : (
-                <>
-                  <ShieldCheck className="w-4 h-4" />
-                  <span>Reset Password & Sign In</span>
-                </>
-              )}
-            </button>
+            <Button type="submit" variant="primary" size="md" className="w-full mt-2" loading={loading} disabled={!isPasswordValid}>
+              Update Password
+            </Button>
           </form>
         )}
+
+        <div className="pt-2 text-center text-xs text-[#697386] border-t border-[#E5E7EB]">
+          <Link to="/login" className="font-medium text-[#172B4D] hover:underline inline-flex items-center gap-1">
+            <ArrowLeft className="w-3.5 h-3.5" /> Return to login
+          </Link>
+        </div>
       </div>
     </div>
   );

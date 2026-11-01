@@ -135,7 +135,7 @@ export const QuizPlayerPage: React.FC = () => {
   }
 
   return (
-    <div className="flex-1 bg-slate-50 py-12 relative overflow-hidden">
+    <div className="flex-1 bg-[#FAFAF8] py-12 relative overflow-hidden">
       {/* Subtle ambient light */}
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-indigo-100/40 rounded-full blur-3xl pointer-events-none"></div>
 
